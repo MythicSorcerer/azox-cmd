@@ -1,0 +1,195 @@
+Make sure this plugin can support later azox-ranks to limit some things
+
+try not to use callback based logic so that it works over geyser
+
+<required argument> 
+[entry] optional
+(entry|entry) Pick one - required
+[entry|entry] Pick one - optional
+
+Home system:
+
+azox.utils.sethome
+/sethome [homename - defaults to home]
+Successufully set a new home[ called homename<shows only if homename is not home>]
+or Home limit reached + message from azoxranks
+
+azox.utils.sethome.others
+/sethome <playername>:[homename - defaults to home]
+
+azox.utils.home
+/home [homename - defaults to home]
+
+azox.utils.home.others
+/home <playername>:[homename - defaults to home]
+
+azox.utils.sethome.unlimited
+bypass home limit
+
+- home limit is usually 4 but hooks into azox-ranks
+
+azox.utils.phome
+/publichome <playername>:[homename - defaults to home]
+alias: /phome
+
+azox.utils.delhome
+/delhome <name>
+
+/delhome all <confirm>
+if didnt put confirm pop up in chat
+confirm? [yes] / [no]
+click yes causes player to run /delhome all confirm
+
+azox.utils.edithome
+/edithome <homename>
+pops up an edit home menu
+
+Details for your home[, HomeName <only shows if name is not home>]
+Description if present
+MM/DD/YYYY HH:MM Private Home / Public Home
+Overworld/Nether/End
+X: x-coords, Y: y-coords
+
+Use: [Teleport]
+Manage: [Delete] [Relocate] [Make Public]
+Edit: [Rename] [Description]
+
+figure out the permission nodes for these
+Show up from edit home menu
+/home (already have)
+/delhome 
+= /edithome <homename> delete
+/relocatehome
+= /edithome <name> reloacate
+sets to current location
+
+/setphome 
+
+/renamehome <originalname> <newname>
+i.e clicking renamehome makes /renamehome originalname show up in chat
+/edithome <name> description
+
+buttons default to /edithome over other equivilant commands
+
+edithome = homeinfo (homeinfo is alias)
+or /home info <homename>
+
+tp cooldown default 3s can be changed
+
+/homes
+= /homelist
+= /homes list
+= /homelist
+Playername's Homes:
+Page 1 of 1
+[home1] [home2] 
+if applicable [previous] [next]
+
+hover over home = show description, priv/pub
+click = show edit home menu
+
+note that 
+.command
+means azox.utils.command
+but sometimes im too lazy to type it out
+also think up nodes when i forget to
+
+pops up confirm dialauge in chat to run
+/delhome <homename>
+
+Warp system
+
+azox.utils.setwarp
+/setwarp <warpname> [level 1-10, default 1]
+
+azox.utils.warp.[number between 1-10]
+/warp <warpname> 
+requires azox.utils.warp.number 's number => warp level
+
+Teleport System
+/tpa = /tpask
+/tpahere 
+/tpaccept 
+accept latest requrest
+/tpaccept [username]
+/tpdecline
+/tpdecline [username]
+/tpignore 
+ignore all incoming tp requests
+
+so
+/tpa username
+Teleporting in 3 seconds, please do not move (after accepted)
+
+their side
+playername would like to teleport to you
+[accept] [deny]
+
+=> /tpaccept playername /tpdeny playername
+
+or
+/tpa username
+That player is currently ignoring tp requests
+
+Home/Tpa time hook into ranks plugin
+
+/rtp
+.rtp.others
+/rtp <player>
+= tpr
+
+/back
+/back death
+/back previous
+back to where you last teleported from
+
+/enderchest
+= /ec
+= /echest
+
+/tp x y z
+/tp x y z dimension
+/tp playername
+/tp playername x y z
+/tp playername x y z dimension
+/tp playername otherplayername
+/whois
+/seen
+/setjail
+/jail
+/anvil
+/break (breaks block you are looking at)
+/broadcast = /bc
+/burn [player default self] [seconds]
+/cartographytable = /carttable
+/clearinventory = /clear = /clean [playername, default self]
+/condense (i.e ingots to blocks, 9 iron ingots = 1 iron block, 9 raw iron = 1 raw iron block only works if enough inventory to store outputs, can add to existing stacks or replace mainhand if multiple of 9) [mainhand|all, default mainhand] = /compact = /toblocks
+/compass describes current direction
+/createkit /ck
+/kit 
+/deljail = rmjail
+/delkit = rmjail
+/trash = /disposal
+/enchant <enchantment> allows illigal enchntments i.e /enchant power 10
+/feed = /eat fill hunger and saturation
+/gamemode = /gm 
+/gms /gmsp /gmc /gma
+/gm [s|sp|c|a]
+/getpos = /coords [playername default self]
+/god toggle invincible to damage
+/heal [player default self]
+/lore [change lore of held item]
+/lightning
+/rules
+/speed = /walkspeed /flyspeed depending on if walking or flying
+/fly fly even in survival mode
+/sudo playername command
+/suicide
+/tempban
+/weather
+/sun
+/storm
+/setspawn
+
+
+
