@@ -3,6 +3,7 @@ package com.azox.utils.listener;
 import com.azox.utils.AzoxUtils;
 import com.azox.utils.command.impl.util.SeeCommand;
 import com.azox.utils.manager.GuiManager;
+import com.azox.utils.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -84,8 +85,13 @@ public final class InventoryListener implements Listener {
                     plugin.getGuiManager().openVanishGui(player);
                     break;
                 case "toggle_gui":
-                    boolean current = plugin.getTeleportManager().getStorage().isGuiEnabled(player.getUniqueId());
-                    plugin.getTeleportManager().getStorage().setGuiEnabled(player.getUniqueId(), !current);
+                    boolean currentGui = plugin.getPlayerStorage().isGuiEnabled(player);
+                    plugin.getPlayerStorage().setGuiEnabled(player, !currentGui);
+                    plugin.getGuiManager().openAdminGui(player);
+                    break;
+                case "toggle_mobs":
+                    boolean currentMobs = plugin.getPlayerStorage().isGodMobsIgnore(player);
+                    plugin.getPlayerStorage().setGodMobsIgnore(player, !currentMobs);
                     plugin.getGuiManager().openAdminGui(player);
                     break;
                 case "world_selector":
@@ -101,20 +107,19 @@ public final class InventoryListener implements Listener {
             if (setting == null) return;
 
             final Player player = (Player) event.getWhoClicked();
-            final UUID uuid = player.getUniqueId();
 
             switch (setting) {
                 case "v_fake_msg":
-                    plugin.getTeleportManager().getStorage().setVanishFakeMessages(uuid, !plugin.getTeleportManager().getStorage().isVanishFakeMessages(uuid));
+                    plugin.getPlayerStorage().setVanishFakeMessages(player, !plugin.getPlayerStorage().isVanishFakeMessages(player));
                     break;
                 case "v_auto_fly":
-                    plugin.getTeleportManager().getStorage().setVanishAutoFly(uuid, !plugin.getTeleportManager().getStorage().isVanishAutoFly(uuid));
+                    plugin.getPlayerStorage().setVanishAutoFly(player, !plugin.getPlayerStorage().isVanishAutoFly(player));
                     break;
                 case "v_auto_god":
-                    plugin.getTeleportManager().getStorage().setVanishAutoGod(uuid, !plugin.getTeleportManager().getStorage().isVanishAutoGod(uuid));
+                    plugin.getPlayerStorage().setVanishAutoGod(player, !plugin.getPlayerStorage().isVanishAutoGod(player));
                     break;
                 case "v_pickup":
-                    plugin.getTeleportManager().getStorage().setVanishPickupDisabled(uuid, !plugin.getTeleportManager().getStorage().isVanishPickupDisabled(uuid));
+                    plugin.getPlayerStorage().setVanishPickupDisabled(player, !plugin.getPlayerStorage().isVanishPickupDisabled(player));
                     break;
             }
             plugin.getGuiManager().openVanishGui(player);
@@ -128,7 +133,30 @@ public final class InventoryListener implements Listener {
 
             final Player player = (Player) event.getWhoClicked();
             player.closeInventory();
-            player.performCommand("tp " + worldName); // Or use teleport logic directly
+            player.performCommand("tp " + worldName);
+        } else if (plainTitle.equals("Ender Chest Pages")) {
+            event.setCancelled(true);
+            final ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem == null || clickedItem.getItemMeta() == null) return;
+
+            final Integer page = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.EC_PAGE_KEY, PersistentDataType.INTEGER);
+            if (page == null) return;
+
+            final Player player = (Player) event.getWhoClicked();
+            plugin.getGuiManager().openEnderChestPage(player, page);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(final org.bukkit.event.inventory.InventoryCloseEvent event) {
+        final String plainTitle = PLAIN_SERIALIZER.serialize(event.getView().title());
+        if (plainTitle.startsWith("Ender Chest - Page ")) {
+            try {
+                final int page = Integer.parseInt(plainTitle.substring(plainTitle.lastIndexOf(' ') + 1));
+                final Player player = (Player) event.getPlayer();
+                plugin.getPlayerStorage().saveEnderChestPage(player, page, event.getInventory().getContents());
+                MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Ender Chest Page " + page + " saved!");
+            } catch (NumberFormatException ignored) {}
         }
     }
 
@@ -148,7 +176,6 @@ public final class InventoryListener implements Listener {
 
         final int slot = event.getRawSlot();
         
-        // Prevent clicking spacers, info, and placeholders
         final ItemStack clickedItem = event.getCurrentItem();
         if (slot >= 42 && slot <= 44 || (slot >= 45 && target.getOpenInventory().getTopInventory() == null) || (clickedItem != null && clickedItem.getType() == Material.GRAY_STAINED_GLASS_PANE)) {
             event.setCancelled(true);
@@ -156,7 +183,6 @@ public final class InventoryListener implements Listener {
         }
 
         Bukkit.getScheduler().runTask(plugin, () -> {
-            // Sync GUI -> Target
             final ItemStack[] contents = target.getInventory().getContents();
             for (int i = 0; i < 36; i++) contents[i] = filterPlaceholder(inv.getItem(i));
             target.getInventory().setContents(contents);
@@ -169,9 +195,8 @@ public final class InventoryListener implements Listener {
             target.getInventory().setArmorContents(armor);
 
             target.getInventory().setItemInOffHand(filterPlaceholder(inv.getItem(40)));
-            target.setItemOnCursor(filterPlaceholder(inv.getItem(41)));
+            target.setItemOnCursor(filterPlaceholder(inv.getItem(50)));
 
-            // Sync Top Inventory (Row 6)
             final Inventory topInv = target.getOpenInventory().getTopInventory();
             if (topInv != null && topInv.getType() != org.bukkit.event.inventory.InventoryType.CRAFTING && topInv.getType() != org.bukkit.event.inventory.InventoryType.PLAYER) {
                 for (int i = 0; i < 9; i++) {
@@ -183,16 +208,16 @@ public final class InventoryListener implements Listener {
         });
     }
 
-    private ItemStack filterPlaceholder(ItemStack item) {
-        if (item == null || item.getType() == Material.GRAY_STAINED_GLASS_PANE) return null;
-        return item;
-    }
-
     @EventHandler
     public void onInventoryDrag(final InventoryDragEvent event) {
         final String plainTitle = PLAIN_SERIALIZER.serialize(event.getView().title());
         if (plainTitle.startsWith("Inspecting: ")) {
             event.setCancelled(true);
         }
+    }
+
+    private ItemStack filterPlaceholder(ItemStack item) {
+        if (item == null || item.getType() == Material.GRAY_STAINED_GLASS_PANE) return null;
+        return item;
     }
 }

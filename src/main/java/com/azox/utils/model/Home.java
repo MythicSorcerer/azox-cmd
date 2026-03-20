@@ -35,10 +35,10 @@ public final class Home {
 
     public void setLocation(final Location location) {
         this.worldName = location.getWorld().getName();
-        this.x = location.getX();
-        this.y = location.getY();
-        this.z = location.getZ();
-        this.yaw = location.getYaw();
-        this.pitch = location.getPitch();
+        this.x = Math.round(location.getX() * 100.0) / 100.0;
+        this.y = Math.round(location.getY() * 100.0) / 100.0;
+        this.z = Math.round(location.getZ() * 100.0) / 100.0;
+        this.yaw = (float) (Math.round(location.getYaw() * 100.0) / 100.0);
+        this.pitch = (float) (Math.round(location.getPitch() * 100.0) / 100.0);
     }
 }

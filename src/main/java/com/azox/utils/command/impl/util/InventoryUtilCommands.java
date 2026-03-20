@@ -23,7 +23,18 @@ public final class InventoryUtilCommands extends BaseCommand {
 
         switch (type.toLowerCase()) {
             case "enderchest":
-                player.openInventory(player.getEnderChest());
+                int maxPages = 1;
+                for (int i = 5; i > 1; i--) {
+                    if (player.hasPermission("azox.utils.enderchest.pages." + i)) {
+                        maxPages = i;
+                        break;
+                    }
+                }
+                if (maxPages > 1) {
+                    plugin.getGuiManager().openEnderChestPageSelector(player, maxPages);
+                } else {
+                    player.openInventory(player.getEnderChest());
+                }
                 break;
             case "anvil":
                 player.openAnvil(null, true);

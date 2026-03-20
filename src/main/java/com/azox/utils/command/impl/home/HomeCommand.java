@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,7 @@ public final class HomeCommand extends BaseCommand {
             homeName = args[0];
         }
 
-        final Optional<Home> home = plugin.getHomeManager().getHome(player.getUniqueId(), homeName);
+        final Optional<Home> home = plugin.getHomeManager().getHome(player, homeName);
         if (home.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>Home '" + homeName + "' not found!");
             return;
@@ -37,7 +36,7 @@ public final class HomeCommand extends BaseCommand {
     public List<String> complete(CommandSender sender, String[] args) {
         if (sender instanceof Player && args.length == 1) {
             final Player player = (Player) sender;
-            return plugin.getHomeManager().getHomes(player.getUniqueId()).keySet().stream()
+            return plugin.getHomeManager().getHomes(player).keySet().stream()
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }

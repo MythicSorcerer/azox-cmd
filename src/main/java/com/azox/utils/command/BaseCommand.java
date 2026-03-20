@@ -38,4 +38,12 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     public List<String> complete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
+
+    protected List<String> getVisiblePlayerNames(CommandSender sender, String partial) {
+        return org.bukkit.Bukkit.getOnlinePlayers().stream()
+                .filter(p -> !(sender instanceof Player) || plugin.getVanishManager().canSee((Player)sender, p))
+                .map(org.bukkit.entity.Player::getName)
+                .filter(name -> name.toLowerCase().startsWith(partial.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

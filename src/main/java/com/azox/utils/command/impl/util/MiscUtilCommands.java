@@ -12,7 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public final class MiscUtilCommands extends BaseCommand {
 
@@ -84,5 +86,15 @@ public final class MiscUtilCommands extends BaseCommand {
                 MessageUtil.sendMessage(pc, "<gold>You are facing: <yellow>" + dir);
                 break;
         }
+    }
+
+    @Override
+    public List<String> complete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            if (type.equalsIgnoreCase("getpos") || type.equalsIgnoreCase("whois")) {
+                return getVisiblePlayerNames(sender, args[0]);
+            }
+        }
+        return new ArrayList<>();
     }
 }

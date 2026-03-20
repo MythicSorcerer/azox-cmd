@@ -3,6 +3,8 @@ package com.azox.utils.listener;
 import com.azox.utils.AzoxUtils;
 import com.azox.utils.manager.GuiManager;
 import com.azox.utils.util.MessageUtil;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +30,12 @@ public final class PlayerListener implements Listener {
             event.joinMessage(null);
         }
         checkLobby(event.getPlayer());
+        
+        Location pendingLoc = plugin.getTeleportManager().getPendingTeleport(event.getPlayer().getUniqueId());
+        if (pendingLoc != null) {
+            event.getPlayer().teleport(pendingLoc);
+            MessageUtil.sendMessage(event.getPlayer(), "<green>You have been teleported!");
+        }
     }
 
     @EventHandler
@@ -44,7 +52,7 @@ public final class PlayerListener implements Listener {
                 meta.displayName(MessageUtil.parse("<green>" + MessageUtil.ICON_WARP + " World Selector"));
                 meta.getPersistentDataContainer().set(GuiManager.UTILITY_KEY, PersistentDataType.STRING, "world_selector_item");
                 compass.setItemMeta(meta);
-                player.getInventory().setItem(4, compass); // Middle slot
+                player.getInventory().setItem(4, compass);
             }
         }
     }
@@ -54,12 +62,16 @@ public final class PlayerListener implements Listener {
         if (plugin.getVanishManager().isVanished(event.getPlayer().getUniqueId())) {
             event.quitMessage(null);
         }
+        plugin.getPlayerDataManager().unload(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onPickup(final EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player && !plugin.getVanishManager().canPickup(event.getEntity().getUniqueId())) {
-            event.setCancelled(true);
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (plugin.getVanishManager().isVanished(player.getUniqueId()) && plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -73,8 +85,28 @@ public final class PlayerListener implements Listener {
             return;
         }
         
-        if (player.isInvulnerable() && plugin.getTeleportManager().getStorage().isGodMobsIgnore(player.getUniqueId())) {
+        if (player.isInvulnerable() && plugin.getPlayerStorage().isGodMobsIgnore(player)) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onMove(final PlayerMoveEvent event) {
+        final Player player = event.getPlayer();
+        if (plugin.getFreezeManager().isFrozen(player.getUniqueId())) {
+            event.setCancelled(true);
+            MessageUtil.sendMessage(player, "<red>You are frozen and cannot move!");
+            return;
+        }
+
+        final String jailName = plugin.getPlayerStorage().getJailName(player);
+        if (jailName != null && plugin.getPlayerStorage().isJailInescapable(player)) {
+            plugin.getJailManager().getJail(jailName).ifPresent(loc -> {
+                if (!player.getLocation().getWorld().equals(loc.getWorld()) || player.getLocation().distanceSquared(loc) > 100) {
+                    player.teleport(loc);
+                    MessageUtil.sendMessage(player, "<red>You are in an inescapable jail!");
+                }
+            });
         }
     }
 
@@ -91,6 +123,23 @@ public final class PlayerListener implements Listener {
             if ("world_selector_item".equals(type)) {
                 plugin.getGuiManager().openWorldSelectorGui(event.getPlayer());
             }
+        }
+    }
+
+    @EventHandler
+    public void onChat(final AsyncChatEvent event) {
+        final Player player = event.getPlayer();
+        String prefix = "";
+        if (player.hasPermission("azox.utils.rank.owner")) prefix = "<red>[Owner] ";
+        else if (player.hasPermission("azox.utils.rank.admin")) prefix = "<red>[Admin] ";
+        else if (player.hasPermission("azox.utils.rank.mod")) prefix = "<green>[Mod] ";
+        else if (player.hasPermission("azox.utils.rank.vip")) prefix = "<gold>[VIP] ";
+
+        if (!prefix.isEmpty()) {
+            final String finalPrefix = prefix;
+            event.renderer((source, sourceDisplayName, message, viewer) -> 
+                MessageUtil.parse(finalPrefix).append(sourceDisplayName).append(MessageUtil.parse(": ")).append(message)
+            );
         }
     }
 }

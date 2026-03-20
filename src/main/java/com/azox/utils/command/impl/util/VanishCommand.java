@@ -1,6 +1,7 @@
 package com.azox.utils.command.impl.util;
 
 import com.azox.utils.command.BaseCommand;
+import com.azox.utils.util.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,6 +30,16 @@ public final class VanishCommand extends BaseCommand {
                     return;
                 case "gui":
                     plugin.getGuiManager().openVanishGui(player);
+                    return;
+                case "status":
+                    final boolean vanished = plugin.getVanishManager().isVanished(player.getUniqueId());
+                    final int level = plugin.getVanishManager().getVanishLevel(player);
+                    MessageUtil.sendMessage(player, "<gold>Vanish Status:");
+                    MessageUtil.sendMessage(player, "<gray>Status: " + (vanished ? "<green>Vanished" : "<red>Visible"));
+                    MessageUtil.sendMessage(player, "<gray>Vanish Level: <yellow>" + level);
+                    MessageUtil.sendMessage(player, "<gray>Auto Fly: " + (plugin.getPlayerStorage().isVanishAutoFly(player) ? "<green>On" : "<red>Off"));
+                    MessageUtil.sendMessage(player, "<gray>Auto God: " + (plugin.getPlayerStorage().isVanishAutoGod(player) ? "<green>On" : "<red>Off"));
+                    MessageUtil.sendMessage(player, "<gray>Fake Msgs: " + (plugin.getPlayerStorage().isVanishFakeMessages(player) ? "<green>On" : "<red>Off"));
                     return;
             }
         }

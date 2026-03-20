@@ -6,6 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class AdminUtilCommands extends BaseCommand {
 
     private final String type;
@@ -91,5 +94,13 @@ public final class AdminUtilCommands extends BaseCommand {
                 }
                 break;
         }
+    }
+
+    @Override
+    public List<String> complete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return getVisiblePlayerNames(sender, args[0]);
+        }
+        return new ArrayList<>();
     }
 }

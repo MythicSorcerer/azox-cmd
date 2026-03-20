@@ -25,12 +25,12 @@ public final class HomesCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        if (plugin.getTeleportManager().getStorage().isGuiEnabled(player.getUniqueId()) && args.length == 0) {
+        if (plugin.getPlayerStorage().isGuiEnabled(player) && args.length == 0) {
             plugin.getGuiManager().openHomesGui(player);
             return;
         }
 
-        UUID targetUuid = player.getUniqueId();
+        OfflinePlayer target = player;
         String targetName = player.getName();
         int page = 1;
 
@@ -38,10 +38,8 @@ public final class HomesCommand extends BaseCommand {
             try {
                 page = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                // If not a number, it might be a player name (azox.utils.home.others)
                 if (player.hasPermission("azox.utils.home.others")) {
-                    final OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-                    targetUuid = target.getUniqueId();
+                    target = Bukkit.getOfflinePlayer(args[0]);
                     targetName = target.getName();
                     if (args.length > 1) {
                         try {
@@ -52,7 +50,7 @@ public final class HomesCommand extends BaseCommand {
             }
         }
 
-        final Map<String, Home> homesMap = plugin.getHomeManager().getHomes(targetUuid);
+        final Map<String, Home> homesMap = plugin.getPlayerStorage().getHomes(target);
         final List<Home> homes = new ArrayList<>(homesMap.values());
 
         if (homes.isEmpty()) {
@@ -80,7 +78,6 @@ public final class HomesCommand extends BaseCommand {
             player.sendMessage(homeComp);
         }
 
-        // Pagination buttons
         final Component pagination = Component.empty();
         if (page > 1) {
             pagination.append(Component.text(MessageUtil.ICON_PREV + " [Previous] ", NamedTextColor.AQUA)

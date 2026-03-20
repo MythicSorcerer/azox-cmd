@@ -11,7 +11,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class JailCommand extends BaseCommand {
 
@@ -48,12 +51,11 @@ public final class JailCommand extends BaseCommand {
                 MessageUtil.sendMessage(sender, "<red>Player not found!");
                 return;
             }
-            plugin.getTeleportManager().getStorage().setUnjailed(target.getUniqueId());
+            plugin.getPlayerStorage().setUnjailed(target);
             MessageUtil.sendMessage(sender, "<green>Player " + target.getName() + " unjailed!");
             return;
         }
 
-        // /jail <player> <jailname> [escapable|not] [dramatic]
         if (args.length < 2) {
             MessageUtil.sendMessage(sender, "<red>Usage: /jail <player> <jailname> [escapable|not] [dramatic]");
             return;
@@ -78,7 +80,7 @@ public final class JailCommand extends BaseCommand {
             applyDramaticJail(target, jailLoc.get(), inescapable);
         } else {
             target.teleport(jailLoc.get());
-            plugin.getTeleportManager().getStorage().setJailed(target.getUniqueId(), args[1], inescapable);
+            plugin.getPlayerStorage().setJailed(target, args[1], inescapable);
             MessageUtil.sendMessage(target, "<red>You have been jailed!");
         }
         MessageUtil.sendMessage(sender, "<green>Player " + target.getName() + " jailed in " + args[1] + " (" + (inescapable ? "inescapable" : "escapable") + ")");
@@ -98,8 +100,6 @@ public final class JailCommand extends BaseCommand {
         }
         
         target.setGlowing(true);
-        // We need a way to set glow color to red. Bukkit doesn't have a direct "setGlowColor"
-        // Usually done via Teams. Let's just stick to glowing for now or assume a helper.
         
         new BukkitRunnable() {
             @Override
@@ -108,9 +108,28 @@ public final class JailCommand extends BaseCommand {
                 target.teleport(jailLoc);
                 target.setGlowing(false);
                 target.removePotionEffect(PotionEffectType.LEVITATION);
-                plugin.getTeleportManager().getStorage().setJailed(target.getUniqueId(), "dramatic_jail", inescapable); // simplify name
+                plugin.getPlayerStorage().setJailed(target, "dramatic_jail", inescapable); 
                 MessageUtil.sendMessage(target, "<red><bold>YOU HAVE BEEN JUDGED AND JAILED!");
             }
         }.runTaskLater(plugin, 40L);
+    }
+
+    @Override
+    public List<String> complete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return getVisiblePlayerNames(sender, args[0]);
+        }
+        if (args.length == 2) {
+            return plugin.getJailManager().getJails().keySet().stream()
+                    .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        if (args.length == 3) {
+            return java.util.Arrays.asList("escapable", "not");
+        }
+        if (args.length == 4) {
+            return java.util.Arrays.asList("dramatic");
+        }
+        return new ArrayList<>();
     }
 }

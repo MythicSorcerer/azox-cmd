@@ -20,7 +20,7 @@ public final class SetHomeCommand extends BaseCommand {
             homeName = args[0];
         }
 
-        final Map<String, Home> homes = plugin.getHomeManager().getHomes(player.getUniqueId());
+        final Map<String, Home> homes = plugin.getHomeManager().getHomes(player);
         if (!homes.containsKey(homeName.toLowerCase())) {
             final int limit = plugin.getHomeManager().getHomeLimit(player);
             if (homes.size() >= limit) {

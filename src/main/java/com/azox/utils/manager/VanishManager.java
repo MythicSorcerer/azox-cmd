@@ -27,37 +27,37 @@ public final class VanishManager {
         vanishedPlayers.add(player.getUniqueId());
 
         // Apply Preferences
-        if (plugin.getTeleportManager().getStorage().isVanishPickupDisabled(player.getUniqueId())) {
+        if (plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
             noPickupPlayers.add(player.getUniqueId());
         }
 
-        if (plugin.getTeleportManager().getStorage().isVanishFakeMessages(player.getUniqueId())) {
+        if (plugin.getPlayerStorage().isVanishFakeMessages(player)) {
             fakeQuit(player);
         }
 
-        if (plugin.getTeleportManager().getStorage().isVanishAutoFly(player.getUniqueId())) {
+        if (plugin.getPlayerStorage().isVanishAutoFly(player)) {
             player.setAllowFlight(true);
             player.setFlying(true);
         }
 
-        if (plugin.getTeleportManager().getStorage().isVanishAutoGod(player.getUniqueId())) {
+        if (plugin.getPlayerStorage().isVanishAutoGod(player)) {
             player.setInvulnerable(true);
         }
 
         for (final Player other : Bukkit.getOnlinePlayers()) {
-            if (!other.hasPermission("azox.utils.vanish.see") && !other.equals(player)) {
+            if (!canSee(other, player)) {
                 other.hidePlayer(plugin, player);
             }
         }
         player.setMetadata("vanished", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
-        MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " You are now vanished!");
+        MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " You are now vanished (Level " + getVanishLevel(player) + ")!");
     }
 
     public void unvanish(final Player player) {
         vanishedPlayers.remove(player.getUniqueId());
         noPickupPlayers.remove(player.getUniqueId());
 
-        if (plugin.getTeleportManager().getStorage().isVanishFakeMessages(player.getUniqueId())) {
+        if (plugin.getPlayerStorage().isVanishFakeMessages(player)) {
             fakeJoin(player);
         }
 
@@ -68,13 +68,33 @@ public final class VanishManager {
         if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
             player.setAllowFlight(false);
             player.setFlying(false);
-            player.setInvulnerable(false); // Disable god if we enabled it? Or just safe default.
+            player.setInvulnerable(false);
         }
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " You are no longer vanished!");
     }
+    public boolean canSee(final Player viewer, final Player target) {
+        if (!isVanished(target.getUniqueId())) return true;
+        if (viewer.getUniqueId().equals(target.getUniqueId())) return true;
+        if (!viewer.hasPermission("azox.utils.vanish.see")) return false;
 
+        return getVanishLevel(viewer) >= getVanishLevel(target);
+    }
+
+    public int getVanishLevel(final Player player) {
+        for (int i = 100; i > 0; i--) {
+            if (player.hasPermission("azox.utils.vanish.level." + i)) {
+                // If it's just the OP default permission, only return 3
+                if (i > 3 && !player.isPermissionSet("azox.utils.vanish.level." + i) && player.isOp()) {
+                    continue;
+                }
+                return i;
+            }
+        }
+        return player.isOp() ? 3 : 1;
+    }
 
     public void toggleItemPickup(final Player player) {
+
         if (noPickupPlayers.contains(player.getUniqueId())) {
             noPickupPlayers.remove(player.getUniqueId());
             MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Item pickup enabled.");

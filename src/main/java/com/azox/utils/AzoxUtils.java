@@ -22,11 +22,21 @@ public final class AzoxUtils extends JavaPlugin {
     private com.azox.utils.manager.JailManager jailManager;
     @Getter
     private com.azox.utils.manager.VanishManager vanishManager;
+    @Getter
+    private com.azox.utils.manager.KitManager kitManager;
+    @Getter
+    private com.azox.utils.manager.PlayerDataManager playerDataManager;
+    @Getter
+    private com.azox.utils.manager.ParticleManager particleManager;
+    @Getter
+    private com.azox.utils.storage.PlayerStorage playerStorage;
 
     @Override
     public void onEnable() {
         instance = this;
-        
+
+        this.playerDataManager = new com.azox.utils.manager.PlayerDataManager();
+        this.playerStorage = new com.azox.utils.storage.PlayerStorage();
         this.homeManager = new com.azox.utils.manager.HomeManager();
         this.warpManager = new com.azox.utils.manager.WarpManager();
         this.teleportManager = new com.azox.utils.manager.TeleportManager();
@@ -34,6 +44,9 @@ public final class AzoxUtils extends JavaPlugin {
         this.guiManager = new com.azox.utils.manager.GuiManager();
         this.jailManager = new com.azox.utils.manager.JailManager();
         this.vanishManager = new com.azox.utils.manager.VanishManager();
+        this.kitManager = new com.azox.utils.manager.KitManager();
+        this.particleManager = new com.azox.utils.manager.ParticleManager();
+
         
         registerCommands();
         registerListeners();
@@ -62,6 +75,9 @@ public final class AzoxUtils extends JavaPlugin {
         getCommand("tpignore").setExecutor(new com.azox.utils.command.impl.teleport.TpIgnoreCommand());
         getCommand("back").setExecutor(new com.azox.utils.command.impl.teleport.BackCommand());
         getCommand("rtp").setExecutor(new com.azox.utils.command.impl.teleport.RtpCommand());
+        getCommand("tpo").setExecutor(new com.azox.utils.command.impl.teleport.TpoCommand());
+        getCommand("tpohere").setExecutor(new com.azox.utils.command.impl.teleport.TpoCommand());
+        getCommand("tpoundo").setExecutor(new com.azox.utils.command.impl.teleport.TpoCommand());
         
         // Inventory util
         getCommand("enderchest").setExecutor(new com.azox.utils.command.impl.util.InventoryUtilCommands("enderchest"));
@@ -71,7 +87,8 @@ public final class AzoxUtils extends JavaPlugin {
         getCommand("craft").setExecutor(new com.azox.utils.command.impl.util.InventoryUtilCommands("craft"));
         getCommand("grindstone").setExecutor(new com.azox.utils.command.impl.util.InventoryUtilCommands("grindstone"));
         getCommand("stonecutter").setExecutor(new com.azox.utils.command.impl.util.InventoryUtilCommands("stonecutter"));
-        getCommand("azoxgui").setExecutor(new com.azox.utils.command.impl.util.GuiCommand());
+        getCommand("utilities").setExecutor(new com.azox.utils.command.impl.util.GuiCommand());
+        getCommand("settings").setExecutor(new com.azox.utils.command.impl.util.SettingsCommand());
         
         getCommand("see").setExecutor(new com.azox.utils.command.impl.util.SeeCommand());
         getCommand("si").setExecutor(new com.azox.utils.command.impl.util.SeeCommand());
@@ -81,6 +98,13 @@ public final class AzoxUtils extends JavaPlugin {
         getCommand("setjail").setExecutor(new com.azox.utils.command.impl.util.JailCommand());
         getCommand("deljail").setExecutor(new com.azox.utils.command.impl.util.JailCommand());
         getCommand("unjail").setExecutor(new com.azox.utils.command.impl.util.JailCommand());
+        
+        getCommand("azox").setExecutor(new com.azox.utils.command.impl.util.AdminCommand());
+        getCommand("lobby").setExecutor(new com.azox.utils.command.impl.util.LobbyCommand());
+        getCommand("remove").setExecutor(new com.azox.utils.command.impl.util.RemoveCommand());
+        getCommand("createkit").setExecutor(new com.azox.utils.command.impl.util.KitCommands());
+        getCommand("kit").setExecutor(new com.azox.utils.command.impl.util.KitCommands());
+        getCommand("delkit").setExecutor(new com.azox.utils.command.impl.util.KitCommands());
         
         // Player util
         getCommand("feed").setExecutor(new com.azox.utils.command.impl.util.PlayerUtilCommands("feed"));

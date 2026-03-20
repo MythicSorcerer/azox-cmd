@@ -15,13 +15,29 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class TeleportManager {
 
-    @Getter
-    private final PlayerStorage storage;
+    private final AzoxUtils plugin = AzoxUtils.getInstance();
     private final Map<UUID, TeleportRequest> pendingRequests = new ConcurrentHashMap<>();
     private final Map<UUID, Location> lastLocations = new ConcurrentHashMap<>();
+    private final Map<UUID, Location> pendingOfflineTeleports = new ConcurrentHashMap<>(); // Target -> Dest
+    private final Map<UUID, Location> undoLocations = new ConcurrentHashMap<>(); // Target -> OldLoc
 
     public TeleportManager() {
-        this.storage = new PlayerStorage();
+    }
+
+    public void addPendingTeleport(UUID target, Location dest) {
+        pendingOfflineTeleports.put(target, dest);
+    }
+
+    public Location getPendingTeleport(UUID target) {
+        return pendingOfflineTeleports.remove(target);
+    }
+
+    public void addUndoLocation(UUID target, Location oldLoc) {
+        undoLocations.put(target, oldLoc);
+    }
+
+    public Location getUndoLocation(UUID target) {
+        return undoLocations.remove(target);
     }
 
     public void requestTeleport(final Player requester, final Player target, final boolean here) {
@@ -87,11 +103,11 @@ public final class TeleportManager {
 
     public void setLastLocation(final Player player, final Location location) {
         lastLocations.put(player.getUniqueId(), location);
-        storage.setBackLocation(player.getUniqueId(), location);
+        plugin.getPlayerStorage().setBackLocation(player, location);
     }
 
     public Optional<Location> getLastLocation(final Player player) {
         return Optional.ofNullable(lastLocations.get(player.getUniqueId()))
-                .or(() -> Optional.ofNullable(storage.getBackLocation(player.getUniqueId())));
+                .or(() -> Optional.ofNullable(plugin.getPlayerStorage().getBackLocation(player)));
     }
 }

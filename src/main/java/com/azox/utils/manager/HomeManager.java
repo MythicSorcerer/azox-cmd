@@ -2,7 +2,6 @@ package com.azox.utils.manager;
 
 import com.azox.utils.AzoxUtils;
 import com.azox.utils.model.Home;
-import com.azox.utils.storage.HomeStorage;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -12,30 +11,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class HomeManager {
 
-    @Getter
-    private final HomeStorage storage;
+    private final AzoxUtils plugin = AzoxUtils.getInstance();
     private final Map<UUID, Map<String, Home>> cachedHomes = new ConcurrentHashMap<>();
 
     public HomeManager() {
-        this.storage = new HomeStorage();
     }
 
-    public Map<String, Home> getHomes(final UUID uuid) {
-        return cachedHomes.computeIfAbsent(uuid, k -> storage.getHomes(k));
+    public Map<String, Home> getHomes(final Player player) {
+        return cachedHomes.computeIfAbsent(player.getUniqueId(), k -> plugin.getPlayerStorage().getHomes(player));
     }
 
-    public Optional<Home> getHome(final UUID uuid, final String name) {
-        return Optional.ofNullable(getHomes(uuid).get(name.toLowerCase()));
+    public Optional<Home> getHome(final Player player, final String name) {
+        return Optional.ofNullable(getHomes(player).get(name.toLowerCase()));
     }
 
     public void setHome(final Player player, final String name, final Location location) {
-        final UUID uuid = player.getUniqueId();
-        final Map<String, Home> homes = getHomes(uuid);
+        final Map<String, Home> homes = getHomes(player);
         
         final String homeName = name.toLowerCase();
         final Home home = homes.getOrDefault(homeName, new Home());
-        home.setOwnerUuid(uuid);
-        home.setName(name); // preserve casing for display if we want, but key is lower
+        home.setOwnerUuid(player.getUniqueId());
+        home.setName(name); 
         home.setLocation(location);
         if (home.getCreationDate() == 0) {
             home.setCreationDate(System.currentTimeMillis());
@@ -44,18 +40,18 @@ public final class HomeManager {
         }
         
         homes.put(homeName, home);
-        storage.saveHome(home);
+        plugin.getPlayerStorage().saveHome(player, home);
     }
 
-    public void deleteHome(final UUID uuid, final String name) {
-        final Map<String, Home> homes = getHomes(uuid);
+    public void deleteHome(final Player player, final String name) {
+        final Map<String, Home> homes = getHomes(player);
         homes.remove(name.toLowerCase());
-        storage.deleteHome(uuid, name.toLowerCase());
+        plugin.getPlayerStorage().deleteHome(player, name.toLowerCase());
     }
 
-    public void deleteAllHomes(final UUID uuid) {
-        cachedHomes.remove(uuid);
-        storage.deleteAllHomes(uuid);
+    public void deleteAllHomes(final Player player) {
+        cachedHomes.remove(player.getUniqueId());
+        plugin.getPlayerStorage().getHomes(player).keySet().forEach(name -> plugin.getPlayerStorage().deleteHome(player, name));
     }
 
     public int getHomeLimit(final Player player) {
@@ -63,8 +59,6 @@ public final class HomeManager {
             return Integer.MAX_VALUE;
         }
         
-        // This is where we hook into azox-ranks
-        // For now, let's use permissions like azox.utils.homes.5
         int limit = 4;
         for (int i = 100; i > limit; i--) {
             if (player.hasPermission("azox.utils.homes." + i)) {
@@ -75,6 +69,6 @@ public final class HomeManager {
     }
 
     public List<Home> getPublicHomes() {
-        return storage.getPublicHomes();
+        return plugin.getPlayerStorage().getPublicHomes();
     }
 }

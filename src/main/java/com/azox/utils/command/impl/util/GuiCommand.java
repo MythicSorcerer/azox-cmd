@@ -5,6 +5,10 @@ import com.azox.utils.util.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public final class GuiCommand extends BaseCommand {
 
     @Override
@@ -18,12 +22,20 @@ public final class GuiCommand extends BaseCommand {
         }
 
         if (args[0].equalsIgnoreCase("toggle")) {
-            final boolean current = plugin.getTeleportManager().getStorage().isGuiEnabled(player.getUniqueId());
+            final boolean current = plugin.getPlayerStorage().isGuiEnabled(player);
             final boolean next = !current;
-            plugin.getTeleportManager().getStorage().setGuiEnabled(player.getUniqueId(), next);
+            plugin.getPlayerStorage().setGuiEnabled(player, next);
             MessageUtil.sendMessage(player, "<green>GUI menus are now " + (next ? "<green>enabled" : "<red>disabled") + "!");
         } else {
             MessageUtil.sendMessage(player, "<red>Usage: /azoxgui [toggle]");
         }
+    }
+
+    @Override
+    public List<String> complete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("toggle");
+        }
+        return new ArrayList<>();
     }
 }

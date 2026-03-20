@@ -7,6 +7,10 @@ import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public final class GamemodeCommand extends BaseCommand {
 
     private final GameMode mode;
@@ -61,5 +65,22 @@ public final class GamemodeCommand extends BaseCommand {
             case "sp": case "spectator": case "3": return GameMode.SPECTATOR;
             default: return null;
         }
+    }
+
+    @Override
+    public List<String> complete(CommandSender sender, String[] args) {
+        if (mode == null) { // /gm <mode> [player]
+            if (args.length == 2) {
+                return getVisiblePlayerNames(sender, args[1]);
+            }
+            if (args.length == 1) {
+                return Arrays.asList("survival", "creative", "adventure", "spectator");
+            }
+        } else { // /gmc [player]
+            if (args.length == 1) {
+                return getVisiblePlayerNames(sender, args[0]);
+            }
+        }
+        return new ArrayList<>();
     }
 }

@@ -161,6 +161,9 @@ commands:
   relocatehome:
     description: Relocate a home.
     permission: azox.utils.edithome
+  remove:
+    description: Remove entities that may be causing lag.
+    permission: azox.utils.remove
   renamehome:
     description: Rename a home.
     permission: azox.utils.edithome
@@ -198,6 +201,9 @@ commands:
   setwarp:
     description: Set a warp.
     permission: azox.utils.setwarp
+  settings:
+    description: Configure personal settings.
+    permission: azox.utils.settings
   si:
     description: Quick inspect player inventory.
     permission: azox.utils.see
@@ -251,6 +257,16 @@ commands:
   tpignore:
     description: Ignore teleport requests.
     permission: azox.utils.tpignore
+  tpo:
+    description: Teleport to a player (including offline).
+    permission: azox.utils.tpo
+    aliases: [tpoffline]
+  tpohere:
+    description: Teleport a player to you (including offline).
+    permission: azox.utils.tpo
+  tpoundo:
+    description: Undo a tpohere.
+    permission: azox.utils.tpo
   tps:
     description: View server TPS and memory.
     permission: azox.utils.tps

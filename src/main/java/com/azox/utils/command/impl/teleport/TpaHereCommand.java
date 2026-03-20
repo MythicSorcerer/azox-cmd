@@ -36,7 +36,7 @@ public final class TpaHereCommand extends BaseCommand {
             return;
         }
 
-        if (plugin.getTeleportManager().getStorage().isTpIgnore(target.getUniqueId())) {
+        if (plugin.getPlayerStorage().isTpIgnore(target)) {
             MessageUtil.sendMessage(player, "<red>That player is currently ignoring tp requests!");
             return;
         }
@@ -54,10 +54,7 @@ public final class TpaHereCommand extends BaseCommand {
     @Override
     public List<String> complete(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
+            return getVisiblePlayerNames(sender, args[0]);
         }
         return new ArrayList<>();
     }
