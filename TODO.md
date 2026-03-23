@@ -1,24 +1,44 @@
-- Add loom to utilites (/utilites)
-- Clean up azox admin config and fix bugs
-    - It should only contain vanish settings and teleport menu
-    - Teleport menu (new!) once clicked should contain a list of all dimensions first
-    - Then a list of online players (playerheads, click to telport)
-    - Then offline players (heads, also click to teleport)
-    and a next page thingy
-    - admin config menu like so:
-    - V = vanish settings, T = teleport, remove the concrete in this menu
-    ---------
-    --V---T--
-    ---------
-- Fix /v tipu not working, despite toggile item pickup in vanish config menu working
-- Move gui toggle to a menu in /config whre more conifgurables can be added later
-- add a /nv alias /nvt, /nightvision, /nightvisiontoggle command
-- runs /effect give playername night_vision infinite 0 true then and again every respawn
-- Store in config so stays after re login
-- Move permission nodes for all for player use commands (i.e tpa, tpaccept, home, sethome...) to azox.user.*
-- Advanced permissions that people with some ranks can get (i.e enderchest, crafting table, etc) to azox.rank.*
-- Admin only commands to azox.admin.*
-- If not permission manager plugin allow all players all permissions under azox.user.*
-- All (all) permission to ops
-- Ranks can be implmented later
+# Development Plan
 
+## 🧭 Teleport Menu System
+- [ ] Create teleport menu with the following structure:
+  - [ ] List of all dimensions first
+  - [ ] List of online players (playerheads, click to teleport)
+  - [ ] Offline players (heads, also click to teleport)
+  - [ ] Next page navigation
+
+## 🛡️ Admin Config Menu
+- [ ] Clean up azox admin config to only contain:
+  - [ ] Vanish settings
+  - [ ] Teleport menu access
+- [ ] Redesign admin config menu layout:
+  - [ ] Remove concrete blocks from menu
+  - [ ] Layout: `--V---T--` (V = vanish settings, T = teleport)
+
+## 🐛 Bug Fixes
+- [ ] Fix `/v tipu` not working (item pickup toggle in vanish config menu works, but command doesnERe)
+
+## ⚙️ Configuration System
+- [ ] Move GUI toggle to `/config` menu where more configurables can be added later
+
+## 🌙 Night Vision System
+- [ ] Add `/nv` command with aliases: `/nvt`, `/nightvision`, `/nightvisiontoggle`
+- [ ] Command runs: `/effect give playername night_vision infinite 0 true`
+- [ ] Re-apply effect on player respawn
+- [ ] Store preference in config so it persists after re-login
+
+## 🔧 Utilities
+- [ ] Add loom to utilities menu
+
+## 👑 Permission System
+- [ ] Move permission nodes for player-use commands to `azox.user.*`:
+  - [ ] `tpa`, `tpaccept`, `home`, `sethome`, etc.
+- [ ] Move advanced permissions to `azox.rank.*`:
+  - [ ] `enderchest`, `crafting table`, etc.
+- [ ] Move admin-only commands to `azox.admin.*`
+- [ ] If no permission manager plugin, allow all players all permissions under `azox.user.*`
+- [ ] Grant all permissions to ops
+- [ ] Ranks can be implemented later
+
+## 📝 Documentation
+- [ ] Update `README.md` with new features
