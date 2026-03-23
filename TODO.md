@@ -1,44 +1,24 @@
-# Development Plan
+- Add loom to utilites (/utilites)
+- Clean up azox admin config and fix bugs
+    - It should only contain vanish settings and teleport menu
+    - Teleport menu (new!) once clicked should contain a list of all dimensions first
+    - Then a list of online players (playerheads, click to telport)
+    - Then offline players (heads, also click to teleport)
+    and a next page thingy
+    - admin config menu like so:
+    - V = vanish settings, T = teleport, remove the concrete in this menu
+    ---------
+    --V---T--
+    ---------
+- Fix /v tipu not working, despite toggile item pickup in vanish config menu working
+- Move gui toggle to a menu in /config whre more conifgurables can be added later
+- add a /nv alias /nvt, /nightvision, /nightvisiontoggle command
+- runs /effect give playername night_vision infinite 0 true then and again every respawn
+- Store in config so stays after re login
+- Move permission nodes for all for player use commands (i.e tpa, tpaccept, home, sethome...) to azox.user.*
+- Advanced permissions that people with some ranks can get (i.e enderchest, crafting table, etc) to azox.rank.*
+- Admin only commands to azox.admin.*
+- If not permission manager plugin allow all players all permissions under azox.user.*
+- All (all) permission to ops
+- Ranks can be implmented later
 
-## 1. Storage & Configuration
-- [ ] Update `PlayerStorage` to handle per-admin preferences:
-    - [ ] `vanish_fake_messages` (default: true)
-    - [ ] `vanish_auto_fly` (default: true)
-    - [ ] `vanish_auto_god` (default: true)
-    - [ ] `vanish_no_pickup` (default: true)
-- [ ] Update `PlayerStorage` for God Mode mob targeting preference (global or per player? User said "configurable if mobs target player", implies setting).
-
-## 2. Command Refactoring & Updates (`plugin.yml`)
-- [ ] Rename `/azoxgui` to `/utilities`.
-- [ ] Add `/azox` or `/azoxadmin` command for the new Admin GUI.
-- [ ] Add aliases for God Mode: `/invuln`, `/invulnerable`, `/godmode`.
-- [ ] Add `/lobby` command.
-- [ ] Ensure `/fly` works in survival (verify logic).
-
-## 3. Vanish System Overhaul
-- [ ] Update `VanishManager` to use `PlayerStorage` preferences.
-- [ ] Implement Fake Join/Leave logic on vanish toggle based on prefs.
-- [ ] Implement Auto Fly/God logic on vanish toggle.
-- [ ] Create `/vanish gui` to toggle these settings (using Concrete blocks for On/Off visualization).
-
-## 4. God Mode Enhancements
-- [ ] Update `PlayerListener` to cancel `EntityTargetEvent` if target is in God Mode.
-
-## 5. GUI Systems
-- [ ] **Utilities GUI:** Update to only show items the player has permission for.
-- [ ] **Admin Configuration GUI:** New GUI to manage personal admin settings (Vanish prefs, GUI mode toggle).
-- [ ] **Homes GUI:** Ensure it visualizes correctly (user mentioned concrete/glass panes, likely for status indicators or styling).
-
-## 6. Lobby & World System
-- [ ] Implement `/lobby` command (teleport to "world", "lobby", or "hub").
-- [ ] **Compass Item:**
-    - [ ] Give on Join/WorldChange if in a lobby world.
-    - [ ] Right-click opens World Selector GUI.
-- [ ] **World Selector GUI:**
-    - [ ] Survival (Group `world`, `nether`, `end`).
-    - [ ] Lobby.
-    - [ ] Dynamic list of other worlds.
-
-## 7. Final Polish
-- [ ] Update `README.md`.
-- [ ] Verify compilation (`mvn package`).
