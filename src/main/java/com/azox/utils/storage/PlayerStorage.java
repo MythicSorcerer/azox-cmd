@@ -337,6 +337,10 @@ public final class PlayerStorage {
     }
 
     public void setJailed(final OfflinePlayer player, final String name, final boolean inescapable) {
+        setJailed(player, name, inescapable, null);
+    }
+
+    public void setJailed(final OfflinePlayer player, final String name, final boolean inescapable, final Long durationMillis) {
         if (player == null) {
             return;
         }
@@ -346,6 +350,11 @@ public final class PlayerStorage {
         }
         config.set("jail.name", name);
         config.set("jail.inescapable", inescapable);
+        if (durationMillis != null) {
+            config.set("jail.releaseTime", System.currentTimeMillis() + durationMillis);
+        } else {
+            config.set("jail.releaseTime", null);
+        }
         save(player);
     }
 
@@ -375,6 +384,25 @@ public final class PlayerStorage {
         }
         final FileConfiguration config = getConfig(player);
         return config != null && config.getBoolean("jail.inescapable", false);
+    }
+
+    public Long getJailReleaseTime(final OfflinePlayer player) {
+        if (player == null) {
+            return null;
+        }
+        final FileConfiguration config = getConfig(player);
+        if (config == null) {
+            return null;
+        }
+        return config.getLong("jail.releaseTime", -1L) > 0 ? config.getLong("jail.releaseTime") : null;
+    }
+
+    public boolean shouldReleaseFromJail(final OfflinePlayer player) {
+        final Long releaseTime = getJailReleaseTime(player);
+        if (releaseTime == null) {
+            return false;
+        }
+        return System.currentTimeMillis() >= releaseTime;
     }
 
     public void saveEnderChestPage(final OfflinePlayer player, final int page, final ItemStack[] items) {

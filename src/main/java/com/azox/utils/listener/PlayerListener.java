@@ -4,6 +4,7 @@ import com.azox.utils.AzoxUtils;
 import com.azox.utils.manager.GuiManager;
 import com.azox.utils.util.MessageUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,20 +27,59 @@ public final class PlayerListener implements Listener {
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent event) {
-        plugin.getVanishManager().handleJoin(event.getPlayer());
-        if (plugin.getVanishManager().isVanished(event.getPlayer().getUniqueId())) {
+        final Player player = event.getPlayer();
+        plugin.getVanishManager().handleJoin(player);
+        if (plugin.getVanishManager().isVanished(player.getUniqueId())) {
             event.joinMessage(null);
         }
-        checkLobby(event.getPlayer());
+        checkLobby(player);
 
-        if (plugin.getPlayerStorage().isNightVisionEnabled(event.getPlayer())) {
-            com.azox.utils.command.impl.util.NightVisionCommand.applyNightVision(event.getPlayer());
+        if (plugin.getPlayerStorage().isNightVisionEnabled(player)) {
+            com.azox.utils.command.impl.util.NightVisionCommand.applyNightVision(player);
         }
 
-        Location pendingLoc = plugin.getTeleportManager().getPendingTeleport(event.getPlayer().getUniqueId());
+        // If no permission manager is present, grant azox.user.* permissions
+        if (!hasPermissionManager()) {
+            grantDefaultUserPermissions(player);
+        }
+
+        // Check for jail release
+        if (plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            plugin.getPlayerStorage().setUnjailed(player);
+            MessageUtil.sendMessage(player, "<green>Your jail sentence has expired. You are now free!");
+        }
+
+        // Re-apply jail if still sentenced
+        final String jailName = plugin.getPlayerStorage().getJailName(player);
+        if (jailName != null && !plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            plugin.getJailManager().getJail(jailName).ifPresent(player::teleport);
+            if (plugin.getPlayerStorage().isJailInescapable(player)) {
+                player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
+                player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 254, false, false));
+                player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.MINING_FATIGUE, Integer.MAX_VALUE, 254, false, false));
+            }
+        }
+
+        final Location pendingLoc = plugin.getTeleportManager().getPendingTeleport(player.getUniqueId());
         if (pendingLoc != null) {
-            event.getPlayer().teleport(pendingLoc);
-            MessageUtil.sendMessage(event.getPlayer(), "<green>You have been teleported!");
+            player.teleport(pendingLoc);
+            MessageUtil.sendMessage(player, "<green>You have been teleported!");
+        }
+    }
+
+    private boolean hasPermissionManager() {
+        return Bukkit.getPluginManager().isPluginEnabled("LuckPerms") ||
+               Bukkit.getPluginManager().isPluginEnabled("PermissionsEx") ||
+               Bukkit.getPluginManager().isPluginEnabled("GroupManager") ||
+               Bukkit.getPluginManager().isPluginEnabled("UltraPermissions") ||
+               Bukkit.getPluginManager().isPluginEnabled("zPermissions");
+    }
+
+    private void grantDefaultUserPermissions(final Player player) {
+        if (!player.hasPermission("azox.user.granted")) {
+            final org.bukkit.permissions.PermissionAttachment attachment = player.addAttachment(plugin);
+            attachment.setPermission("azox.user.*", true);
+            attachment.setPermission("azox.user.granted", true);
         }
     }
 
@@ -112,13 +152,25 @@ public final class PlayerListener implements Listener {
         }
 
         final String jailName = plugin.getPlayerStorage().getJailName(player);
-        if (jailName != null && plugin.getPlayerStorage().isJailInescapable(player)) {
-            plugin.getJailManager().getJail(jailName).ifPresent(loc -> {
-                if (!player.getLocation().getWorld().equals(loc.getWorld()) || player.getLocation().distanceSquared(loc) > 100) {
-                    player.teleport(loc);
-                    MessageUtil.sendMessage(player, "<red>You are in an inescapable jail!");
+        if (jailName != null && !plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            if (plugin.getPlayerStorage().isJailInescapable(player)) {
+                plugin.getJailManager().getJail(jailName).ifPresent(loc -> {
+                    if (!player.getLocation().getWorld().equals(loc.getWorld()) || player.getLocation().distanceSquared(loc) > 100) {
+                        player.teleport(loc);
+                        MessageUtil.sendMessage(player, "<red>You are in an inescapable jail!");
+                    }
+                });
+            }
+        } else if (jailName != null && plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            // Player has escaped after time expired
+            plugin.getPlayerStorage().setUnjailed(player);
+            MessageUtil.sendMessage(player, "<green>Your jail sentence has expired. You are now free!");
+            for (final Player admin : Bukkit.getOnlinePlayers()) {
+                if (admin.hasPermission("azox.admin.*") || admin.isOp()) {
+                    MessageUtil.sendMessage(admin, "<yellow>" + player.getName() + " was released from jail (sentence expired).");
                 }
-            });
+            }
+            plugin.getLogger().info("Player " + player.getName() + " was released from jail (sentence expired).");
         }
     }
 

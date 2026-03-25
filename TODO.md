@@ -2,23 +2,29 @@
 
 ## ✅ Completed
 
-### Teleport Menu System
-- [x] Create teleport menu with dimensions, online/offline players, and pagination
-- [x] Add back button navigation
+### Jail System Improvements
+- [x] Update jail messages:
+  - [x] Change dramatic jail message to "You have been sentenced to solitary confinement"
+  - [x] Make "Player has been jailed/solitary confinement" message global
+  - [x] Add escape/release message visible only to admins and in logs
+- [x] Add time component to `/jail` command:
+  - [x] Default: forever ("indefinitely")
+  - [x] Timed: "28d12h32m1s" → "You will be released in 28.5 days"
+  - [x] Supports formats: `1d`, `12h`, `30m`, `45s` or any combination
+- [x] Inescapable jail enhancements:
+  - [x] Apply Blindness I (infinite) while in jail
+  - [x] Apply Slowness XXV (infinite) while in jail
+  - [x] Apply Mining Fatigue XXV (infinite) while in jail
+  - [x] Teleport back if they leave the jail area
+  - [x] Auto-release when time expires
 
-### Admin Configuration
-- [x] Clean up admin config menu (Vanish Settings + Teleport Menu only)
-- [x] Create `/config` command for general settings
-
-### Night Vision
-- [x] Add `/nv` command with aliases
-- [x] Persist night vision across sessions and respawns
-
-### Utilities
-- [x] Add loom to utilities menu
+### Bug Fixes
+- [x] Fix Vanish Settings back button (now returns to Admin menu)
+- [x] Move vanish config out of `/config` menu (accessible only via Admin menu)
 
 ### Permissions
-- [x] Structure permissions as `azox.user.*`, `azox.rank.*`, `azox.admin.*`
+- [x] If no permission manager plugin, grant all players `azox.user.*` by default
+- [x] Detects: LuckPerms, PermissionsEx, GroupManager, UltraPermissions, zPermissions
 
 ### Code Quality
 - [x] Add null safety throughout
@@ -28,28 +34,10 @@
 
 ---
 
-## 📋 Pending Tasks
+## 📋 Remaining Tasks
 
-### Jail System Improvements
-- [ ] Update jail messages:
-  - [ ] Change dramatic jail message to "You have been sentenced to solitary confinement"
-  - [ ] Make "Player has been jailed/solitary confinement" message global
-  - [ ] Add escape message visible only to admins and in logs
-- [ ] Add time component to `/jail` command:
-  - [ ] Default: forever ("You have been jailed indefinitely")
-  - [ ] Timed: "28d12h32m1s" → "You will be released in 28.5 days, unless you escape before then"
-- [ ] Inescapable jail enhancements:
-  - [ ] Apply Blindness I (infinite) while in jail
-  - [ ] Apply Slowness XXV (infinite) while in jail
-  - [ ] Apply Mining Fatigue XXV (infinite) while in jail
-  - [ ] Teleport back if they leave the jail area
-
-### Bug Fixes
-- [ ] Fix Vanish Settings back button (currently doesn't work)
-- [ ] Move vanish config out of `/config` menu (should be separate)
-
-### Permissions
-- [ ] If no permission manager plugin, grant all players `azox.user.*` by default
+### Documentation
+- [ ] Update `README.md` with new features
 
 ---
 

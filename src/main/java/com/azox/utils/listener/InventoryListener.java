@@ -91,26 +91,27 @@ public final class InventoryListener implements Listener {
         } else if (plainTitle.contains("Configuration")) {
             event.setCancelled(true);
             final ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem == null || clickedItem.getItemMeta() == null) return;
+            if (clickedItem == null || clickedItem.getItemMeta() == null) {
+                return;
+            }
 
             final String setting = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.ADMIN_KEY, PersistentDataType.STRING);
-            if (setting == null) return;
+            if (setting == null) {
+                return;
+            }
 
             final Player player = (Player) event.getWhoClicked();
 
             switch (setting) {
                 case "toggle_gui":
-                    boolean currentGui = plugin.getPlayerStorage().isGuiEnabled(player);
+                    final boolean currentGui = plugin.getPlayerStorage().isGuiEnabled(player);
                     plugin.getPlayerStorage().setGuiEnabled(player, !currentGui);
                     plugin.getGuiManager().openConfigGui(player);
                     break;
                 case "toggle_particles":
-                    boolean currentParticles = plugin.getPlayerStorage().areParticlesEnabled(player);
+                    final boolean currentParticles = plugin.getPlayerStorage().areParticlesEnabled(player);
                     plugin.getPlayerStorage().setParticlesEnabled(player, !currentParticles);
                     plugin.getGuiManager().openConfigGui(player);
-                    break;
-                case "vanish_settings":
-                    plugin.getGuiManager().openVanishGui(player);
                     break;
             }
         } else if (plainTitle.contains("Vanish Settings")) {
@@ -186,7 +187,43 @@ public final class InventoryListener implements Listener {
                 player.performCommand("tp " + world);
             } else if (action.equals("back_to:admin")) {
                 plugin.getGuiManager().openAdminGui(player);
+            } else if (action.equals("back_to:config")) {
+                plugin.getGuiManager().openConfigGui(player);
             }
+        } else if (plainTitle.contains("Vanish Settings")) {
+            event.setCancelled(true);
+            final ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem == null || clickedItem.getItemMeta() == null) {
+                return;
+            }
+
+            final String setting = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.ADMIN_KEY, PersistentDataType.STRING);
+            if (setting == null) {
+                return;
+            }
+
+            final Player player = (Player) event.getWhoClicked();
+
+            if (setting.equals("back_to:admin")) {
+                plugin.getGuiManager().openAdminGui(player);
+                return;
+            }
+
+            switch (setting) {
+                case "v_fake_msg":
+                    plugin.getPlayerStorage().setVanishFakeMessages(player, !plugin.getPlayerStorage().isVanishFakeMessages(player));
+                    break;
+                case "v_auto_fly":
+                    plugin.getPlayerStorage().setVanishAutoFly(player, !plugin.getPlayerStorage().isVanishAutoFly(player));
+                    break;
+                case "v_auto_god":
+                    plugin.getPlayerStorage().setVanishAutoGod(player, !plugin.getPlayerStorage().isVanishAutoGod(player));
+                    break;
+                case "v_pickup":
+                    plugin.getPlayerStorage().setVanishPickupDisabled(player, !plugin.getPlayerStorage().isVanishPickupDisabled(player));
+                    break;
+            }
+            plugin.getGuiManager().openVanishGui(player);
         }
     }
 

@@ -202,7 +202,7 @@ public final class GuiManager {
         inventory.setItem(16, createAdminItem(Material.HOPPER, "<yellow>Item Pickup", "v_pickup", pickup));
         inventory.setItem(25, new ItemStack(pickup ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
 
-        inventory.setItem(22, createBackButton("config"));
+        inventory.setItem(22, createBackButton("admin"));
 
         player.openInventory(inventory);
     }
@@ -220,8 +220,6 @@ public final class GuiManager {
         final boolean particles = plugin.getPlayerStorage().areParticlesEnabled(player);
         inventory.setItem(12, createAdminItem(Material.FIREWORK_STAR, "<yellow>Particles", "toggle_particles", particles));
         inventory.setItem(13, new ItemStack(particles ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
-
-        inventory.setItem(15, createAdminItem(Material.ENDER_EYE, "<aqua>Vanish Settings", "vanish_settings", true));
 
         player.openInventory(inventory);
     }
