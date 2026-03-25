@@ -1,53 +1,14 @@
-# Development Plan
-
-## ✅ Completed Tasks
-
-### 🧭 Teleport Menu System
-- [x] Create teleport menu with the following structure:
-  - [x] List of all dimensions first
-  - [x] List of online players (playerheads, click to teleport)
-  - [x] Offline players (heads, also click to teleport)
-  - [x] Next page navigation
-
-### 🛡️ Admin Config Menu
-- [x] Clean up azox admin config to only contain:
-  - [x] Vanish settings
-  - [x] Teleport menu access
-- [x] Redesign admin config menu layout:
-  - [x] Remove concrete blocks from menu
-  - [x] Layout: `--V---T--` (V = vanish settings, T = teleport)
-
-### 🐛 Bug Fixes
-- [x] Fix `/v tipu` not working (item pickup toggle in vanish config menu works, but command didn't persist to config)
-
-### ⚙️ Configuration System
-- [x] Move GUI toggle to `/config` menu where more configurables can be added later
-- [x] Added `/config` command with aliases `/cfg`, `/configuration`
-- [x] Config GUI includes: GUI Mode, Particles, Vanish Settings
-
-### 🌙 Night Vision System
-- [x] Add `/nv` command with aliases: `/nvt`, `/nightvision`, `/nightvisiontoggle`
-- [x] Command applies night vision effect (infinite, amplifier 0, hidden particles)
-- [x] Re-apply effect on player respawn
-- [x] Store preference in config so it persists after re-login
-
-### 🔧 Utilities
-- [x] Add loom to utilities menu
-- [x] Added `/loom` command
-
-### 👑 Permission System
-- [x] Move permission nodes for player-use commands to `azox.user.*`
-- [x] Move advanced permissions to `azox.rank.*` (enderchest pages, vanish levels, particles, ranks)
-- [x] Move admin-only commands to `azox.admin.*`
-- [x] Set `azox.admin.*` default to op
-
----
-
-## 📋 Remaining Tasks
-
-### 📝 Documentation
-- [ ] Update `README.md` with new features
-
-### 🔮 Future Enhancements
-- [ ] Implement ranks system
-- [ ] Add more configurables to `/config` menu
+ - Make dramatic jail message less dramatic (should be same message as normal jail)          │
+  │    53 - - actually no make it "You have been sentenced to solitary confinement"                     │
+  │    54 - - Inescapable jail should give blindness 1 and darkness 1 infinite duration while in jail,  │
+  │       slowness 255, mining fatuige 255 as well on top of telporting back if they leave              │
+  │    55 - - also add a time component to /jail default forever (you have been jailed indefiniately)   │
+  │       but can also be like 28d12h32m1s => you have been jailed\nYou will be released in 28.5 days,  │
+  │       unless you escape before then.                                                                │
+  │    56 - - Player has been jailed/solitary confinment message should be global                       │
+  │    57 - - Escape message -> excaped player, admin, logs not to other players                        │
+  │    58 -                                                                                             │
+  │    59 - - Teleport menu back works, vanish settings back does not                                   │
+  │    60 - - vanish config menu should not be in /config                                               │
+  │    61 - - If there is no permission manager all players should have default acess to azox.user.*    │
+  │    62 - -

@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class WarpStorage extends BaseStorage {
 
@@ -13,6 +14,9 @@ public final class WarpStorage extends BaseStorage {
     }
 
     public void saveWarp(final Warp warp) {
+        if (warp == null || warp.getName() == null) {
+            return;
+        }
         final String path = warp.getName();
         this.config.set(path + ".world", warp.getWorldName());
         this.config.set(path + ".x", warp.getX());
@@ -25,6 +29,9 @@ public final class WarpStorage extends BaseStorage {
     }
 
     public void deleteWarp(final String name) {
+        if (name == null) {
+            return;
+        }
         this.config.set(name, null);
         this.save();
     }
@@ -33,7 +40,9 @@ public final class WarpStorage extends BaseStorage {
         final Map<String, Warp> warps = new HashMap<>();
         for (final String key : this.config.getKeys(false)) {
             final ConfigurationSection section = this.config.getConfigurationSection(key);
-            if (section == null) continue;
+            if (section == null) {
+                continue;
+            }
 
             final Warp warp = new Warp(
                     key,

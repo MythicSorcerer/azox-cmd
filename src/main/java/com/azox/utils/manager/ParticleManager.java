@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class ParticleManager {
@@ -19,24 +20,67 @@ public final class ParticleManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!plugin.getPlayerStorage().areParticlesEnabled(player)) continue;
-                    
-                    Particle particle = getPlayerParticle(player);
+                for (final Player player : Bukkit.getOnlinePlayers()) {
+                    if (player == null) {
+                        continue;
+                    }
+                    if (!plugin.getPlayerStorage().areParticlesEnabled(player)) {
+                        continue;
+                    }
+
+                    final Particle particle = getPlayerParticle(player);
                     if (particle != null) {
                         player.getWorld().spawnParticle(particle, player.getLocation().add(0, 3.2, 0), 1, 0.1, 0.1, 0.1, 0.05);
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 5L);
+        }.runTaskTimer(AzoxUtils.getInstance(), 0L, 20L);
     }
 
-    private Particle getPlayerParticle(Player player) {
-        for (Particle p : Particle.values()) {
-            if (player.hasPermission("azox.utils.particles." + p.name().toLowerCase())) {
-                return p;
+    public void setParticle(final UUID uuid, final Particle particle) {
+        if (uuid == null) {
+            return;
+        }
+        if (particle == null) {
+            activeParticles.remove(uuid);
+        } else {
+            activeParticles.put(uuid, particle);
+        }
+    }
+
+    public Particle getPlayerParticle(final Player player) {
+        if (player == null) {
+            return null;
+        }
+        for (int i = 100; i > 0; i--) {
+            if (player.hasPermission("azox.utils.particles." + i)) {
+                return getParticleForLevel(i);
             }
         }
         return null;
+    }
+
+    private Particle getParticleForLevel(final int level) {
+        if (level >= 100) {
+            return Particle.DRAGON_BREATH;
+        } else if (level >= 75) {
+            return Particle.END_ROD;
+        } else if (level >= 50) {
+            return Particle.FLAME;
+        } else if (level >= 25) {
+            return Particle.HEART;
+        }
+        return Particle.SMOKE;
+    }
+
+    public boolean hasParticle(final UUID uuid) {
+        return uuid != null && activeParticles.containsKey(uuid);
+    }
+
+    public void removeParticle(final UUID uuid) {
+        if (uuid == null) {
+            return;
+        }
+        activeParticles.remove(uuid);
     }
 }

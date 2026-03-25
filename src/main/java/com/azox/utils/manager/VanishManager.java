@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,6 +17,9 @@ public final class VanishManager {
     private final AzoxUtils plugin = AzoxUtils.getInstance();
 
     public void toggleVanish(final Player player) {
+        if (player == null) {
+            return;
+        }
         if (vanishedPlayers.contains(player.getUniqueId())) {
             unvanish(player);
         } else {
@@ -24,9 +28,11 @@ public final class VanishManager {
     }
 
     public void vanish(final Player player) {
+        if (player == null) {
+            return;
+        }
         vanishedPlayers.add(player.getUniqueId());
 
-        // Apply Preferences
         if (plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
             noPickupPlayers.add(player.getUniqueId());
         }
@@ -54,6 +60,9 @@ public final class VanishManager {
     }
 
     public void unvanish(final Player player) {
+        if (player == null) {
+            return;
+        }
         vanishedPlayers.remove(player.getUniqueId());
         noPickupPlayers.remove(player.getUniqueId());
 
@@ -72,18 +81,30 @@ public final class VanishManager {
         }
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " You are no longer vanished!");
     }
+
     public boolean canSee(final Player viewer, final Player target) {
-        if (!isVanished(target.getUniqueId())) return true;
-        if (viewer.getUniqueId().equals(target.getUniqueId())) return true;
-        if (!viewer.hasPermission("azox.utils.vanish.see")) return false;
+        if (viewer == null || target == null) {
+            return true;
+        }
+        if (!isVanished(target.getUniqueId())) {
+            return true;
+        }
+        if (viewer.getUniqueId().equals(target.getUniqueId())) {
+            return true;
+        }
+        if (!viewer.hasPermission("azox.utils.vanish.see")) {
+            return false;
+        }
 
         return getVanishLevel(viewer) >= getVanishLevel(target);
     }
 
     public int getVanishLevel(final Player player) {
+        if (player == null) {
+            return 1;
+        }
         for (int i = 100; i > 0; i--) {
             if (player.hasPermission("azox.utils.vanish.level." + i)) {
-                // If it's just the OP default permission, only return 3
                 if (i > 3 && !player.isPermissionSet("azox.utils.vanish.level." + i) && player.isOp()) {
                     continue;
                 }
@@ -94,6 +115,9 @@ public final class VanishManager {
     }
 
     public void toggleItemPickup(final Player player) {
+        if (player == null) {
+            return;
+        }
         final boolean currentlyDisabled = plugin.getPlayerStorage().isVanishPickupDisabled(player);
         plugin.getPlayerStorage().setVanishPickupDisabled(player, !currentlyDisabled);
 
@@ -107,22 +131,31 @@ public final class VanishManager {
     }
 
     public boolean canPickup(final UUID uuid) {
-        return !noPickupPlayers.contains(uuid);
+        return uuid != null && !noPickupPlayers.contains(uuid);
     }
 
     public void fakeJoin(final Player player) {
+        if (player == null) {
+            return;
+        }
         Bukkit.broadcast(MessageUtil.parse("<yellow>" + player.getName() + " joined the game"));
     }
 
     public void fakeQuit(final Player player) {
+        if (player == null) {
+            return;
+        }
         Bukkit.broadcast(MessageUtil.parse("<yellow>" + player.getName() + " left the game"));
     }
 
     public boolean isVanished(final UUID uuid) {
-        return vanishedPlayers.contains(uuid);
+        return uuid != null && vanishedPlayers.contains(uuid);
     }
 
     public void handleJoin(final Player joiningPlayer) {
+        if (joiningPlayer == null) {
+            return;
+        }
         for (final UUID uuid : vanishedPlayers) {
             final Player vanished = Bukkit.getPlayer(uuid);
             if (vanished != null && !joiningPlayer.hasPermission("azox.utils.vanish.see")) {

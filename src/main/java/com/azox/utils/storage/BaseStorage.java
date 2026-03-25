@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public abstract class BaseStorage {
 
@@ -13,15 +14,20 @@ public abstract class BaseStorage {
     protected final File file;
     protected FileConfiguration config;
 
-    public BaseStorage(final String fileName) {
-        this.fileName = fileName;
-        this.file = new File(AzoxUtils.getInstance().getDataFolder(), fileName);
+    protected BaseStorage(final String fileName) {
+        this.fileName = Objects.requireNonNull(fileName, "File name cannot be null");
+        final AzoxUtils plugin = AzoxUtils.getInstance();
+        this.file = new File(plugin.getDataFolder(), fileName);
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
+            final File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
             try {
                 file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (final IOException exception) {
+                plugin.getLogger().severe("Failed to create file: " + fileName);
+                exception.printStackTrace();
             }
         }
         this.config = YamlConfiguration.loadConfiguration(file);
@@ -30,8 +36,9 @@ public abstract class BaseStorage {
     public void save() {
         try {
             this.config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException exception) {
+            AzoxUtils.getInstance().getLogger().severe("Failed to save file: " + fileName);
+            exception.printStackTrace();
         }
     }
 

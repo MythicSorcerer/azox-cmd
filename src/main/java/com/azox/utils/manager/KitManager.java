@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,21 +27,33 @@ public final class KitManager {
     }
 
     public Optional<Kit> getKit(final String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(cachedKits.get(name.toLowerCase()));
     }
 
     public void createKit(final String name, final ItemStack[] contents, final long cooldown) {
+        if (name == null || contents == null) {
+            return;
+        }
         final Kit kit = new Kit(name.toLowerCase(), contents, cooldown);
         cachedKits.put(name.toLowerCase(), kit);
         storage.saveKit(kit);
     }
 
     public void deleteKit(final String name) {
+        if (name == null) {
+            return;
+        }
         cachedKits.remove(name.toLowerCase());
         storage.deleteKit(name);
     }
 
     public void giveKit(final Player player, final Kit kit) {
+        if (player == null || kit == null) {
+            return;
+        }
         if (!player.hasPermission("azox.utils.kit." + kit.getName()) && !player.hasPermission("azox.utils.kit.*")) {
             MessageUtil.sendMessage(player, "<red>" + MessageUtil.ICON_ERROR + " You don't have permission for this kit!");
             return;
@@ -62,7 +75,7 @@ public final class KitManager {
                 player.getInventory().addItem(item.clone());
             }
         }
-        
+
         playerCooldowns.put(kit.getName(), now);
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Received kit " + kit.getName() + "!");
     }

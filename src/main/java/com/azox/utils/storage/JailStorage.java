@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public final class JailStorage extends BaseStorage {
 
@@ -15,6 +16,9 @@ public final class JailStorage extends BaseStorage {
     }
 
     public void saveJail(final String name, final Location location) {
+        if (name == null || location == null || location.getWorld() == null) {
+            return;
+        }
         final String path = name.toLowerCase();
         this.config.set(path + ".world", location.getWorld().getName());
         this.config.set(path + ".x", location.getX());
@@ -26,6 +30,9 @@ public final class JailStorage extends BaseStorage {
     }
 
     public void deleteJail(final String name) {
+        if (name == null) {
+            return;
+        }
         this.config.set(name.toLowerCase(), null);
         this.save();
     }
@@ -34,12 +41,20 @@ public final class JailStorage extends BaseStorage {
         final Map<String, Location> jails = new HashMap<>();
         for (final String key : this.config.getKeys(false)) {
             final ConfigurationSection section = this.config.getConfigurationSection(key);
-            if (section == null) continue;
+            if (section == null) {
+                continue;
+            }
 
-            final World world = Bukkit.getWorld(section.getString("world", ""));
-            if (world == null) continue;
+            final String worldName = section.getString("world", "");
+            if (worldName == null || worldName.isEmpty()) {
+                continue;
+            }
+            final World world = Bukkit.getWorld(worldName);
+            if (world == null) {
+                continue;
+            }
 
-            final Location loc = new Location(
+            final Location location = new Location(
                     world,
                     section.getDouble("x"),
                     section.getDouble("y"),
@@ -47,7 +62,7 @@ public final class JailStorage extends BaseStorage {
                     (float) section.getDouble("yaw"),
                     (float) section.getDouble("pitch")
             );
-            jails.put(key, loc);
+            jails.put(key, location);
         }
         return jails;
     }
