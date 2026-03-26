@@ -26,7 +26,6 @@
 
 ### Configuration
 - [x] Add `/azox reload` command for config reloading (warps, jails, kits, homes)
-- [x] Convert to Paper plugin format (`paper-plugin.yml`)
 - [x] Add Folia support flag
 
 ### Code Quality
@@ -38,6 +37,14 @@
 ### Documentation
 - [x] Update `README.md` with new features
 - [x] Add development workflow section with Docker and remote debug setup
+
+### GUI Improvements
+- [x] Fix Vanish menu back button
+- [x] Remove status indicators from Teleport menu (action buttons, not toggles)
+- [x] Place concrete status directly below toggle icons with gaps between options
+- [x] Use 6-row (54 slot) menus for better spacing
+- [x] Fix Teleport menu world button clicks (WORLD_KEY handling)
+- [x] Move Admin Configuration items to middle row (row 3)
 
 ---
 

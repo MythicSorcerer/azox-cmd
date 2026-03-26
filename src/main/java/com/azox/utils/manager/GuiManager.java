@@ -1,6 +1,7 @@
 package com.azox.utils.manager;
 
 import com.azox.utils.AzoxUtils;
+import com.azox.utils.model.Home;
 import com.azox.utils.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -171,10 +172,12 @@ public final class GuiManager {
         if (player == null) {
             return;
         }
-        final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<red>" + MessageUtil.ICON_STAR + " Admin Configuration"));
+        // Use 54-slot inventory with items on middle row (row 3, slots 18-26)
+        final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<red>" + MessageUtil.ICON_STAR + " Admin Configuration"));
 
-        inventory.setItem(2, createAdminItem(Material.ENDER_EYE, "<aqua>Vanish Settings", "vanish_settings", true));
-        inventory.setItem(6, createAdminItem(Material.COMPASS, "<green>Teleport Menu", "teleport_menu", true));
+        // Middle row (row 3): slots 18-26, place items at 20 and 24
+        inventory.setItem(20, createAdminItem(Material.ENDER_EYE, "<aqua>Vanish Settings", "vanish_settings", true));
+        inventory.setItem(24, createAdminItem(Material.COMPASS, "<green>Teleport Menu", "teleport_menu", true));
 
         player.openInventory(inventory);
     }
@@ -183,26 +186,32 @@ public final class GuiManager {
         if (player == null) {
             return;
         }
-        final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<aqua>" + MessageUtil.ICON_INFO + " Vanish Settings"));
+        // Use 54-slot inventory for better spacing
+        final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<aqua>" + MessageUtil.ICON_INFO + " Vanish Settings"));
 
         final boolean fakeMessage = plugin.getPlayerStorage().isVanishFakeMessages(player);
         final boolean autoFly = plugin.getPlayerStorage().isVanishAutoFly(player);
         final boolean autoGod = plugin.getPlayerStorage().isVanishAutoGod(player);
         final boolean pickup = !plugin.getPlayerStorage().isVanishPickupDisabled(player);
 
-        inventory.setItem(10, createAdminItem(Material.PAPER, "<yellow>Fake Join/Leave", "v_fake_msg", fakeMessage));
-        inventory.setItem(19, createStatusIndicator(fakeMessage));
+        // Row 2 (slots 9-17): Fake Join/Leave at slot 11, indicator at 20
+        inventory.setItem(11, createAdminItem(Material.PAPER, "<yellow>Fake Join/Leave", "v_fake_msg", fakeMessage));
+        inventory.setItem(20, createStatusIndicator(fakeMessage));
 
-        inventory.setItem(12, createAdminItem(Material.FEATHER, "<yellow>Auto Fly", "v_auto_fly", autoFly));
-        inventory.setItem(21, createStatusIndicator(autoFly));
+        // Row 3 (slots 18-26): Auto Fly at slot 20, indicator at 29 - but we use 54 slot so 29 is valid
+        inventory.setItem(22, createAdminItem(Material.FEATHER, "<yellow>Auto Fly", "v_auto_fly", autoFly));
+        inventory.setItem(31, createStatusIndicator(autoFly));
 
-        inventory.setItem(14, createAdminItem(Material.GOLDEN_APPLE, "<yellow>Auto God", "v_auto_god", autoGod));
-        inventory.setItem(23, createStatusIndicator(autoGod));
+        // Row 4 (slots 27-35): Auto God at slot 31, indicator at 40
+        inventory.setItem(33, createAdminItem(Material.GOLDEN_APPLE, "<yellow>Auto God", "v_auto_god", autoGod));
+        inventory.setItem(42, createStatusIndicator(autoGod));
 
-        inventory.setItem(16, createAdminItem(Material.HOPPER, "<yellow>Item Pickup", "v_pickup", pickup));
-        inventory.setItem(25, createStatusIndicator(pickup));
+        // Row 5 (slots 36-44): Item Pickup at slot 38, indicator at 47
+        inventory.setItem(38, createAdminItem(Material.HOPPER, "<yellow>Item Pickup", "v_pickup", pickup));
+        inventory.setItem(47, createStatusIndicator(pickup));
 
-        inventory.setItem(22, createBackButton("admin"));
+        // Back button in center of last row
+        inventory.setItem(49, createBackButton("admin"));
 
         player.openInventory(inventory);
     }
@@ -211,15 +220,19 @@ public final class GuiManager {
         if (player == null) {
             return;
         }
-        final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<gold>" + MessageUtil.ICON_UTILITY + " Configuration"));
+        // Use 54-slot inventory for better spacing
+        final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<gold>" + MessageUtil.ICON_UTILITY + " Configuration"));
 
         final boolean guiEnabled = plugin.getPlayerStorage().isGuiEnabled(player);
-        inventory.setItem(10, createAdminItem(Material.BOOK, "<yellow>GUI Mode", "toggle_gui", guiEnabled));
-        inventory.setItem(11, createStatusIndicator(guiEnabled));
-
         final boolean particles = plugin.getPlayerStorage().areParticlesEnabled(player);
-        inventory.setItem(12, createAdminItem(Material.FIREWORK_STAR, "<yellow>Particles", "toggle_particles", particles));
-        inventory.setItem(13, createStatusIndicator(particles));
+
+        // Row 3 (slots 18-26): GUI Mode at slot 20, indicator at 29
+        inventory.setItem(20, createAdminItem(Material.BOOK, "<yellow>GUI Mode", "toggle_gui", guiEnabled));
+        inventory.setItem(29, createStatusIndicator(guiEnabled));
+
+        // Row 4 (slots 27-35): Particles at slot 31, indicator at 40 - leave gap
+        inventory.setItem(33, createAdminItem(Material.FIREWORK_STAR, "<yellow>Particles", "toggle_particles", particles));
+        inventory.setItem(42, createStatusIndicator(particles));
 
         player.openInventory(inventory);
     }
@@ -244,6 +257,7 @@ public final class GuiManager {
         }
         final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<green>" + MessageUtil.ICON_TP + " Teleport Menu - Page " + page));
 
+        // Top row: dimension teleports (no status indicators needed - these are actions, not toggles)
         inventory.setItem(0, createWorldItem(Material.GRASS_BLOCK, "<green>Overworld", "tp_world_overworld"));
         inventory.setItem(1, createWorldItem(Material.NETHERRACK, "<red>Nether", "tp_world_nether"));
         inventory.setItem(2, createWorldItem(Material.END_STONE, "<purple>End", "tp_world_end"));
@@ -324,6 +338,7 @@ public final class GuiManager {
             }
         }
 
+        // Navigation buttons (last row)
         if (page > 1) {
             final ItemStack prev = new ItemStack(Material.ARROW);
             final ItemMeta prevMeta = prev.getItemMeta();
@@ -439,6 +454,9 @@ public final class GuiManager {
         }
         meta.displayName(MessageUtil.parse(Objects.requireNonNull(name, "Name cannot be null")));
         meta.getPersistentDataContainer().set(WORLD_KEY, PersistentDataType.STRING, Objects.requireNonNull(worldName, "World name cannot be null"));
+        final List<Component> lore = new ArrayList<>();
+        lore.add(MessageUtil.parse("<gray>Click to teleport!"));
+        meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }

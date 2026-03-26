@@ -163,12 +163,25 @@ public final class InventoryListener implements Listener {
         } else if (plainTitle.contains("Teleport Menu")) {
             event.setCancelled(true);
             final ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem == null || clickedItem.getItemMeta() == null) return;
-
-            final String action = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.ADMIN_KEY, PersistentDataType.STRING);
-            if (action == null) return;
+            if (clickedItem == null || clickedItem.getItemMeta() == null) {
+                return;
+            }
 
             final Player player = (Player) event.getWhoClicked();
+
+            // Check for world teleport (uses WORLD_KEY)
+            final String worldName = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.WORLD_KEY, PersistentDataType.STRING);
+            if (worldName != null) {
+                player.closeInventory();
+                player.performCommand("tp " + worldName);
+                return;
+            }
+
+            // Check for other actions (uses ADMIN_KEY)
+            final String action = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.ADMIN_KEY, PersistentDataType.STRING);
+            if (action == null) {
+                return;
+            }
 
             if (action.startsWith("tp_player:")) {
                 final String targetName = action.substring(10);
@@ -181,15 +194,26 @@ public final class InventoryListener implements Listener {
             } else if (action.startsWith("tp_page:")) {
                 final int page = Integer.parseInt(action.substring(8));
                 plugin.getGuiManager().openTeleportMenu(player, page);
-            } else if (action.startsWith("tp_world_")) {
-                final String world = action.substring(9);
-                player.closeInventory();
-                player.performCommand("tp " + world);
             } else if (action.equals("back_to:admin")) {
                 plugin.getGuiManager().openAdminGui(player);
             } else if (action.equals("back_to:config")) {
                 plugin.getGuiManager().openConfigGui(player);
             }
+        } else if (plainTitle.contains("World Selector")) {
+            event.setCancelled(true);
+            final ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem == null || clickedItem.getItemMeta() == null) {
+                return;
+            }
+
+            final String worldName = clickedItem.getItemMeta().getPersistentDataContainer().get(GuiManager.WORLD_KEY, PersistentDataType.STRING);
+            if (worldName == null) {
+                return;
+            }
+
+            final Player player = (Player) event.getWhoClicked();
+            player.closeInventory();
+            player.performCommand("tp " + worldName);
         } else if (plainTitle.contains("Vanish Settings")) {
             event.setCancelled(true);
             final ItemStack clickedItem = event.getCurrentItem();
