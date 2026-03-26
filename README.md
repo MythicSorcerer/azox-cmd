@@ -133,6 +133,52 @@ All admin commands default to ops. Includes:
 
 ---
 
+## 🔧 Development Workflow
+
+### Quick Testing Without Server Restarts
+
+| Method | Description | Setup |
+| :--- | :--- | :--- |
+| **Config Reload** | Reload warps, jails, kits, homes without restart | `/azox reload` |
+| **Paper Watchdog** | Auto-reload on file change (dev only) | Use [Paperwatch](https://github.com/PaperMC/paperwatch) |
+| **Docker Hot-Reload** | Mount plugin folder, copy JAR on build | See docker-compose below |
+| **IDE Remote Debug** | Debug running server remotely | Add `-agentlib:jdwp` to startup |
+
+### Recommended: Docker Development Setup
+
+```yaml
+# docker-compose.yml
+services:
+  paper:
+    image: ghcr.io/papermc/paper:1.21.11
+    volumes:
+      - ./plugins:/plugins
+      - ./world:/world
+    ports:
+      - "25565:25565"
+    environment:
+      - EULA=TRUE
+```
+
+```bash
+# Build and auto-deploy script
+#!/bin/bash
+mvn clean package -DskipTests
+cp target/AzoxUtils-1.0.0.jar ../test-server/plugins/
+ssh user@server "docker cp AzoxUtils-1.0.0.jar paper:/plugins/ && docker exec paper /paper reload"
+```
+
+### Remote Debug Setup
+
+Add to server startup script:
+```bash
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar paper.jar
+```
+
+Then connect IDE to `localhost:5005` for breakpoints.
+
+---
+
 ## 🎨 Design Features
 - **MiniMessage Support:** All messages use modern `<color>` tags and support hover/click events.
 - **Geyser Compatible:** Avoids complex GUI containers where possible, using interactive chat components that work perfectly for Bedrock players.
