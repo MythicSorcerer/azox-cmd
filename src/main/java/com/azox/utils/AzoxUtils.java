@@ -9,21 +9,33 @@ public final class AzoxUtils extends JavaPlugin {
     @Getter
     private static AzoxUtils instance;
 
-    private final com.azox.utils.manager.PlayerDataManager playerDataManager = new com.azox.utils.manager.PlayerDataManager();
-    private final com.azox.utils.storage.PlayerStorage playerStorage = new com.azox.utils.storage.PlayerStorage();
-    private final com.azox.utils.manager.HomeManager homeManager = new com.azox.utils.manager.HomeManager();
-    private final com.azox.utils.manager.WarpManager warpManager = new com.azox.utils.manager.WarpManager();
-    private final com.azox.utils.manager.TeleportManager teleportManager = new com.azox.utils.manager.TeleportManager();
-    private final com.azox.utils.manager.FreezeManager freezeManager = new com.azox.utils.manager.FreezeManager();
-    private final com.azox.utils.manager.GuiManager guiManager = new com.azox.utils.manager.GuiManager();
-    private final com.azox.utils.manager.JailManager jailManager = new com.azox.utils.manager.JailManager();
-    private final com.azox.utils.manager.VanishManager vanishManager = new com.azox.utils.manager.VanishManager();
-    private final com.azox.utils.manager.KitManager kitManager = new com.azox.utils.manager.KitManager();
-    private final com.azox.utils.manager.ParticleManager particleManager = new com.azox.utils.manager.ParticleManager();
+    private com.azox.utils.manager.PlayerDataManager playerDataManager;
+    private com.azox.utils.storage.PlayerStorage playerStorage;
+    private com.azox.utils.manager.HomeManager homeManager;
+    private com.azox.utils.manager.WarpManager warpManager;
+    private com.azox.utils.manager.TeleportManager teleportManager;
+    private com.azox.utils.manager.FreezeManager freezeManager;
+    private com.azox.utils.manager.GuiManager guiManager;
+    private com.azox.utils.manager.JailManager jailManager;
+    private com.azox.utils.manager.VanishManager vanishManager;
+    private com.azox.utils.manager.KitManager kitManager;
+    private com.azox.utils.manager.ParticleManager particleManager;
 
     @Override
     public void onEnable() {
         AzoxUtils.instance = this;
+
+        this.playerDataManager = new com.azox.utils.manager.PlayerDataManager();
+        this.playerStorage = new com.azox.utils.storage.PlayerStorage();
+        this.homeManager = new com.azox.utils.manager.HomeManager();
+        this.warpManager = new com.azox.utils.manager.WarpManager();
+        this.teleportManager = new com.azox.utils.manager.TeleportManager();
+        this.freezeManager = new com.azox.utils.manager.FreezeManager();
+        this.guiManager = new com.azox.utils.manager.GuiManager();
+        this.jailManager = new com.azox.utils.manager.JailManager();
+        this.vanishManager = new com.azox.utils.manager.VanishManager();
+        this.kitManager = new com.azox.utils.manager.KitManager();
+        this.particleManager = new com.azox.utils.manager.ParticleManager();
 
         this.registerCommands();
         this.registerListeners();

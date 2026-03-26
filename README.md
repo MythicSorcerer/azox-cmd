@@ -1,6 +1,6 @@
 # AzoxUtils Documentation
 
-A comprehensive utility plugin for Paper 1.21.11, featuring a modern Home system, Warp management, Teleportation requests, and essential server utilities.
+A comprehensive utility plugin for Paper 1.21.11, featuring a modern Home system, Warp management, Teleportation requests, enhanced Jail system, and essential server utilities.
 
 ## 🏗️ Storage System
 AzoxUtils uses a unified player data storage system. Each player has their own dedicated file located at `plugins/AzoxUtils/playerdata/username_uuid.yml`. This ensures that all settings, homes, and preferences are neatly organized and easy to manage.
@@ -11,14 +11,17 @@ AzoxUtils features a comprehensive GUI system for players and admins.
 | Command | Usage | Permission | Description |
 | :--- | :--- | :--- | :--- |
 | `/utilities` | `/utilities` | `azox.utils.gui` | Opens the Utility Hub (Crafting, Enderchest, etc.). |
-| `/azox` | `/azox` | `azox.utils.admin` | Opens the Admin Configuration GUI (Vanish settings, etc.). |
+| `/config` | `/config` | `azox.utils.config` | Opens personal configuration (GUI toggle, particles). |
+| `/azox` | `/azox` | `azox.utils.admin` | Opens the Admin Configuration GUI (Vanish, Teleport menu). |
 | `/lobby` | `/lobby` | `azox.utils.lobby` | Teleports to the Hub/Lobby world. |
 
 **Features:**
-- **Admin Config:** Toggle personal settings for Vanish (Auto Fly, Auto God, Fake Messages, Item Pickup).
+- **Admin Config:** Access Vanish settings and Teleport menu with dimension/player navigation.
+- **Personal Config:** Toggle GUI menus and particle effects.
 - **World Selector:** Automatically given a Compass in the Hub world to navigate servers.
 - **Dynamic Utilities:** The `/utilities` menu only shows tools you have permission to use.
 - **Ender Chest Pages:** Rank-based access to up to 5 ender chest pages. Access via `/enderchest` or `/ec`.
+- **Night Vision:** Toggle with `/nv` - persists across sessions and respawns.
 
 ---
 
@@ -71,6 +74,26 @@ Modern request system and advanced administrative teleportation.
 
 ---
 
+### ⛓️ Jail System
+Advanced jail system with timed sentences and inescapable confinement.
+
+| Command | Usage | Permission | Description |
+| :--- | :--- | :--- | :--- |
+| `/jail` | `/jail <player> <jail> [not] [dramatic] [time]` | `azox.utils.jail` | Jail a player with optional time (e.g., `1d12h30m`). |
+| `/setjail` | `/setjail <name>` | `azox.utils.setjail` | Set a jail location. |
+| `/deljail` | `/deljail <name>` | `azox.utils.deljail` | Delete a jail. |
+| `/unjail` | `/unjail <player>` | `azox.utils.jail` | Release a player from jail. |
+
+**Features:**
+- **Timed Sentences:** Use formats like `1d`, `12h`, `30m`, `45s` or combinations (`1d12h30m`).
+- **Indefinite:** No time specified = indefinite sentence.
+- **Inescapable Jails:** Apply Blindness I, Slowness XXV, Mining Fatigue XXV. Auto-teleport back if escaped.
+- **Auto-Release:** Players are freed automatically when their sentence expires.
+- **Global Broadcast:** All players are notified when someone is sentenced.
+- **Dramatic Mode:** Lightning strike and levitation effect before jailing.
+
+---
+
 ### 🛡️ Admin & Miscellaneous
 
 | Command | Usage | Permission | Description |
@@ -80,18 +103,39 @@ Modern request system and advanced administrative teleportation.
 | `/kit` | `/kit <name>` | `azox.utils.kit` | Claim a kit. |
 | `/delkit` | `/delkit <name>` | `azox.utils.delkit` | Delete a kit. |
 | `/vanish` | `/vanish [gui\|tipu\|fakejoin\|fakeleave]` | `azox.utils.vanish` | Advanced vanish system with stealth features. |
-| `/jail` | `/jail <player> <jailname> [escapable\|not] [dramatic]` | `azox.utils.jail` | Jail system with dramatic effects. |
 | `/freeze` | `/freeze <player>` | `azox.utils.freeze` | Prevent a player from moving or interacting. |
+| `/nv` | `/nv` | `azox.utils.nightvision` | Toggle night vision (persists across sessions). |
 
-## 👑 Rank System (Permissions)
-AzoxUtils integrates with permissions to provide rank-based benefits:
-- **Prefixes:** `azox.utils.rank.<name>` (e.g., owner, admin, mod, vip).
+---
+
+## 👑 Permission System
+
+AzoxUtils uses a structured permission system with automatic defaults.
+
+### Default Permissions (`azox.user.*`)
+If no permission manager is detected (LuckPerms, PermissionsEx, etc.), all players automatically receive `azox.user.*` permissions including:
+- Teleport commands (`/tpa`, `/home`, `/warp`, `/rtp`, `/back`)
+- Utility commands (`/craft`, `/anvil`, `/enderchest`, `/loom`)
+- Personal commands (`/fly`, `/god`, `/heal`, `/feed`, `/nv`)
+- Information commands (`/ping`, `/stats`, `/whois`, `/seen`)
+
+### Rank Permissions (`azox.rank.*`)
+- **Prefixes:** `azox.utils.rank.<name>` (owner, admin, mod, vip).
 - **Particles:** `azox.utils.particles.<effect>`.
-- **Feed Cooldown:** `azox.utils.feed.cooldown.<seconds>` (e.g., 3600 for 1 hour).
 - **Ender Chest Pages:** `azox.utils.enderchest.pages.<1-5>`.
 - **Vanish Levels:** `azox.utils.vanish.level.<number>`.
+
+### Admin Permissions (`azox.admin.*`)
+All admin commands default to ops. Includes:
+- Jail management, vanish, freeze, sudo
+- World editing (`/lightning`, `/burn`, `/weather`)
+- Player management (`/gamemode`, `/speed`, `/tpo`)
+
+---
 
 ## 🎨 Design Features
 - **MiniMessage Support:** All messages use modern `<color>` tags and support hover/click events.
 - **Geyser Compatible:** Avoids complex GUI containers where possible, using interactive chat components that work perfectly for Bedrock players.
 - **Smart Completion:** Tab-completion for homes, warps, players, and coordinates, respecting vanish levels.
+- **Null Safety:** Comprehensive null checks throughout to prevent crashes.
+- **Clean UI:** Status indicators show "✔ Enabled" / "✘ Disabled" instead of raw material names.

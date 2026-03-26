@@ -6,7 +6,7 @@
 
     <groupId>com.azox</groupId>
     <artifactId>azox-utils</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>AzoxUtils</name>

@@ -191,16 +191,16 @@ public final class GuiManager {
         final boolean pickup = !plugin.getPlayerStorage().isVanishPickupDisabled(player);
 
         inventory.setItem(10, createAdminItem(Material.PAPER, "<yellow>Fake Join/Leave", "v_fake_msg", fakeMessage));
-        inventory.setItem(19, new ItemStack(fakeMessage ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
+        inventory.setItem(19, createStatusIndicator(fakeMessage));
 
         inventory.setItem(12, createAdminItem(Material.FEATHER, "<yellow>Auto Fly", "v_auto_fly", autoFly));
-        inventory.setItem(21, new ItemStack(autoFly ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
+        inventory.setItem(21, createStatusIndicator(autoFly));
 
         inventory.setItem(14, createAdminItem(Material.GOLDEN_APPLE, "<yellow>Auto God", "v_auto_god", autoGod));
-        inventory.setItem(23, new ItemStack(autoGod ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
+        inventory.setItem(23, createStatusIndicator(autoGod));
 
         inventory.setItem(16, createAdminItem(Material.HOPPER, "<yellow>Item Pickup", "v_pickup", pickup));
-        inventory.setItem(25, new ItemStack(pickup ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
+        inventory.setItem(25, createStatusIndicator(pickup));
 
         inventory.setItem(22, createBackButton("admin"));
 
@@ -215,11 +215,11 @@ public final class GuiManager {
 
         final boolean guiEnabled = plugin.getPlayerStorage().isGuiEnabled(player);
         inventory.setItem(10, createAdminItem(Material.BOOK, "<yellow>GUI Mode", "toggle_gui", guiEnabled));
-        inventory.setItem(11, new ItemStack(guiEnabled ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
+        inventory.setItem(11, createStatusIndicator(guiEnabled));
 
         final boolean particles = plugin.getPlayerStorage().areParticlesEnabled(player);
         inventory.setItem(12, createAdminItem(Material.FIREWORK_STAR, "<yellow>Particles", "toggle_particles", particles));
-        inventory.setItem(13, new ItemStack(particles ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE));
+        inventory.setItem(13, createStatusIndicator(particles));
 
         player.openInventory(inventory);
     }
@@ -451,6 +451,17 @@ public final class GuiManager {
         }
         meta.displayName(MessageUtil.parse("<green>Page " + page));
         meta.getPersistentDataContainer().set(EC_PAGE_KEY, PersistentDataType.INTEGER, page);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack createStatusIndicator(final boolean enabled) {
+        final ItemStack item = new ItemStack(enabled ? Material.LIME_CONCRETE : Material.GRAY_CONCRETE);
+        final ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return item;
+        }
+        meta.displayName(MessageUtil.parse(enabled ? "<green>✔ Enabled" : "<red>✘ Disabled"));
         item.setItemMeta(meta);
         return item;
     }
