@@ -30,7 +30,8 @@ public final class ParticleManager {
 
                     final Particle particle = getPlayerParticle(player);
                     if (particle != null) {
-                        player.getWorld().spawnParticle(particle, player.getLocation().add(0, 3.2, 0), 1, 0.1, 0.1, 0.1, 0.05);
+                        // Use particles that don't require data
+                        player.getWorld().spawnParticle(particle, player.getLocation().add(0, 3.2, 0), 1, 0.1, 0.1, 0.1, 0.0);
                     }
                 }
             }
@@ -61,10 +62,11 @@ public final class ParticleManager {
     }
 
     private Particle getParticleForLevel(final int level) {
+        // Use only particles that don't require data
         if (level >= 100) {
-            return Particle.DRAGON_BREATH;
-        } else if (level >= 75) {
             return Particle.END_ROD;
+        } else if (level >= 75) {
+            return Particle.HAPPY_VILLAGER;
         } else if (level >= 50) {
             return Particle.FLAME;
         } else if (level >= 25) {
