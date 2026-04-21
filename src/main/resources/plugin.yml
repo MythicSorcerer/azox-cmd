@@ -1,458 +1,470 @@
-name: AzoxUtils
+name: AzoxCmd
 version: 1.0
-main: net.azox.utils.AzoxUtils
+main: net.azox.cmd.AzoxCmd
 api-version: '1.21'
 author: Azox
 description: A comprehensive utility plugin for Paper servers.
 commands:
   anvil:
     description: Open an anvil.
-    permission: azox.util.anvil
+    permission: azox.cmd.anvil
   azox:
     description: Open AzoxUtils Admin GUI.
-    permission: azox.util.admin
+    permission: azox.cmd.admin
     aliases: [azoxadmin]
   azoxreload:
     description: Reload the plugin.
-    permission: azox.util.admin
+    permission: azox.cmd.admin
   back:
     description: Go back to your last location.
-    permission: azox.util.back
+    permission: azox.cmd.back
   break:
     description: Break the block you are looking at.
-    permission: azox.util.break
+    permission: azox.cmd.break
   broadcast:
     description: Broadcast a message.
-    permission: azox.util.broadcast
+    permission: azox.cmd.broadcast
     aliases: [bc]
   burn:
     description: Set a player on fire.
-    permission: azox.util.burn
+    permission: azox.cmd.burn
   cartographytable:
     description: Open a cartography table.
-    permission: azox.util.cartographytable
+    permission: azox.cmd.cartographytable
     aliases: [carttable]
   clearinventory:
     description: Clear inventory.
-    permission: azox.util.clearinventory
+    permission: azox.cmd.clearinventory
     aliases: [clear, clean]
   compass:
     description: Show current direction.
-    permission: azox.util.compass
+    permission: azox.cmd.compass
   condense:
     description: Condense items into blocks.
-    permission: azox.util.condense
+    permission: azox.cmd.condense
     aliases: [compact, toblocks]
   config:
     description: Open configuration menu.
-    permission: azox.util.config
+    permission: azox.cmd.config
     aliases: [cfg, configuration]
   copyitem:
     description: Duplicate the held item.
-    permission: azox.util.copyitem
+    permission: azox.cmd.copyitem
     aliases: [dupe,clone]
   craft:
     description: Open a portable crafting table.
-    permission: azox.util.craft
+    permission: azox.cmd.craft
     aliases: [wb, workbench]
   createkit:
     description: Create a kit.
-    permission: azox.util.createkit
+    permission: azox.util.kit.create
     aliases: [ck]
   delhome:
     description: Delete a home.
-    permission: azox.util.delhome
+    permission: azox.cmd.delhome
   deljail:
     description: Delete a jail.
-    permission: azox.util.deljail
+    permission: azox.cmd.deljail
     aliases: [rmjail]
   delkit:
     description: Delete a kit.
-    permission: azox.util.delkit
+    permission: azox.util.kit.delete
     aliases: [rmkit]
   edithome:
     description: Edit home details.
-    permission: azox.util.edithome
+    permission: azox.cmd.edithome
     aliases: [homeinfo]
   enchant:
     description: Enchant an item.
-    permission: azox.util.enchant
+    permission: azox.cmd.enchant
   enderchest:
     description: Open your enderchest.
-    permission: azox.util.enderchest
+    permission: azox.cmd.enderchest
     aliases: [ec, echest]
   extinguish:
     description: Put out a player who is on fire.
-    permission: azox.util.extinguish
+    permission: azox.cmd.extinguish
   feed:
     description: Feed a player.
-    permission: azox.util.feed
+    permission: azox.cmd.feed
     aliases: [eat]
   fillpot:
     description: Enable potion auto-refill.
-    permission: azox.util.fillpot
+    permission: azox.cmd.fillpot
   fillpotsave:
     description: Save potion slots for auto-refill.
-    permission: azox.util.fillpot
+    permission: azox.cmd.fillpot
   fly:
     description: Toggle flight.
-    permission: azox.util.fly
+    permission: azox.cmd.fly
   freeze:
     description: Freeze or unfreeze a player.
-    permission: azox.util.freeze
+    permission: azox.cmd.freeze
   gamemode:
     description: Change gamemode.
-    permission: azox.util.gamemode
+    permission: azox.cmd.gamemode
     aliases: [gm]
   getpos:
     description: Get current coordinates.
-    permission: azox.util.getpos
+    permission: azox.cmd.getpos
     aliases: [coords]
   gma:
     description: Set adventure mode.
-    permission: azox.util.gamemode
+    permission: azox.cmd.gamemode
   gmc:
     description: Set creative mode.
-    permission: azox.util.gamemode
+    permission: azox.cmd.gamemode
   gms:
     description: Set survival mode.
-    permission: azox.util.gamemode
+    permission: azox.cmd.gamemode
   gmsp:
     description: Set spectator mode.
-    permission: azox.util.gamemode
+    permission: azox.cmd.gamemode
   god:
     description: Toggle god mode.
-    permission: azox.util.god
+    permission: azox.cmd.god
     aliases: [invuln, invulnerable, godmode]
   grindstone:
     description: Open a portable grindstone.
-    permission: azox.util.grindstone
+    permission: azox.cmd.grindstone
   heal:
     description: Heal a player.
-    permission: azox.util.heal
+    permission: azox.cmd.heal
   home:
     description: Teleport to your home.
-    permission: azox.util.home
+    permission: azox.cmd.home
   homes:
     description: List your homes.
-    permission: azox.util.home
+    permission: azox.cmd.home
     aliases: [homelist]
   itemname:
     description: Set the display name of the held item.
-    permission: azox.util.itemname
+    permission: azox.cmd.itemname
   jail:
     description: Jail a player with optional escapable and dramatic effects.
-    permission: azox.util.jail
+    permission: azox.cmd.jail
   jumpto:
     description: Teleport to the block you are looking at.
-    permission: azox.util.jumpto
+    permission: azox.cmd.jumpto
   kit:
     description: Claim a kit.
-    permission: azox.util.kit
+    permission: azox.cmd.kit
   lightning:
     description: Strike lightning.
-    permission: azox.util.lightning
+    permission: azox.cmd.lightning
     aliases: [smite,strike]
   lobby:
     description: Teleport to the lobby/hub.
-    permission: azox.util.lobby
+    permission: azox.cmd.lobby
     aliases: [hub]
   loom:
     description: Open a loom.
-    permission: azox.util.loom
+    permission: azox.cmd.loom
   lore:
     description: Change item lore.
-    permission: azox.util.lore
+    permission: azox.cmd.lore
   near:
     description: See players within a certain radius.
-    permission: azox.util.near
+    permission: azox.cmd.near
   ilive:
     description: Toggle immortality mode with damage reduction and food healing.
-    permission: azox.util.ilive
+    permission: azox.cmd.ilive
   nightvision:
     description: Toggle night vision effect.
-    permission: azox.util.nightvision
+    permission: azox.cmd.nightvision
     aliases: [nv, nvt, nightvisiontoggle]
   nv:
     description: Toggle night vision effect.
-    permission: azox.util.nightvision
+    permission: azox.cmd.nightvision
   nvt:
     description: Toggle night vision effect.
-    permission: azox.util.nightvision
+    permission: azox.cmd.nightvision
   nightvisiontoggle:
     description: Toggle night vision effect.
-    permission: azox.util.nightvision
+    permission: azox.cmd.nightvision
   phome:
     description: Teleport to a public home.
-    permission: azox.util.phome
+    permission: azox.cmd.phome
     aliases: [publichome]
   ping:
     description: View your ping or another player's ping.
-    permission: azox.util.ping
+    permission: azox.cmd.ping
   permeffect:
     description: Apply a permanent potion effect that reapplies on death.
-    permission: azox.util.permeffect
+    permission: azox.cmd.permeffect
   relocatehome:
     description: Relocate a home.
-    permission: azox.util.edithome
+    permission: azox.cmd.edithome
   remove:
     description: Remove entities that may be causing lag.
-    permission: azox.util.remove
+    permission: azox.cmd.remove
   renamehome:
     description: Rename a home.
-    permission: azox.util.edithome
+    permission: azox.cmd.edithome
   repair:
     description: Repair the held item.
-    permission: azox.util.repair
+    permission: azox.cmd.repair
   rtp:
     description: Randomly teleport.
-    permission: azox.util.rtp
+    permission: azox.cmd.rtp
     aliases: [tpr]
   rules:
     description: Show server rules.
-    permission: azox.util.rules
+    permission: azox.cmd.rules
   se:
     description: Quick inspect player enderchest.
-    permission: azox.util.see
+    permission: azox.cmd.see
   see:
     description: Inspect a player's inventory or enderchest.
-    permission: azox.util.see
+    permission: azox.cmd.see
   seen:
     description: See when a player was last online.
-    permission: azox.util.seen
+    permission: azox.cmd.seen
   silence:
     description: Toggle silence for command responses.
-    permission: azox.util.silence
+    permission: azox.cmd.silence
   sethome:
     description: Set a home at your current location.
-    permission: azox.util.sethome
+    permission: azox.cmd.sethome
   setjail:
     description: Set a jail location.
-    permission: azox.util.setjail
+    permission: azox.cmd.setjail
   setphome:
     description: Set a public home.
-    permission: azox.util.setphome
+    permission: azox.cmd.setphome
   setspawn:
     description: Set spawn location.
-    permission: azox.util.setspawn
+    permission: azox.cmd.setspawn
   setwarp:
     description: Set a warp.
-    permission: azox.util.setwarp
+    permission: azox.cmd.setwarp
   settings:
     description: Configure personal settings.
-    permission: azox.util.settings
+    permission: azox.cmd.settings
   si:
     description: Quick inspect player inventory.
-    permission: azox.util.see
+    permission: azox.cmd.see
   spawn:
     description: Teleport to spawn.
-    permission: azox.util.spawn
+    permission: azox.cmd.spawn
   speed:
     description: Set walk or fly speed.
-    permission: azox.util.speed
+    permission: azox.cmd.speed
     aliases: [walkspeed, flyspeed]
   stats:
     description: See player statistics.
-    permission: azox.util.stats
+    permission: azox.cmd.stats
   stonecutter:
     description: Open a portable stonecutter.
-    permission: azox.util.stonecutter
+    permission: azox.cmd.stonecutter
   storm:
     description: Set weather to storm.
-    permission: azox.util.weather
+    permission: azox.cmd.weather
   sudo:
     description: Force a player to run a command.
-    permission: azox.util.sudo
+    permission: azox.cmd.sudo
   suicide:
     description: Kill yourself.
-    permission: azox.util.suicide
+    permission: azox.cmd.suicide
   sun:
     description: Set weather to sun.
-    permission: azox.util.weather
+    permission: azox.cmd.weather
   tempban:
     description: Temporarily ban a player.
-    permission: azox.util.tempban
+    permission: azox.cmd.tempban
   top:
     description: Teleport to the highest safe block.
-    permission: azox.util.top
+    permission: azox.cmd.top
   tp:
     description: Teleport command.
-    permission: azox.util.tp
+    permission: azox.cmd.tp
   tpaccept:
     description: Accept a teleport request.
-    permission: azox.util.tpa
+    permission: azox.cmd.tpa
   tpa:
     description: Request to teleport to a player.
-    permission: azox.util.tpa
+    permission: azox.cmd.tpa
     aliases: [tpask]
   tpahere:
     description: Request a player to teleport to you.
-    permission: azox.util.tpahere
+    permission: azox.cmd.tpahere
   tpdecline:
     description: Decline a teleport request.
-    permission: azox.util.tpa
+    permission: azox.cmd.tpa
   tpignore:
     description: Ignore teleport requests.
-    permission: azox.util.tpignore
+    permission: azox.cmd.tpignore
   tpo:
     description: Teleport to a player (including offline).
-    permission: azox.util.tpo
+    permission: azox.cmd.tpo
     aliases: [tpoffline]
   tpohere:
     description: Teleport a player to you (including offline).
-    permission: azox.util.tpo
+    permission: azox.cmd.tpo
   tpoundo:
     description: Undo a tpohere.
-    permission: azox.util.tpo
+    permission: azox.cmd.tpo
   tps:
     description: View server TPS and memory.
-    permission: azox.util.tps
+    permission: azox.cmd.tps
   trash:
     description: Open a disposal inventory.
-    permission: azox.util.trash
+    permission: azox.cmd.trash
     aliases: [disposal]
   unjail:
     description: Unjail a player.
-    permission: azox.util.jail
+    permission: azox.cmd.jail
   unfillpot:
     description: Disable potion auto-refill.
-    permission: azox.util.fillpot
+    permission: azox.cmd.fillpot
   uptime:
     description: See how long the server has been running.
-    permission: azox.util.tps
+    permission: azox.cmd.tps
   utilities:
     description: Open the utility hub.
-    permission: azox.util.gui
+    permission: azox.cmd.gui
     aliases: [utils]
   vanish:
     description: Hide from other players.
-    permission: azox.util.vanish
+    permission: azox.cmd.vanish
     aliases: [v]
   warp:
     description: Teleport to a warp.
-    permission: azox.util.warp
+    permission: azox.cmd.warp
   weather:
     description: Change weather.
-    permission: azox.util.weather
+    permission: azox.cmd.weather
   whois:
     description: Get information about a player.
-    permission: azox.util.whois
+    permission: azox.cmd.whois
   world:
     description: Teleport to a different world.
-    permission: azox.util.world
+    permission: azox.cmd.world
 permissions:
-  azox.util.*:
+  azox.cmd.*:
     description: All player-use commands (granted to all players when no permission manager is present)
     default: true
     children:
-      azox.util.tpa: true
-      azox.util.tpahere: true
-      azox.util.tpaccept: true
-      azox.util.tpdecline: true
-      azox.util.tpignore: true
-      azox.util.home: true
-      azox.util.sethome: true
-      azox.util.delhome: true
-      azox.util.edithome: true
-      azox.util.phome: true
-      azox.util.back: true
-      azox.util.rtp: true
-      azox.util.spawn: true
-      azox.util.lobby: true
-      azox.util.warp: true
-      azox.util.gui: true
-      azox.util.config: true
-      azox.util.settings: true
-      azox.util.enderchest: true
-      azox.util.craft: true
-      azox.util.anvil: true
-      azox.util.grindstone: true
-      azox.util.stonecutter: true
-      azox.util.cartographytable: true
-      azox.util.loom: true
-      azox.util.trash: true
-      azox.util.fly: true
-      azox.util.god: true
-      azox.util.heal: true
-      azox.util.feed: true
-      azox.util.gamemode: true
-      azox.util.speed: true
-      azox.util.nightvision: true
-      azox.util.ping: true
-      azox.util.stats: true
-      azox.util.uptime: true
-      azox.util.tps: true
-      azox.util.rules: true
-      azox.util.compass: true
-      azox.util.getpos: true
-      azox.util.near: true
-      azox.util.top: true
-      azox.util.jumpto: true
-      azox.util.world: true
-      azox.util.weather: true
-      azox.util.sun: true
-      azox.util.storm: true
-      azox.util.suicide: true
-      azox.util.clearinventory: true
-      azox.util.condense: true
-      azox.util.kit: true
-      azox.util.seen: true
-      azox.util.whois: true
-      azox.util.permeffect: true
-      azox.util.ilive: true
-      azox.util.fillpot: true
-      azox.util.silence: true
-  azox.util.rank.*:
+      azox.cmd.tpa: true
+      azox.cmd.tpahere: true
+      azox.cmd.tpaccept: true
+      azox.cmd.tpdecline: true
+      azox.cmd.tpignore: true
+      azox.cmd.home: true
+      azox.cmd.sethome: true
+      azox.cmd.delhome: true
+      azox.cmd.edithome: true
+      azox.cmd.phome: true
+      azox.cmd.back: true
+      azox.cmd.rtp: true
+      azox.cmd.spawn: true
+      azox.cmd.lobby: true
+      azox.cmd.warp: true
+      azox.cmd.gui: true
+      azox.cmd.config: true
+      azox.cmd.settings: true
+      azox.cmd.enderchest: true
+      azox.cmd.craft: true
+      azox.cmd.anvil: true
+      azox.cmd.grindstone: true
+      azox.cmd.stonecutter: true
+      azox.cmd.cartographytable: true
+      azox.cmd.loom: true
+      azox.cmd.trash: true
+      azox.cmd.fly: true
+      azox.cmd.god: true
+      azox.cmd.heal: true
+      azox.cmd.feed: true
+      azox.cmd.gamemode: true
+      azox.cmd.speed: true
+      azox.cmd.nightvision: true
+      azox.cmd.ping: true
+      azox.cmd.stats: true
+      azox.cmd.uptime: true
+      azox.cmd.tps: true
+      azox.cmd.rules: true
+      azox.cmd.compass: true
+      azox.cmd.getpos: true
+      azox.cmd.near: true
+      azox.cmd.top: true
+      azox.cmd.jumpto: true
+      azox.cmd.world: true
+      azox.cmd.weather: true
+      azox.cmd.sun: true
+      azox.cmd.storm: true
+      azox.cmd.suicide: true
+      azox.cmd.clearinventory: true
+      azox.cmd.condense: true
+      azox.cmd.kit: true
+      azox.cmd.seen: true
+      azox.cmd.whois: true
+      azox.cmd.permeffect: true
+      azox.cmd.ilive: true
+      azox.cmd.fillpot: true
+      azox.cmd.silence: true
+  azox.cmd.rank.*:
     description: Advanced permissions for ranked players
     default: false
     children:
-      azox.util.enderchest.pages.2: true
-      azox.util.enderchest.pages.3: true
-      azox.util.enderchest.pages.4: true
-      azox.util.enderchest.pages.5: true
-      azox.util.vanish.level.1: true
-      azox.util.vanish.level.2: true
-      azox.util.vanish.level.3: true
-      azox.util.vanish.level.4: true
-      azox.util.vanish.level.5: true
-      azox.util.particles.*: true
-      azox.util.rank.owner: true
-      azox.util.rank.admin: true
-      azox.util.rank.mod: true
-      azox.util.rank.vip: true
-  azox.util.admin.*:
+      azox.cmd.enderchest.pages.2: true
+      azox.cmd.enderchest.pages.3: true
+      azox.cmd.enderchest.pages.4: true
+      azox.cmd.enderchest.pages.5: true
+      azox.cmd.vanish.level.1: true
+      azox.cmd.vanish.level.2: true
+      azox.cmd.vanish.level.3: true
+      azox.cmd.vanish.level.4: true
+      azox.cmd.vanish.level.5: true
+      azox.cmd.particles.*: true
+      azox.cmd.rank.owner: true
+      azox.cmd.rank.admin: true
+      azox.cmd.rank.mod: true
+      azox.cmd.rank.vip: true
+  azox.cmd.admin.*:
     description: All admin-only commands
     default: op
     children:
-      azox.util.admin: true
-      azox.util.vanish: true
-      azox.util.vanish.see: true
-      azox.util.see: true
-      azox.util.jail: true
-      azox.util.setjail: true
-      azox.util.deljail: true
-      azox.util.freeze: true
-      azox.util.sudo: true
-      azox.util.lightning: true
-      azox.util.burn: true
-      azox.util.extinguish: true
-      azox.util.tempban: true
-      azox.util.break: true
-      azox.util.broadcast: true
-      azox.util.copyitem: true
-      azox.util.enchant: true
-      azox.util.itemname: true
-      azox.util.lore: true
-      azox.util.repair: true
-      azox.util.setwarp: true
-      azox.util.setphome: true
-      azox.util.setspawn: true
-      azox.util.createkit: true
-      azox.util.delkit: true
-      azox.util.remove: true
-      azox.util.tp: true
-      azox.util.tpo: true
-      azox.util.tpohere: true
-      azox.util.tpoundo: true
-      azox.util.gamemode: true
-      azox.util.azoxreload: true
+      azox.cmd.admin: true
+      azox.cmd.vanish: true
+      azox.cmd.vanish.see: true
+      azox.cmd.see: true
+      azox.cmd.jail: true
+      azox.cmd.setjail: true
+      azox.cmd.deljail: true
+      azox.cmd.freeze: true
+      azox.cmd.sudo: true
+      azox.cmd.lightning: true
+      azox.cmd.burn: true
+      azox.cmd.extinguish: true
+      azox.cmd.tempban: true
+      azox.cmd.break: true
+      azox.cmd.broadcast: true
+      azox.cmd.copyitem: true
+      azox.cmd.enchant: true
+      azox.cmd.itemname: true
+      azox.cmd.lore: true
+      azox.cmd.repair: true
+      azox.cmd.setwarp: true
+      azox.cmd.setphome: true
+      azox.cmd.setspawn: true
+      azox.cmd.createkit: true
+      azox.cmd.delkit: true
+      azox.cmd.remove: true
+      azox.cmd.tp: true
+      azox.cmd.tpo: true
+      azox.cmd.tpohere: true
+      azox.cmd.tpoundo: true
+      azox.cmd.gamemode: true
+      azox.cmd.azoxreload: true
+  azox.util.kit.*:
+    description: Access to all kits
+    default: true
+  azox.util.kit.bypass:
+    description: Bypass kit cooldowns
+    default: op
+  azox.util.kit.create:
+    description: Create kits
+    default: op
+  azox.util.kit.delete:
+    description: Delete kits
+    default: op
