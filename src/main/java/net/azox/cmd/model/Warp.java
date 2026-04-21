@@ -23,12 +23,20 @@ public final class Warp {
     private int level;
 
     public Location getLocation() {
+        if (this.worldName == null) {
+            return null;
+        }
         final World world = Bukkit.getWorld(this.worldName);
-        if (world == null) return null;
+        if (world == null) {
+            return null;
+        }
         return new Location(world, this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
     public void setLocation(final Location location) {
+        if (location == null || location.getWorld() == null) {
+            return;
+        }
         this.worldName = location.getWorld().getName();
         this.x = location.getX();
         this.y = location.getY();
