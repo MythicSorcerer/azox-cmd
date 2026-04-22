@@ -1,193 +1,104 @@
-# AzoxUtils Documentation
+# AzoxCmd
 
-A comprehensive utility plugin for Paper 1.21.11, featuring a modern Home system, Warp management, Teleportation requests, enhanced Jail system, and essential server utilities.
+A comprehensive utility plugin for Paper 1.21.11 with 70+ commands for teleportation, homes, warps, admin tools, player utilities, inventory management, and more.
 
-## 🏗️ Storage System
-AzoxUtils uses a unified player data storage system. Each player has their own dedicated file located at `plugins/AzoxUtils/playerdata/username_uuid.yml`. This ensures that all settings, homes, and preferences are neatly organized and easy to manage.
+## Features
 
-## 🖥️ GUI & Admin Systems
-AzoxUtils features a comprehensive GUI system for players and admins.
+- **70+ Commands** across teleportation, utilities, admin, and inventory categories
+- **GUI System** for homes, utilities, vanish settings, teleport menu, and player inspection
+- **Home System** with limits, public homes, and interactive management
+- **Warp System** with level-based access control
+- **Jail System** with timed sentences, inescapable mode, and auto-release
+- **Vanish System** with levels, auto-fly, auto-god, fake join/leave messages
+- **Inventory Utilities** — portable crafting, anvil, ender chest, grindstone, stonecutter, cartography table, loom, trash
+- **Player Buffs** — fly, god mode, heal, feed, speed, night vision
+- **Kit System** — create, claim, and cooldown-based kits
 
-| Command | Usage | Permission | Description |
-| :--- | :--- | :--- | :--- |
-| `/utilities` | `/utilities` | `azox.utils.gui` | Opens the Utility Hub (Crafting, Enderchest, etc.). |
-| `/config` | `/config` | `azox.utils.config` | Opens personal configuration (GUI toggle, particles). |
-| `/azox` | `/azox` | `azox.utils.admin` | Opens the Admin Configuration GUI (Vanish, Teleport menu). |
-| `/lobby` | `/lobby` | `azox.utils.lobby` | Teleports to the Hub/Lobby world. |
+## Installation
 
-**Features:**
-- **Admin Config:** Access Vanish settings and Teleport menu with dimension/player navigation.
-- **Personal Config:** Toggle GUI menus and particle effects.
-- **World Selector:** Automatically given a Compass in the Hub world to navigate servers.
-- **Dynamic Utilities:** The `/utilities` menu only shows tools you have permission to use.
-- **Ender Chest Pages:** Rank-based access to up to 5 ender chest pages. Access via `/enderchest` or `/ec`.
-- **Night Vision:** Toggle with `/nv` - persists across sessions and respawns.
+Drop `AzoxCmd-1.0.jar` into your `plugins/` folder on a Paper 1.21.11 server.
 
----
+## Commands
 
-## 🚀 Core Systems
+| Category | Commands |
+| :--- | :--- |
+| **Teleportation** | `/tpa`, `/tpahere`, `/tpaccept`, `/tpdecline`, `/tpignore`, `/back`, `/rtp`, `/tpo`, `/tpohere`, `/tpoundo`, `/tp`, `/top`, `/jumpto`, `/world`, `/spawn`, `/lobby` |
+| **Homes** | `/sethome`, `/home`, `/delhome`, `/homes`, `/edithome`, `/phome` |
+| **Warps** | `/warp`, `/setwarp` |
+| **Jail** | `/jail`, `/setjail`, `/deljail`, `/unjail` |
+| **Admin** | `/vanish`, `/freeze`, `/see`, `/sudo`, `/tempban`, `/broadcast`, `/remove`, `/break`, `/lightning`, `/burn`, `/extinguish` |
+| **Player Utils** | `/fly`, `/god`, `/heal`, `/feed`, `/speed`, `/nv` (night vision), `/ping`, `/stats`, `/tps`, `/uptime`, `/near`, `/getpos`, `/whois`, `/seen`, `/rules`, `/suicide`, `/clearinventory`, `/compass` |
+| **Inventory** | `/craft`, `/anvil`, `/enderchest`, `/ec`, `/grindstone`, `/stonecutter`, `/carttable`, `/loom`, `/trash`, `/repair`, `/enchant`, `/itemname`, `/lore`, `/copyitem`, `/condense` |
+| **Game** | `/gamemode` (aliases: `/gma`, `/gmc`, `/gms`, `/gmsp`), `/weather`, `/sun`, `/storm`, `/setspawn` |
+| **Kits** | `/kit`, `/createkit`, `/delkit` |
+| **Settings** | `/config`, `/settings`, `/silence`, `/ilive`, `/fillpot`, `/fillpotsave`, `/permeffect` |
+| **Other** | `/azox`, `/azoxreload`, `/near`, `/ext`, `/itemname`, `/lore`, `/renamehome`, `/relocatehome`, `/setphome` |
 
-### 🏠 Home System
-Manage multiple homes with interactive chat menus and public sharing capabilities.
+## GUI Commands
 
-| Command | Usage | Permission | Description |
-| :--- | :--- | :--- | :--- |
-| `/sethome` | `/sethome [name]` | `azox.utils.sethome` | Sets a home at your current location. |
-| `/home` | `/home [name]` | `azox.utils.home` | Teleports to a home (3s delay). |
-| `/delhome` | `/delhome <name\|all>` | `azox.utils.delhome` | Deletes a home. `/delhome all` requires confirmation. |
-| `/homes` | `/homes [page]` | `azox.utils.home` | Lists your homes with interactive hover/click info. |
-| `/phome` | `/phome [player:home]` | `azox.utils.phome` | Access public homes of other players. |
-| `/edithome` | `/edithome <name>` | `azox.utils.edithome` | Opens an interactive chat menu to manage your home. |
+| Command | Description |
+| :--- | :--- |
+| `/utilities` | Opens the Utility Hub (shows tools you have permission to use). |
+| `/config` | Personal settings — toggle GUI menus and particle effects. |
+| `/azox` | Admin Configuration — vanish settings and teleport menu. |
+| `/see` | Inspect player inventory or enderchest. |
 
-**Home Limits:**
-- Default: 4 homes.
-- Permission-based: `azox.utils.homes.<number>` (e.g., `azox.utils.homes.10`).
-- Unlimited: `azox.utils.sethome.unlimited`.
+## Permissions
 
----
+### Default (`azox.cmd.*`)
+Granted to all players when no permission manager is detected. Includes:
+- Teleport: `/tpa`, `/home`, `/warp`, `/rtp`, `/back`
+- Utilities: `/craft`, `/anvil`, `/enderchest`, `/loom`, `/trash`
+- Player: `/fly`, `/god`, `/heal`, `/feed`, `/speed`, `/nv`
+- Info: `/ping`, `/stats`, `/whois`, `/seen`, `/rules`
 
-### 🌀 Warp System
-Server-wide locations with access levels (1-10).
+### Rank (`azox.cmd.rank.*`)
+- `azox.cmd.rank.vip`, `azox.cmd.rank.mod`, `azox.cmd.rank.admin`, `azox.cmd.rank.owner`
+- `azox.cmd.particles.*` — visual effects
+- `azox.cmd.enderchest.pages.2-5` — additional EC pages
+- `azox.cmd.vanish.level.1-5` — vanish visibility levels
 
-| Command | Usage | Permission | Description |
-| :--- | :--- | :--- | :--- |
-| `/setwarp` | `/setwarp <name> [1-10]` | `azox.utils.setwarp` | Creates a warp with a specific access level. |
-| `/warp` | `/warp <name>` | `azox.utils.warp.<level>` | Teleports to a warp if you have the required level. |
+### Home Limits
+- Default: 4 homes
+- Increase: `azox.util.homes.<number>` (e.g., `azox.util.homes.10`)
+- Unlimited: `azox.util.sethome.unlimited`
 
----
+### Kit Permissions
+- `azox.util.kit.<name>` — claim specific kit
+- `azox.util.kit.*` — all kits
+- `azox.util.kit.bypass` — bypass cooldown
+- `azox.util.kit.create` — create kits (op)
+- `azox.util.kit.delete` — delete kits (op)
 
-### ✈️ Teleportation (TPA & TPO)
-Modern request system and advanced administrative teleportation.
+### Admin (`azox.cmd.admin.*`)
+Default to ops. Includes vanish, jail, freeze, sudo, spawn, lightning, burn, weather, gamemode, and more.
 
-| Command | Usage | Permission | Description |
-| :--- | :--- | :--- | :--- |
-| `/tpa` | `/tpa <player>` | `azox.utils.tpa` | Request to teleport to a player. |
-| `/tpahere` | `/tpahere <player>` | `azox.utils.tpahere` | Request a player to teleport to you. |
-| `/tpaccept` | `/tpaccept [player]` | `azox.utils.tpa` | Accepts the latest or specific TP request. |
-| `/tpdecline` | `/tpdecline` | `azox.utils.tpa` | Declines a pending request. |
-| `/tpignore` | `/tpignore` | `azox.utils.tpignore` | Toggle ignoring all incoming requests. |
-| `/back` | `/back` | `azox.utils.back` | Return to your last location or death point. |
-| `/rtp` | `/rtp` | `azox.utils.rtp` | Randomly teleport within 5000 blocks. |
-| `/tpo` | `/tpo <player>` | `azox.utils.tpo` | Teleport to an online or offline player. |
-| `/tpohere` | `/tpohere <player>` | `azox.utils.tpo` | Teleport an online or offline player to you. |
-| `/tpoundo` | `/tpoundo <player>` | `azox.utils.tpo` | Undo the last `/tpohere` operation. |
+## Storage
 
----
+Player data stored per-file at `plugins/AzoxCmd/playerdata/<username>_<uuid>.yml`. This keeps settings, homes, and preferences organized and easy to manage.
 
-### ⛓️ Jail System
-Advanced jail system with timed sentences and inescapable confinement.
-
-| Command | Usage | Permission | Description |
-| :--- | :--- | :--- | :--- |
-| `/jail` | `/jail <player> <jail> [not] [dramatic] [time]` | `azox.utils.jail` | Jail a player with optional time (e.g., `1d12h30m`). |
-| `/setjail` | `/setjail <name>` | `azox.utils.setjail` | Set a jail location. |
-| `/deljail` | `/deljail <name>` | `azox.utils.deljail` | Delete a jail. |
-| `/unjail` | `/unjail <player>` | `azox.utils.jail` | Release a player from jail. |
-
-**Features:**
-- **Timed Sentences:** Use formats like `1d`, `12h`, `30m`, `45s` or combinations (`1d12h30m`).
-- **Indefinite:** No time specified = indefinite sentence.
-- **Inescapable Jails:** Apply Blindness I, Slowness XXV, Mining Fatigue XXV. Auto-teleport back if escaped.
-- **Auto-Release:** Players are freed automatically when their sentence expires.
-- **Global Broadcast:** All players are notified when someone is sentenced.
-- **Dramatic Mode:** Lightning strike and levitation effect before jailing.
-
----
-
-### 🛡️ Admin & Miscellaneous
-
-| Command | Usage | Permission | Description |
-| :--- | :--- | :--- | :--- |
-| `/remove` | `/remove <type> [radius]` | `azox.utils.remove` | Remove entities (items, mobs, etc.) to reduce lag. |
-| `/createkit` | `/createkit <name> [cooldown]` | `azox.utils.createkit` | Create a kit from your current inventory. |
-| `/kit` | `/kit <name>` | `azox.utils.kit` | Claim a kit. |
-| `/delkit` | `/delkit <name>` | `azox.utils.delkit` | Delete a kit. |
-| `/vanish` | `/vanish [gui\|tipu\|fakejoin\|fakeleave]` | `azox.utils.vanish` | Advanced vanish system with stealth features. |
-| `/freeze` | `/freeze <player>` | `azox.utils.freeze` | Prevent a player from moving or interacting. |
-| `/nv` | `/nv` | `azox.utils.nightvision` | Toggle night vision (persists across sessions). |
-
----
-
-## 👑 Permission System
-
-AzoxUtils uses a structured permission system with automatic defaults.
-
-### Default Permissions (`azox.user.*`)
-If no permission manager is detected (LuckPerms, PermissionsEx, etc.), all players automatically receive `azox.user.*` permissions including:
-- Teleport commands (`/tpa`, `/home`, `/warp`, `/rtp`, `/back`)
-- Utility commands (`/craft`, `/anvil`, `/enderchest`, `/loom`)
-- Personal commands (`/fly`, `/god`, `/heal`, `/feed`, `/nv`)
-- Information commands (`/ping`, `/stats`, `/whois`, `/seen`)
-
-### Rank Permissions (`azox.rank.*`)
-- **Prefixes:** `azox.utils.rank.<name>` (owner, admin, mod, vip).
-- **Particles:** `azox.utils.particles.<effect>`.
-- **Ender Chest Pages:** `azox.utils.enderchest.pages.<1-5>`.
-- **Vanish Levels:** `azox.utils.vanish.level.<number>`.
-
-### Admin Permissions (`azox.admin.*`)
-All admin commands default to ops. Includes:
-- Jail management, vanish, freeze, sudo
-- World editing (`/lightning`, `/burn`, `/weather`)
-- Player management (`/gamemode`, `/speed`, `/tpo`)
-
----
-
-## 🔧 Development Workflow
-
-### Quick Testing Without Server Restarts
-
-| Method | Description | Setup |
-| :--- | :--- | :--- |
-| **Config Reload** | Reload warps, jails, kits, homes without restart | `/azox reload` |
-| **Paper Watchdog** | Auto-reload on file change (dev only) | Use [Paperwatch](https://github.com/PaperMC/paperwatch) |
-| **Docker Hot-Reload** | Mount plugin folder, copy JAR on build | See docker-compose below |
-| **IDE Remote Debug** | Debug running server remotely | Add `-agentlib:jdwp` to startup |
-
-### Recommended: Docker Development Setup
-
-```yaml
-# docker-compose.yml
-services:
-  paper:
-    image: ghcr.io/papermc/paper:1.21.11
-    volumes:
-      - ./plugins:/plugins
-      - ./world:/world
-    ports:
-      - "25565:25565"
-    environment:
-      - EULA=TRUE
-```
+## Building
 
 ```bash
-# Build and auto-deploy script
-#!/bin/bash
-mvn clean package -DskipTests
-cp target/AzoxUtils-1.0.0.jar ../test-server/plugins/
-ssh user@server "docker cp AzoxUtils-1.0.0.jar paper:/plugins/ && docker exec paper /paper reload"
+mvn clean package
 ```
 
-### Remote Debug Setup
+Output: `target/AzoxCmd-1.0.jar`
 
-Add to server startup script:
-```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar paper.jar
-```
+## Development
 
-Then connect IDE to `localhost:5005` for breakpoints.
+| Task | Command |
+| :--- | :--- |
+| Reload plugin | `/azoxreload` |
+| Check server TPS | `/tps` |
+| Check uptime | `/uptime` |
+| Remove lag sources | `/remove` |
 
-### Plugin Format Note
+## Configuration
 
-This plugin uses **Bukkit API** (`plugin.yml`) which is fully compatible with Paper servers.
-The newer "Paper plugin" format (`paper-plugin.yml`) requires programmatic command registration
-and offers no benefit for this plugin's use case.
+No configuration file required. All settings are player-specific and stored in individual player data files.
 
----
+## Version
 
-## 🎨 Design Features
-- **MiniMessage Support:** All messages use modern `<color>` tags and support hover/click events.
-- **Geyser Compatible:** Avoids complex GUI containers where possible, using interactive chat components that work perfectly for Bedrock players.
-- **Smart Completion:** Tab-completion for homes, warps, players, and coordinates, respecting vanish levels.
-- **Null Safety:** Comprehensive null checks throughout to prevent crashes.
-- **Clean UI:** Status indicators show "✔ Enabled" / "✘ Disabled" instead of raw material names.
+- Requires: Paper 1.21.11
+- API: Bukkit (compatible with Paper servers)
