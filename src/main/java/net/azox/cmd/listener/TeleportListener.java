@@ -12,14 +12,14 @@ public final class TeleportListener implements Listener {
 
     @EventHandler
     public void onDeath(final PlayerDeathEvent event) {
-        plugin.getTeleportManager().setLastLocation(event.getEntity(), event.getEntity().getLocation());
+        this.plugin.getTeleportManager().setLastLocation(event.getEntity(), event.getEntity().getLocation());
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(final PlayerTeleportEvent event) {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.COMMAND || 
             event.getCause() == PlayerTeleportEvent.TeleportCause.PLUGIN) {
-            plugin.getTeleportManager().setLastLocation(event.getPlayer(), event.getFrom());
+            this.plugin.getTeleportManager().setLastLocation(event.getPlayer(), event.getFrom());
         }
     }
 }

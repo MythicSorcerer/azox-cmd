@@ -36,12 +36,12 @@ public final class TpaHereCommand extends BaseCommand {
             return;
         }
 
-        if (plugin.getPlayerStorage().isTpIgnore(target)) {
+        if (this.plugin.getPlayerStorage().isTpIgnore(target)) {
             MessageUtil.sendMessage(player, "<red>That player is currently ignoring tp requests!");
             return;
         }
 
-        plugin.getTeleportManager().requestTeleport(player, target, true);
+        this.plugin.getTeleportManager().requestTeleport(player, target, true);
         MessageUtil.sendMessage(player, "<green>Teleport-here request sent to " + target.getName() + "!");
 
         final Component message = Component.text(player.getName() + " would like you to teleport to them. ", NamedTextColor.YELLOW)

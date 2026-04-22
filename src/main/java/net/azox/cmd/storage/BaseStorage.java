@@ -18,31 +18,31 @@ public abstract class BaseStorage {
         this.fileName = Objects.requireNonNull(fileName, "File name cannot be null");
         final AzoxCmd plugin = AzoxCmd.getInstance();
         this.file = new File(plugin.getDataFolder(), fileName);
-        if (!file.exists()) {
-            final File parent = file.getParentFile();
+        if (!this.file.exists()) {
+            final File parent = this.file.getParentFile();
             if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
             try {
-                file.createNewFile();
+                this.file.createNewFile();
             } catch (final IOException exception) {
-                plugin.getLogger().severe("Failed to create file: " + fileName);
+                plugin.getLogger().severe("Failed to create file: " + this.fileName);
                 exception.printStackTrace();
             }
         }
-        this.config = YamlConfiguration.loadConfiguration(file);
+        this.config = YamlConfiguration.loadConfiguration(this.file);
     }
 
     public void save() {
         try {
-            this.config.save(file);
+            this.config.save(this.file);
         } catch (final IOException exception) {
-            AzoxCmd.getInstance().getLogger().severe("Failed to save file: " + fileName);
+            AzoxCmd.getInstance().getLogger().severe("Failed to save file: " + this.fileName);
             exception.printStackTrace();
         }
     }
 
     public void reload() {
-        this.config = YamlConfiguration.loadConfiguration(file);
+        this.config = YamlConfiguration.loadConfiguration(this.file);
     }
 }

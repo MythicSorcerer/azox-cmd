@@ -9,6 +9,6 @@ public final class ConfigCommand extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!isPlayer(sender)) return;
-        plugin.getGuiManager().openConfigGui((Player) sender);
+        this.plugin.getGuiManager().openConfigGui((Player) sender);
     }
 }

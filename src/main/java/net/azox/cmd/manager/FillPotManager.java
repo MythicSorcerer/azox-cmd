@@ -18,96 +18,118 @@ public final class FillPotManager {
     private static final int REFILL_INTERVAL_TICKS = 200;
 
     private final AzoxCmd plugin = AzoxCmd.getInstance();
-    private final Map<UUID, List<SavedPotionSlot>> savedSlots = new ConcurrentHashMap<>();
+    private final Map<UUID, List<SavedPotionSlot>> savedSlots;
 
     public FillPotManager() {
+        this.savedSlots = new ConcurrentHashMap<>();
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (UUID uuid : savedSlots.keySet()) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    if (player != null && player.isOnline() && plugin.getPlayerStorage().isFillPotEnabled(player)) {
-                        refillPotions(player);
+                for (final UUID uuid : FillPotManager.this.savedSlots.keySet()) {
+                    final Player player = Bukkit.getPlayer(uuid);
+                    if (player != null && player.isOnline() && FillPotManager.this.plugin.getPlayerStorage().isFillPotEnabled(player)) {
+                        FillPotManager.this.refillPotions(player);
                     }
                 }
             }
-        }.runTaskTimer(plugin, REFILL_INTERVAL_TICKS, REFILL_INTERVAL_TICKS);
+        }.runTaskTimer(this.plugin, REFILL_INTERVAL_TICKS, REFILL_INTERVAL_TICKS);
     }
 
-    public void loadPlayerData(Player player) {
-        if (plugin.getPlayerStorage().hasSavedPotions(player)) {
-            List<String> savedData = plugin.getPlayerStorage().getSavedPotions(player);
-            List<SavedPotionSlot> slots = new ArrayList<>();
-            for (String entry : savedData) {
-                String[] parts = entry.split(":", 2);
+    public void loadPlayerData(final Player player) {
+        if (player == null) {
+            return;
+        }
+        if (this.plugin.getPlayerStorage().hasSavedPotions(player)) {
+            final List<String> savedData = this.plugin.getPlayerStorage().getSavedPotions(player);
+            final List<SavedPotionSlot> slots = new ArrayList<>();
+            for (final String entry : savedData) {
+                final String[] parts = entry.split(":", 2);
                 if (parts.length == 2) {
                     try {
-                        int slot = Integer.parseInt(parts[0]);
-                        ItemStack item = deserializeItemStack(parts[1]);
+                        final int slot = Integer.parseInt(parts[0]);
+                        final ItemStack item = this.deserializeItemStack(parts[1]);
                         if (item != null) {
                             slots.add(new SavedPotionSlot(slot, item.clone()));
                         }
-                    } catch (NumberFormatException ignored) {}
+                    } catch (NumberFormatException ignored) {
+                        // ignore invalid entries
+                    }
                 }
             }
-            savedSlots.put(player.getUniqueId(), slots);
+            this.savedSlots.put(player.getUniqueId(), slots);
         }
     }
 
-    public void unloadPlayerData(UUID uuid) {
-        savedSlots.remove(uuid);
+    public void unloadPlayerData(final UUID uuid) {
+        if (uuid == null) {
+            return;
+        }
+        this.savedSlots.remove(uuid);
     }
 
-    public void savePlayerPotions(Player player) {
-        List<SavedPotionSlot> slots = new ArrayList<>();
-        for (int i = 0; i < player.getInventory().getSize(); i++) {
-            ItemStack item = player.getInventory().getItem(i);
-            if (item != null && isPotion(item.getType())) {
-                slots.add(new SavedPotionSlot(i, item.clone()));
+    public void savePlayerPotions(final Player player) {
+        if (player == null) {
+            return;
+        }
+        final List<SavedPotionSlot> slots = new ArrayList<>();
+        for (int slotIndex = 0; slotIndex < player.getInventory().getSize(); slotIndex++) {
+            final ItemStack item = player.getInventory().getItem(slotIndex);
+            if (item != null && this.isPotion(item.getType())) {
+                slots.add(new SavedPotionSlot(slotIndex, item.clone()));
             }
         }
-        savedSlots.put(player.getUniqueId(), slots);
+        this.savedSlots.put(player.getUniqueId(), slots);
     }
 
-    private void refillPotions(Player player) {
-        List<SavedPotionSlot> slots = savedSlots.get(player.getUniqueId());
-        if (slots == null) return;
+    private void refillPotions(final Player player) {
+        final List<SavedPotionSlot> slots = this.savedSlots.get(player.getUniqueId());
+        if (slots == null) {
+            return;
+        }
 
-        for (SavedPotionSlot slot : slots) {
-            ItemStack current = player.getInventory().getItem(slot.slot);
+        for (final SavedPotionSlot slot : slots) {
+            final ItemStack current = player.getInventory().getItem(slot.slot);
             if (current == null || current.getAmount() < slot.item.getAmount()) {
                 player.getInventory().setItem(slot.slot, slot.item.clone());
             }
         }
     }
 
-    private boolean isPotion(Material material) {
+    private boolean isPotion(final Material material) {
         return material == Material.POTION ||
                material == Material.SPLASH_POTION ||
                material == Material.LINGERING_POTION;
     }
 
-    private ItemStack deserializeItemStack(String data) {
+    private ItemStack deserializeItemStack(final String data) {
+        if (data == null || data.isBlank()) {
+            return null;
+        }
         try {
-            String[] parts = data.split(",");
-            Material material = Material.getMaterial(parts[0]);
-            if (material == null) return null;
+            final String[] parts = data.split(",");
+            if (parts.length < 3) {
+                return null;
+            }
+            final Material material = Material.getMaterial(parts[0]);
+            if (material == null) {
+                return null;
+            }
 
-            int amount = Integer.parseInt(parts[1]);
-            short durability = Short.parseShort(parts[2]);
+            final int amount = Integer.parseInt(parts[1]);
+            final short durability = Short.parseShort(parts[2]);
 
-            ItemStack item = new ItemStack(material, amount, durability);
+            final ItemStack item = new ItemStack(material, amount, durability);
 
             if (parts.length > 3) {
-                org.bukkit.inventory.meta.ItemMeta meta = item.getItemMeta();
+                final org.bukkit.inventory.meta.ItemMeta meta = item.getItemMeta();
                 if (meta != null) {
-                    for (int i = 3; i < parts.length; i++) {
-                        if (parts[i].startsWith("name:")) {
-                            meta.setDisplayName(parts[i].substring(5).replace(";", ","));
-                        } else if (parts[i].startsWith("lore:")) {
-                            String loreStr = parts[i].substring(5);
-                            List<String> lore = new ArrayList<>();
-                            for (String line : loreStr.split("\\|")) {
+                    for (int partIndex = 3; partIndex < parts.length; partIndex++) {
+                        if (parts[partIndex].startsWith("name:")) {
+                            meta.setDisplayName(parts[partIndex].substring(5).replace(";", ","));
+                        } else if (parts[partIndex].startsWith("lore:")) {
+                            final String loreStr = parts[partIndex].substring(5);
+                            final List<String> lore = new ArrayList<>();
+                            for (final String line : loreStr.split("\\|")) {
                                 lore.add(line.replace(";", ","));
                             }
                             meta.setLore(lore);
@@ -118,7 +140,7 @@ public final class FillPotManager {
             }
 
             return item;
-        } catch (Exception e) {
+        } catch (final Exception exception) {
             return null;
         }
     }
@@ -127,7 +149,7 @@ public final class FillPotManager {
         public final int slot;
         public final ItemStack item;
 
-        public SavedPotionSlot(int slot, ItemStack item) {
+        public SavedPotionSlot(final int slot, final ItemStack item) {
             this.slot = slot;
             this.item = item;
         }

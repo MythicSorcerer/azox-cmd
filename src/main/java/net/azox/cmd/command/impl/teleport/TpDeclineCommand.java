@@ -15,7 +15,7 @@ public final class TpDeclineCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        final Optional<TeleportRequest> requestOpt = plugin.getTeleportManager().getRequest(player);
+        final Optional<TeleportRequest> requestOpt = this.plugin.getTeleportManager().getRequest(player);
         if (requestOpt.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>You have no pending teleport requests!");
             return;
@@ -27,7 +27,7 @@ public final class TpDeclineCommand extends BaseCommand {
             return;
         }
 
-        plugin.getTeleportManager().removeRequest(player);
+        this.plugin.getTeleportManager().removeRequest(player);
         MessageUtil.sendMessage(player, "<green>Teleport request declined!");
         if (request.getRequester().isOnline()) {
             MessageUtil.sendMessage(request.getRequester(), "<red>" + player.getName() + " declined your teleport request.");

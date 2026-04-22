@@ -33,7 +33,7 @@ public final class JailCommand extends BaseCommand {
                 MessageUtil.sendMessage(sender, "<red>Usage: /setjail <name>");
                 return;
             }
-            plugin.getJailManager().setJail(args[0], ((Player) sender).getLocation());
+            this.plugin.getJailManager().setJail(args[0], ((Player) sender).getLocation());
             MessageUtil.sendMessage(sender, "<green>Jail '" + args[0] + "' set!");
             return;
         }
@@ -43,7 +43,7 @@ public final class JailCommand extends BaseCommand {
                 MessageUtil.sendMessage(sender, "<red>Usage: /deljail <name>");
                 return;
             }
-            plugin.getJailManager().deleteJail(args[0]);
+            this.plugin.getJailManager().deleteJail(args[0]);
             MessageUtil.sendMessage(sender, "<green>Jail '" + args[0] + "' deleted!");
             return;
         }
@@ -58,7 +58,7 @@ public final class JailCommand extends BaseCommand {
                 MessageUtil.sendMessage(sender, "<red>Player not found!");
                 return;
             }
-            plugin.getPlayerStorage().setUnjailed(target);
+            this.plugin.getPlayerStorage().setUnjailed(target);
             MessageUtil.sendMessage(sender, "<green>Player " + target.getName() + " unjailed!");
             return;
         }
@@ -74,7 +74,7 @@ public final class JailCommand extends BaseCommand {
             return;
         }
 
-        final Optional<Location> jailLoc = plugin.getJailManager().getJail(args[1]);
+        final Optional<Location> jailLoc = this.plugin.getJailManager().getJail(args[1]);
         if (jailLoc.isEmpty()) {
             MessageUtil.sendMessage(sender, "<red>Jail not found!");
             return;
@@ -92,13 +92,13 @@ public final class JailCommand extends BaseCommand {
     }
 
     private void jailPlayer(final Player target, final String jailName, final boolean inescapable, final Long durationMillis, final CommandSender sender) {
-        final Optional<Location> jailLoc = plugin.getJailManager().getJail(jailName);
+        final Optional<Location> jailLoc = this.plugin.getJailManager().getJail(jailName);
         if (jailLoc.isEmpty()) {
             return;
         }
 
         target.teleport(jailLoc.get());
-        plugin.getPlayerStorage().setJailed(target, jailName, inescapable, durationMillis);
+        this.plugin.getPlayerStorage().setJailed(target, jailName, inescapable, durationMillis);
 
         if (inescapable) {
             applyInescapableJailEffects(target);
@@ -141,7 +141,7 @@ public final class JailCommand extends BaseCommand {
                 target.setGlowing(false);
                 target.removePotionEffect(PotionEffectType.LEVITATION);
 
-                plugin.getPlayerStorage().setJailed(target, "dramatic_jail", inescapable, durationMillis);
+                JailCommand.this.plugin.getPlayerStorage().setJailed(target, "dramatic_jail", inescapable, durationMillis);
 
                 if (inescapable) {
                     applyInescapableJailEffects(target);
@@ -213,7 +213,7 @@ public final class JailCommand extends BaseCommand {
             return getVisiblePlayerNames(sender, args[0]);
         }
         if (args.length == 2) {
-            return plugin.getJailManager().getJails().keySet().stream()
+            return this.plugin.getJailManager().getJails().keySet().stream()
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }

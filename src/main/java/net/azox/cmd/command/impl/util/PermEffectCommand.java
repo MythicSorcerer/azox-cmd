@@ -40,10 +40,10 @@ public final class PermEffectCommand extends BaseCommand {
         final Player finalTarget = target;
 
         if (args.length == 0) {
-            if (plugin.getPlayerStorage().hasPermEffects(finalTarget)) {
-                plugin.getPlayerStorage().clearPermEffects(finalTarget);
+            if (this.plugin.getPlayerStorage().hasPermEffects(finalTarget)) {
+                this.plugin.getPlayerStorage().clearPermEffects(finalTarget);
                 finalTarget.getActivePotionEffects().forEach(effect -> {
-                    if (plugin.getPlayerStorage().getPermEffectLevel(finalTarget, effect.getType().getName()) != null) {
+                    if (this.plugin.getPlayerStorage().getPermEffectLevel(finalTarget, effect.getType().getName()) != null) {
                         finalTarget.removePotionEffect(effect.getType());
                     }
                 });
@@ -88,7 +88,7 @@ public final class PermEffectCommand extends BaseCommand {
             return;
         }
 
-        plugin.getPlayerStorage().setPermEffect(target, effectType.getName(), level);
+        this.plugin.getPlayerStorage().setPermEffect(target, effectType.getName(), level);
         target.removePotionEffect(effectType);
         target.addPotionEffect(new PotionEffect(effectType, Integer.MAX_VALUE, level, false, false));
 

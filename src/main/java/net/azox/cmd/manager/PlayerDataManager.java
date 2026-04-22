@@ -9,19 +9,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public final class PlayerDataManager {
 
     private final AzoxCmd plugin = AzoxCmd.getInstance();
     private final File dataFolder;
-    private final Map<UUID, FileConfiguration> configs = new HashMap<>();
+    private final Map<UUID, FileConfiguration> configs;
 
     public PlayerDataManager() {
-        this.dataFolder = new File(plugin.getDataFolder(), "playerdata");
-        if (!dataFolder.exists()) {
-            dataFolder.mkdirs();
+        this.dataFolder = new File(this.plugin.getDataFolder(), "playerdata");
+        this.configs = new HashMap<>();
+        if (!this.dataFolder.exists()) {
+            this.dataFolder.mkdirs();
         }
     }
 
@@ -29,42 +29,42 @@ public final class PlayerDataManager {
         if (player == null || player.getUniqueId() == null) {
             return null;
         }
-        return configs.computeIfAbsent(player.getUniqueId(), k -> loadConfig(player.getUniqueId(), player.getName()));
+        return this.configs.computeIfAbsent(player.getUniqueId(), key -> this.loadConfig(player.getUniqueId(), player.getName()));
     }
 
     public FileConfiguration getConfig(final Player player) {
         if (player == null) {
             return null;
         }
-        return configs.computeIfAbsent(player.getUniqueId(), k -> loadConfig(player));
+        return this.configs.computeIfAbsent(player.getUniqueId(), key -> this.loadConfig(player));
     }
 
     public FileConfiguration getConfig(final UUID uuid, final String name) {
         if (uuid == null) {
             return null;
         }
-        return configs.computeIfAbsent(uuid, k -> loadConfig(uuid, name));
+        return this.configs.computeIfAbsent(uuid, key -> this.loadConfig(uuid, name));
     }
 
     private FileConfiguration loadConfig(final Player player) {
         if (player == null) {
             return null;
         }
-        return loadConfig(player.getUniqueId(), player.getName());
+        return this.loadConfig(player.getUniqueId(), player.getName());
     }
 
     private FileConfiguration loadConfig(final UUID uuid, final String name) {
         if (uuid == null) {
             return null;
         }
-        final File file = getFile(uuid, name);
+        final File file = this.getFile(uuid, name);
         if (file == null || !file.exists()) {
             try {
                 if (file != null && !file.createNewFile()) {
-                    plugin.getLogger().warning("Failed to create config file for: " + name);
+                    this.plugin.getLogger().warning("Failed to create config file for: " + name);
                 }
             } catch (final IOException exception) {
-                plugin.getLogger().severe("Failed to create config file for: " + name);
+                this.plugin.getLogger().severe("Failed to create config file for: " + name);
                 exception.printStackTrace();
             }
         }
@@ -75,18 +75,18 @@ public final class PlayerDataManager {
         if (uuid == null) {
             return;
         }
-        final FileConfiguration config = configs.get(uuid);
+        final FileConfiguration config = this.configs.get(uuid);
         if (config == null) {
             return;
         }
-        final File file = getFile(uuid, name);
+        final File file = this.getFile(uuid, name);
         if (file == null) {
             return;
         }
         try {
             config.save(file);
         } catch (final IOException exception) {
-            plugin.getLogger().severe("Failed to save config for: " + name);
+            this.plugin.getLogger().severe("Failed to save config for: " + name);
             exception.printStackTrace();
         }
     }
@@ -95,13 +95,13 @@ public final class PlayerDataManager {
         if (uuid == null || name == null) {
             return null;
         }
-        return new File(dataFolder, name + "_" + uuid.toString() + ".yml");
+        return new File(this.dataFolder, name + "_" + uuid.toString() + ".yml");
     }
 
     public void unload(final UUID uuid) {
         if (uuid == null) {
             return;
         }
-        configs.remove(uuid);
+        this.configs.remove(uuid);
     }
 }

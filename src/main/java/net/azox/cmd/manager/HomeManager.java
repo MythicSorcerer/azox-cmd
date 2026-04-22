@@ -1,15 +1,14 @@
 package net.azox.cmd.manager;
 
 import net.azox.cmd.AzoxCmd;
-import net.azox.cmd.model.Home;
 import lombok.Getter;
+import net.azox.cmd.model.Home;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,30 +16,31 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class HomeManager {
 
     private final AzoxCmd plugin = AzoxCmd.getInstance();
-    private final Map<UUID, Map<String, Home>> cachedHomes = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<String, Home>> cachedHomes;
 
     public HomeManager() {
+        this.cachedHomes = new ConcurrentHashMap<>();
     }
 
     public Map<String, Home> getHomes(final Player player) {
         if (player == null) {
             return new HashMap<>();
         }
-        return cachedHomes.computeIfAbsent(player.getUniqueId(), k -> plugin.getPlayerStorage().getHomes(player));
+        return this.cachedHomes.computeIfAbsent(player.getUniqueId(), key -> this.plugin.getPlayerStorage().getHomes(player));
     }
 
     public Optional<Home> getHome(final Player player, final String name) {
         if (player == null || name == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(getHomes(player).get(name.toLowerCase()));
+        return Optional.ofNullable(this.getHomes(player).get(name.toLowerCase()));
     }
 
     public void setHome(final Player player, final String name, final Location location) {
         if (player == null || name == null || location == null) {
             return;
         }
-        final Map<String, Home> homes = getHomes(player);
+        final Map<String, Home> homes = this.getHomes(player);
 
         final String homeName = name.toLowerCase();
         final Home home = homes.getOrDefault(homeName, new Home());
@@ -54,24 +54,25 @@ public final class HomeManager {
         }
 
         homes.put(homeName, home);
-        plugin.getPlayerStorage().saveHome(player, home);
+        this.plugin.getPlayerStorage().saveHome(player, home);
     }
 
     public void deleteHome(final Player player, final String name) {
         if (player == null || name == null) {
             return;
         }
-        final Map<String, Home> homes = getHomes(player);
+        final Map<String, Home> homes = this.getHomes(player);
         homes.remove(name.toLowerCase());
-        plugin.getPlayerStorage().deleteHome(player, name.toLowerCase());
+        this.plugin.getPlayerStorage().deleteHome(player, name.toLowerCase());
     }
 
     public void deleteAllHomes(final Player player) {
         if (player == null) {
             return;
         }
-        cachedHomes.remove(player.getUniqueId());
-        plugin.getPlayerStorage().getHomes(player).keySet().forEach(homeName -> plugin.getPlayerStorage().deleteHome(player, homeName));
+        this.cachedHomes.remove(player.getUniqueId());
+        this.plugin.getPlayerStorage().getHomes(player).keySet()
+                .forEach(homeName -> this.plugin.getPlayerStorage().deleteHome(player, homeName));
     }
 
     public int getHomeLimit(final Player player) {
@@ -83,15 +84,15 @@ public final class HomeManager {
         }
 
         int limit = 4;
-        for (int i = 100; i > limit; i--) {
-            if (player.hasPermission("azox.util.homes." + i)) {
-                return i;
+        for (int homeLimit = 100; homeLimit > limit; homeLimit--) {
+            if (player.hasPermission("azox.util.homes." + homeLimit)) {
+                return homeLimit;
             }
         }
         return limit;
     }
 
     public List<Home> getPublicHomes() {
-        return plugin.getPlayerStorage().getPublicHomes();
+        return this.plugin.getPlayerStorage().getPublicHomes();
     }
 }

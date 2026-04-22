@@ -30,7 +30,7 @@ public final class DelHomeCommand extends BaseCommand {
 
         if (name.equals("all")) {
             if (args.length > 1 && args[1].equalsIgnoreCase("confirm")) {
-                plugin.getHomeManager().deleteAllHomes(player);
+                this.plugin.getHomeManager().deleteAllHomes(player);
                 MessageUtil.sendMessage(player, "<green>Successfully deleted all homes!");
             } else {
                 final Component message = Component.text("Are you sure you want to delete all homes? ", NamedTextColor.RED)
@@ -44,13 +44,13 @@ public final class DelHomeCommand extends BaseCommand {
             return;
         }
 
-        final Optional<Home> home = plugin.getHomeManager().getHome(player, name);
+        final Optional<Home> home = this.plugin.getHomeManager().getHome(player, name);
         if (home.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>Home '" + name + "' not found!");
             return;
         }
 
-        plugin.getHomeManager().deleteHome(player, name);
+        this.plugin.getHomeManager().deleteHome(player, name);
         MessageUtil.sendMessage(player, "<green>Successfully deleted home '" + name + "'!");
     }
 
@@ -58,7 +58,7 @@ public final class DelHomeCommand extends BaseCommand {
     public List<String> complete(CommandSender sender, String[] args) {
         if (sender instanceof Player && args.length == 1) {
             final Player player = (Player) sender;
-            final List<String> homes = new ArrayList<>(plugin.getHomeManager().getHomes(player).keySet());
+            final List<String> homes = new ArrayList<>(this.plugin.getHomeManager().getHomes(player).keySet());
             homes.add("all");
             return homes.stream()
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))

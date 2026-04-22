@@ -25,8 +25,8 @@ public final class HomesCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        if (plugin.getPlayerStorage().isGuiEnabled(player) && args.length == 0) {
-            plugin.getGuiManager().openHomesGui(player);
+        if (this.plugin.getPlayerStorage().isGuiEnabled(player) && args.length == 0) {
+            this.plugin.getGuiManager().openHomesGui(player);
             return;
         }
 
@@ -50,7 +50,7 @@ public final class HomesCommand extends BaseCommand {
             }
         }
 
-        final Map<String, Home> homesMap = plugin.getPlayerStorage().getHomes(target);
+        final Map<String, Home> homesMap = this.plugin.getPlayerStorage().getHomes(target);
         final List<Home> homes = new ArrayList<>(homesMap.values());
 
         if (homes.isEmpty()) {

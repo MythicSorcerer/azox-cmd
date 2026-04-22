@@ -32,85 +32,110 @@ public final class ILiveManager {
     ));
 
     private final AzoxCmd plugin = AzoxCmd.getInstance();
-    private final Map<UUID, ILiveData> ilivePlayers = new ConcurrentHashMap<>();
+    private final Map<UUID, ILiveData> ilivePlayers;
 
     public ILiveManager() {
+        this.ilivePlayers = new ConcurrentHashMap<>();
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (UUID uuid : ilivePlayers.keySet()) {
-                    Player player = Bukkit.getPlayer(uuid);
+                for (final UUID uuid : ILiveManager.this.ilivePlayers.keySet()) {
+                    final Player player = Bukkit.getPlayer(uuid);
                     if (player != null && player.isOnline()) {
-                        processILivePlayer(player);
+                        ILiveManager.this.processILivePlayer(player);
                     }
                 }
             }
-        }.runTaskTimer(plugin, 100L, 100L);
+        }.runTaskTimer(this.plugin, 100L, 100L);
     }
 
-    public void enableILive(Player player, String mode, int damageReduction, boolean foodHeal) {
-        ilivePlayers.put(player.getUniqueId(), new ILiveData(mode, damageReduction, foodHeal));
-        plugin.getPlayerStorage().setILiveEnabled(player, true);
-        plugin.getPlayerStorage().setILiveMode(player, mode);
-        plugin.getPlayerStorage().setILiveDamageReduction(player, damageReduction);
-        plugin.getPlayerStorage().setILiveFoodHeal(player, foodHeal);
+    public void enableILive(final Player player, final String mode, final int damageReduction, final boolean foodHeal) {
+        if (player == null) {
+            return;
+        }
+        this.ilivePlayers.put(player.getUniqueId(), new ILiveData(mode, damageReduction, foodHeal));
+        this.plugin.getPlayerStorage().setILiveEnabled(player, true);
+        this.plugin.getPlayerStorage().setILiveMode(player, mode);
+        this.plugin.getPlayerStorage().setILiveDamageReduction(player, damageReduction);
+        this.plugin.getPlayerStorage().setILiveFoodHeal(player, foodHeal);
     }
 
-    public void disableILive(Player player) {
-        ilivePlayers.remove(player.getUniqueId());
-        plugin.getPlayerStorage().setILiveEnabled(player, false);
+    public void disableILive(final Player player) {
+        if (player == null) {
+            return;
+        }
+        this.ilivePlayers.remove(player.getUniqueId());
+        this.plugin.getPlayerStorage().setILiveEnabled(player, false);
     }
 
-    public boolean isEnabled(Player player) {
-        return ilivePlayers.containsKey(player.getUniqueId());
+    public boolean isEnabled(final Player player) {
+        if (player == null) {
+            return false;
+        }
+        return this.ilivePlayers.containsKey(player.getUniqueId());
     }
 
-    public ILiveData getData(Player player) {
-        return ilivePlayers.get(player.getUniqueId());
+    public ILiveData getData(final Player player) {
+        if (player == null) {
+            return null;
+        }
+        return this.ilivePlayers.get(player.getUniqueId());
     }
 
-    public void loadPlayerData(Player player) {
-        if (plugin.getPlayerStorage().isILiveEnabled(player)) {
-            String mode = plugin.getPlayerStorage().getILiveMode(player);
-            int damageReduction = plugin.getPlayerStorage().getILiveDamageReduction(player);
-            boolean foodHeal = plugin.getPlayerStorage().isILiveFoodHealEnabled(player);
-            if (mode == null) mode = "nototem";
-            if (damageReduction < 0) damageReduction = 1;
-            ilivePlayers.put(player.getUniqueId(), new ILiveData(mode, damageReduction, foodHeal));
+    public void loadPlayerData(final Player player) {
+        if (player == null) {
+            return;
+        }
+        if (this.plugin.getPlayerStorage().isILiveEnabled(player)) {
+            String mode = this.plugin.getPlayerStorage().getILiveMode(player);
+            int damageReduction = this.plugin.getPlayerStorage().getILiveDamageReduction(player);
+            final boolean foodHeal = this.plugin.getPlayerStorage().isILiveFoodHealEnabled(player);
+            if (mode == null) {
+                mode = "nototem";
+            }
+            if (damageReduction < 0) {
+                damageReduction = 1;
+            }
+            this.ilivePlayers.put(player.getUniqueId(), new ILiveData(mode, damageReduction, foodHeal));
         }
     }
 
-    private void processILivePlayer(Player player) {
-        ILiveData data = getData(player);
-        if (data == null) return;
+    private void processILivePlayer(final Player player) {
+        final ILiveData data = this.getData(player);
+        if (data == null) {
+            return;
+        }
 
         if (data.foodHeal && player.getHealth() < 6.0 && player.getFoodLevel() > 0) {
-            healWithFood(player);
+            this.healWithFood(player);
         }
     }
 
-    private void healWithFood(Player player) {
-        for (int i = 0; i < player.getInventory().getSize(); i++) {
-            ItemStack item = player.getInventory().getItem(i);
+    private void healWithFood(final Player player) {
+        for (int slotIndex = 0; slotIndex < player.getInventory().getSize(); slotIndex++) {
+            final ItemStack item = player.getInventory().getItem(slotIndex);
             if (item != null && HEALING_FOODS.contains(item.getType())) {
-                player.getInventory().setItem(i, item.getAmount() > 1 ? 
-                        new ItemStack(item.getType(), item.getAmount() - 1) : null);
-                int newFood = Math.min(20, player.getFoodLevel() + 3);
+                player.getInventory().setItem(slotIndex, item.getAmount() > 1
+                        ? new ItemStack(item.getType(), item.getAmount() - 1)
+                        : null);
+                final int newFood = Math.min(20, player.getFoodLevel() + 3);
                 player.setFoodLevel(newFood);
                 break;
             }
         }
     }
 
-    public double getDamageMultiplier(Player player) {
-        ILiveData data = getData(player);
-        if (data == null) return 1.0;
-        int reduction = data.damageReduction;
+    public double getDamageMultiplier(final Player player) {
+        final ILiveData data = this.getData(player);
+        if (data == null) {
+            return 1.0;
+        }
+        final int reduction = data.damageReduction;
         return 1.0 - (reduction * 0.2);
     }
 
-    public boolean isNoTotemMode(Player player) {
-        ILiveData data = getData(player);
+    public boolean isNoTotemMode(final Player player) {
+        final ILiveData data = this.getData(player);
         return data != null && "nototem".equals(data.mode);
     }
 
@@ -119,7 +144,7 @@ public final class ILiveManager {
         public final int damageReduction;
         public final boolean foodHeal;
 
-        public ILiveData(String mode, int damageReduction, boolean foodHeal) {
+        public ILiveData(final String mode, final int damageReduction, final boolean foodHeal) {
             this.mode = mode;
             this.damageReduction = Math.max(0, Math.min(5, damageReduction));
             this.foodHeal = foodHeal;

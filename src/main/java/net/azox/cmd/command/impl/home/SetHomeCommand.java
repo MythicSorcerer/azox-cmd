@@ -20,16 +20,16 @@ public final class SetHomeCommand extends BaseCommand {
             homeName = args[0];
         }
 
-        final Map<String, Home> homes = plugin.getHomeManager().getHomes(player);
+        final Map<String, Home> homes = this.plugin.getHomeManager().getHomes(player);
         if (!homes.containsKey(homeName.toLowerCase())) {
-            final int limit = plugin.getHomeManager().getHomeLimit(player);
+            final int limit = this.plugin.getHomeManager().getHomeLimit(player);
             if (homes.size() >= limit) {
                 MessageUtil.sendMessage(player, "<red>" + MessageUtil.ICON_ERROR + " You have reached your home limit of " + limit + "!");
                 return;
             }
         }
 
-        plugin.getHomeManager().setHome(player, homeName, player.getLocation());
+        this.plugin.getHomeManager().setHome(player, homeName, player.getLocation());
         final String displayName = homeName.equalsIgnoreCase("home") ? "" : " called " + homeName;
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Successfully set a new home" + displayName + "!");
     }

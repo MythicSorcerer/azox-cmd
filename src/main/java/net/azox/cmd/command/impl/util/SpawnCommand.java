@@ -23,7 +23,7 @@ public final class SpawnCommand extends BaseCommand {
             player.getWorld().setSpawnLocation(player.getLocation());
             MessageUtil.sendMessage(player, "<green>Spawn location set!");
         } else {
-            plugin.getTeleportManager().teleportWithDelay(player, player.getWorld().getSpawnLocation());
+            this.plugin.getTeleportManager().teleportWithDelay(player, player.getWorld().getSpawnLocation());
         }
     }
 }

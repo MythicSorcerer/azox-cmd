@@ -8,15 +8,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public final class ParticleManager {
 
     private final AzoxCmd plugin = AzoxCmd.getInstance();
-    private final Map<UUID, Particle> activeParticles = new HashMap<>();
+    private final Map<UUID, Particle> activeParticles;
 
     public ParticleManager() {
+        this.activeParticles = new HashMap<>();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -24,18 +24,18 @@ public final class ParticleManager {
                     if (player == null) {
                         continue;
                     }
-                    if (!plugin.getPlayerStorage().areParticlesEnabled(player)) {
+                    if (!ParticleManager.this.plugin.getPlayerStorage().areParticlesEnabled(player)) {
                         continue;
                     }
 
-                    final Particle particle = getPlayerParticle(player);
+                    final Particle particle = ParticleManager.this.getPlayerParticle(player);
                     if (particle != null) {
                         // Use particles that don't require data
                         player.getWorld().spawnParticle(particle, player.getLocation().add(0, 3.2, 0), 1, 0.1, 0.1, 0.1, 0.0);
                     }
                 }
             }
-        }.runTaskTimer(AzoxCmd.getInstance(), 0L, 20L);
+        }.runTaskTimer(this.plugin, 0L, 20L);
     }
 
     public void setParticle(final UUID uuid, final Particle particle) {
@@ -43,9 +43,9 @@ public final class ParticleManager {
             return;
         }
         if (particle == null) {
-            activeParticles.remove(uuid);
+            this.activeParticles.remove(uuid);
         } else {
-            activeParticles.put(uuid, particle);
+            this.activeParticles.put(uuid, particle);
         }
     }
 
@@ -53,9 +53,9 @@ public final class ParticleManager {
         if (player == null) {
             return null;
         }
-        for (int i = 100; i > 0; i--) {
-            if (player.hasPermission("azox.util.particles." + i)) {
-                return getParticleForLevel(i);
+        for (int level = 100; level > 0; level--) {
+            if (player.hasPermission("azox.util.particles." + level)) {
+                return this.getParticleForLevel(level);
             }
         }
         return null;
@@ -76,13 +76,13 @@ public final class ParticleManager {
     }
 
     public boolean hasParticle(final UUID uuid) {
-        return uuid != null && activeParticles.containsKey(uuid);
+        return uuid != null && this.activeParticles.containsKey(uuid);
     }
 
     public void removeParticle(final UUID uuid) {
         if (uuid == null) {
             return;
         }
-        activeParticles.remove(uuid);
+        this.activeParticles.remove(uuid);
     }
 }

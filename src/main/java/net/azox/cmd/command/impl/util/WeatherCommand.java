@@ -16,7 +16,7 @@ public final class WeatherCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        World world = sender instanceof Player ? ((Player) sender).getWorld() : plugin.getServer().getWorlds().get(0);
+        World world = sender instanceof Player ? ((Player) sender).getWorld() : this.plugin.getServer().getWorlds().get(0);
         
         switch (type.toLowerCase()) {
             case "sun":

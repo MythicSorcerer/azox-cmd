@@ -23,20 +23,20 @@ public final class HomeCommand extends BaseCommand {
             homeName = args[0];
         }
 
-        final Optional<Home> home = plugin.getHomeManager().getHome(player, homeName);
+        final Optional<Home> home = this.plugin.getHomeManager().getHome(player, homeName);
         if (home.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>Home '" + homeName + "' not found!");
             return;
         }
 
-        plugin.getTeleportManager().teleportWithDelay(player, home.get().getLocation());
+        this.plugin.getTeleportManager().teleportWithDelay(player, home.get().getLocation());
     }
 
     @Override
     public List<String> complete(CommandSender sender, String[] args) {
         if (sender instanceof Player && args.length == 1) {
             final Player player = (Player) sender;
-            return plugin.getHomeManager().getHomes(player).keySet().stream()
+            return this.plugin.getHomeManager().getHomes(player).keySet().stream()
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }

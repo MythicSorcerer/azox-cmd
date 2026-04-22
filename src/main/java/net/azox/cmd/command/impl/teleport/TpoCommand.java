@@ -40,11 +40,11 @@ public final class TpoCommand extends BaseCommand {
             }
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
             if (target.isOnline()) {
-                plugin.getTeleportManager().addUndoLocation(target.getUniqueId(), target.getPlayer().getLocation());
+                this.plugin.getTeleportManager().addUndoLocation(target.getUniqueId(), target.getPlayer().getLocation());
                 target.getPlayer().teleport(player.getLocation());
                 MessageUtil.sendMessage(player, "<green>Teleported " + target.getName() + " to you.");
             } else {
-                plugin.getTeleportManager().addPendingTeleport(target.getUniqueId(), player.getLocation());
+                this.plugin.getTeleportManager().addPendingTeleport(target.getUniqueId(), player.getLocation());
                 MessageUtil.sendMessage(player, "<green>Target offline. They will teleport to you on join.");
             }
         } else if (label.equalsIgnoreCase("tpoundo")) {
@@ -53,7 +53,7 @@ public final class TpoCommand extends BaseCommand {
                 return;
             }
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-            Location oldLoc = plugin.getTeleportManager().getUndoLocation(target.getUniqueId());
+            Location oldLoc = this.plugin.getTeleportManager().getUndoLocation(target.getUniqueId());
             if (oldLoc != null && target.isOnline()) {
                 target.getPlayer().teleport(oldLoc);
                 MessageUtil.sendMessage(player, "<green>Teleported " + target.getName() + " back.");

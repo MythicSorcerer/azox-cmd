@@ -36,12 +36,12 @@ public final class TpaCommand extends BaseCommand {
             return;
         }
 
-        if (plugin.getPlayerStorage().isTpIgnore(target)) {
+        if (this.plugin.getPlayerStorage().isTpIgnore(target)) {
             MessageUtil.sendMessage(player, "<red>" + MessageUtil.ICON_ERROR + " That player is currently ignoring tp requests!");
             return;
         }
 
-        plugin.getTeleportManager().requestTeleport(player, target, false);
+        this.plugin.getTeleportManager().requestTeleport(player, target, false);
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Teleport request sent to " + target.getName() + "!");
 
         final Component message = Component.text(MessageUtil.ICON_TP + " " + player.getName() + " would like to teleport to you. ", NamedTextColor.YELLOW)

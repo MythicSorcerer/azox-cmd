@@ -27,7 +27,7 @@ public final class SetWarpCommand extends BaseCommand {
             } catch (NumberFormatException ignored) {}
         }
 
-        plugin.getWarpManager().setWarp(name, player.getLocation(), level);
+        this.plugin.getWarpManager().setWarp(name, player.getLocation(), level);
         MessageUtil.sendMessage(player, "<green>Successfully set warp '" + name + "' with level " + level + "!");
     }
 }

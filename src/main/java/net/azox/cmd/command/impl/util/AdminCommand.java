@@ -23,7 +23,7 @@ public final class AdminCommand extends BaseCommand {
             MessageUtil.sendMessage(sender, "<red>This command must be executed by a player.");
             return;
         }
-        plugin.getGuiManager().openAdminGui((Player) sender);
+        this.plugin.getGuiManager().openAdminGui((Player) sender);
     }
 
     private void reloadConfig(final CommandSender sender) {
@@ -31,20 +31,20 @@ public final class AdminCommand extends BaseCommand {
 
         try {
             // Reload warp data
-            plugin.getWarpManager().getStorage().reload();
+            this.plugin.getWarpManager().getStorage().reload();
 
             // Reload jail data
-            plugin.getJailManager().getStorage().reload();
+            this.plugin.getJailManager().getStorage().reload();
 
             // Reload kit data
-            plugin.getKitManager().getStorage().reload();
+            this.plugin.getKitManager().getStorage().reload();
 
             // Clear and reload home cache for all online players
             for (final Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
                 if (player != null) {
-                    final java.util.Map<String, net.azox.cmd.model.Home> homes = plugin.getHomeManager().getHomes(player);
+                    final java.util.Map<String, net.azox.cmd.model.Home> homes = this.plugin.getHomeManager().getHomes(player);
                     homes.clear();
-                    homes.putAll(plugin.getPlayerStorage().getHomes(player));
+                    homes.putAll(this.plugin.getPlayerStorage().getHomes(player));
                 }
             }
 

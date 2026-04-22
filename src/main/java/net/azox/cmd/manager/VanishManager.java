@@ -6,24 +6,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 public final class VanishManager {
 
-    private final Set<UUID> vanishedPlayers = new HashSet<>();
-    private final Set<UUID> noPickupPlayers = new HashSet<>();
+    private final Set<UUID> vanishedPlayers;
+    private final Set<UUID> noPickupPlayers;
     private final AzoxCmd plugin = AzoxCmd.getInstance();
+
+    public VanishManager() {
+        this.vanishedPlayers = new HashSet<>();
+        this.noPickupPlayers = new HashSet<>();
+    }
 
     public void toggleVanish(final Player player) {
         if (player == null) {
             return;
         }
-        if (vanishedPlayers.contains(player.getUniqueId())) {
-            unvanish(player);
+        if (this.vanishedPlayers.contains(player.getUniqueId())) {
+            this.unvanish(player);
         } else {
-            vanish(player);
+            this.vanish(player);
         }
     }
 
@@ -31,49 +35,49 @@ public final class VanishManager {
         if (player == null) {
             return;
         }
-        vanishedPlayers.add(player.getUniqueId());
+        this.vanishedPlayers.add(player.getUniqueId());
 
-        if (plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
-            noPickupPlayers.add(player.getUniqueId());
+        if (this.plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
+            this.noPickupPlayers.add(player.getUniqueId());
         }
 
-        if (plugin.getPlayerStorage().isVanishFakeMessages(player)) {
-            fakeQuit(player);
+        if (this.plugin.getPlayerStorage().isVanishFakeMessages(player)) {
+            this.fakeQuit(player);
         }
 
-        if (plugin.getPlayerStorage().isVanishAutoFly(player)) {
+        if (this.plugin.getPlayerStorage().isVanishAutoFly(player)) {
             player.setAllowFlight(true);
             player.setFlying(true);
         }
 
-        if (plugin.getPlayerStorage().isVanishAutoGod(player)) {
+        if (this.plugin.getPlayerStorage().isVanishAutoGod(player)) {
             player.setInvulnerable(true);
         }
 
         for (final Player other : Bukkit.getOnlinePlayers()) {
-            if (!canSee(other, player)) {
-                other.hidePlayer(plugin, player);
+            if (!this.canSee(other, player)) {
+                other.hidePlayer(this.plugin, player);
             }
         }
-        player.setMetadata("vanished", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
-        MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " You are now vanished (Level " + getVanishLevel(player) + ")!");
+        player.setMetadata("vanished", new org.bukkit.metadata.FixedMetadataValue(this.plugin, true));
+        MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " You are now vanished (Level " + this.getVanishLevel(player) + ")!");
     }
 
     public void unvanish(final Player player) {
         if (player == null) {
             return;
         }
-        vanishedPlayers.remove(player.getUniqueId());
-        noPickupPlayers.remove(player.getUniqueId());
+        this.vanishedPlayers.remove(player.getUniqueId());
+        this.noPickupPlayers.remove(player.getUniqueId());
 
-        if (plugin.getPlayerStorage().isVanishFakeMessages(player)) {
-            fakeJoin(player);
+        if (this.plugin.getPlayerStorage().isVanishFakeMessages(player)) {
+            this.fakeJoin(player);
         }
 
         for (final Player other : Bukkit.getOnlinePlayers()) {
-            other.showPlayer(plugin, player);
+            other.showPlayer(this.plugin, player);
         }
-        player.removeMetadata("vanished", plugin);
+        player.removeMetadata("vanished", this.plugin);
         if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
             player.setAllowFlight(false);
             player.setFlying(false);
@@ -86,7 +90,7 @@ public final class VanishManager {
         if (viewer == null || target == null) {
             return true;
         }
-        if (!isVanished(target.getUniqueId())) {
+        if (!this.isVanished(target.getUniqueId())) {
             return true;
         }
         if (viewer.getUniqueId().equals(target.getUniqueId())) {
@@ -96,19 +100,19 @@ public final class VanishManager {
             return false;
         }
 
-        return getVanishLevel(viewer) >= getVanishLevel(target);
+        return this.getVanishLevel(viewer) >= this.getVanishLevel(target);
     }
 
     public int getVanishLevel(final Player player) {
         if (player == null) {
             return 1;
         }
-        for (int i = 100; i > 0; i--) {
-            if (player.hasPermission("azox.util.vanish.level." + i)) {
-                if (i > 3 && !player.isPermissionSet("azox.util.vanish.level." + i) && player.isOp()) {
+        for (int level = 100; level > 0; level--) {
+            if (player.hasPermission("azox.util.vanish.level." + level)) {
+                if (level > 3 && !player.isPermissionSet("azox.util.vanish.level." + level) && player.isOp()) {
                     continue;
                 }
-                return i;
+                return level;
             }
         }
         return player.isOp() ? 3 : 1;
@@ -118,20 +122,20 @@ public final class VanishManager {
         if (player == null) {
             return;
         }
-        final boolean currentlyDisabled = plugin.getPlayerStorage().isVanishPickupDisabled(player);
-        plugin.getPlayerStorage().setVanishPickupDisabled(player, !currentlyDisabled);
+        final boolean currentlyDisabled = this.plugin.getPlayerStorage().isVanishPickupDisabled(player);
+        this.plugin.getPlayerStorage().setVanishPickupDisabled(player, !currentlyDisabled);
 
         if (!currentlyDisabled) {
-            noPickupPlayers.add(player.getUniqueId());
+            this.noPickupPlayers.add(player.getUniqueId());
             MessageUtil.sendMessage(player, "<red>" + MessageUtil.ICON_ERROR + " Item pickup disabled.");
         } else {
-            noPickupPlayers.remove(player.getUniqueId());
+            this.noPickupPlayers.remove(player.getUniqueId());
             MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Item pickup enabled.");
         }
     }
 
     public boolean canPickup(final UUID uuid) {
-        return uuid != null && !noPickupPlayers.contains(uuid);
+        return uuid != null && !this.noPickupPlayers.contains(uuid);
     }
 
     public void fakeJoin(final Player player) {
@@ -149,17 +153,17 @@ public final class VanishManager {
     }
 
     public boolean isVanished(final UUID uuid) {
-        return uuid != null && vanishedPlayers.contains(uuid);
+        return uuid != null && this.vanishedPlayers.contains(uuid);
     }
 
     public void handleJoin(final Player joiningPlayer) {
         if (joiningPlayer == null) {
             return;
         }
-        for (final UUID uuid : vanishedPlayers) {
+        for (final UUID uuid : this.vanishedPlayers) {
             final Player vanished = Bukkit.getPlayer(uuid);
             if (vanished != null && !joiningPlayer.hasPermission("azox.util.vanish.see")) {
-                joiningPlayer.hidePlayer(plugin, vanished);
+                joiningPlayer.hidePlayer(this.plugin, vanished);
             }
         }
     }

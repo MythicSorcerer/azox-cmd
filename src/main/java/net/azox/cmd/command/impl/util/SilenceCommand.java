@@ -15,10 +15,10 @@ public final class SilenceCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        boolean currentState = plugin.getPlayerStorage().isSilenced(player);
+        boolean currentState = this.plugin.getPlayerStorage().isSilenced(player);
         boolean newState = !currentState;
 
-        plugin.getPlayerStorage().setSilenced(player, newState);
+        this.plugin.getPlayerStorage().setSilenced(player, newState);
 
         if (newState) {
             MessageUtil.sendMessage(player, "<yellow>" + MessageUtil.ICON_INFO + " Silence enabled. Command responses are now hidden.");

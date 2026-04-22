@@ -1,12 +1,11 @@
 package net.azox.cmd.manager;
 
+import lombok.Getter;
 import net.azox.cmd.model.Warp;
 import net.azox.cmd.storage.WarpStorage;
-import lombok.Getter;
 import org.bukkit.Location;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,14 +17,14 @@ public final class WarpManager {
 
     public WarpManager() {
         this.storage = new WarpStorage();
-        this.cachedWarps = new ConcurrentHashMap<>(storage.getWarps());
+        this.cachedWarps = new ConcurrentHashMap<>(this.storage.getWarps());
     }
 
     public Optional<Warp> getWarp(final String name) {
         if (name == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(cachedWarps.get(name.toLowerCase()));
+        return Optional.ofNullable(this.cachedWarps.get(name.toLowerCase()));
     }
 
     public void setWarp(final String name, final Location location, final int level) {
@@ -33,24 +32,24 @@ public final class WarpManager {
             return;
         }
         final String warpName = name.toLowerCase();
-        final Warp warp = cachedWarps.getOrDefault(warpName, new Warp());
+        final Warp warp = this.cachedWarps.getOrDefault(warpName, new Warp());
         warp.setName(name);
         warp.setLocation(location);
         warp.setLevel(level);
 
-        cachedWarps.put(warpName, warp);
-        storage.saveWarp(warp);
+        this.cachedWarps.put(warpName, warp);
+        this.storage.saveWarp(warp);
     }
 
     public void deleteWarp(final String name) {
         if (name == null) {
             return;
         }
-        cachedWarps.remove(name.toLowerCase());
-        storage.deleteWarp(name.toLowerCase());
+        this.cachedWarps.remove(name.toLowerCase());
+        this.storage.deleteWarp(name.toLowerCase());
     }
 
     public Map<String, Warp> getWarps() {
-        return cachedWarps;
+        return this.cachedWarps;
     }
 }

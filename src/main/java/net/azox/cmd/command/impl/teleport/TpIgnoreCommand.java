@@ -12,10 +12,10 @@ public final class TpIgnoreCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        final boolean current = plugin.getPlayerStorage().isTpIgnore(player);
+        final boolean current = this.plugin.getPlayerStorage().isTpIgnore(player);
         final boolean next = !current;
         
-        plugin.getPlayerStorage().setTpIgnore(player, next);
+        this.plugin.getPlayerStorage().setTpIgnore(player, next);
         MessageUtil.sendMessage(player, "<green>Teleport requests are now " + (next ? "<red>ignored" : "<green>accepted") + "!");
     }
 }

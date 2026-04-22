@@ -31,7 +31,7 @@ public final class EditHomeCommand extends BaseCommand {
         }
 
         final String homeName = args[0];
-        final Optional<Home> homeOpt = plugin.getHomeManager().getHome(player, homeName);
+        final Optional<Home> homeOpt = this.plugin.getHomeManager().getHome(player, homeName);
 
         if (homeOpt.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>Home '" + homeName + "' not found!");
@@ -48,12 +48,12 @@ public final class EditHomeCommand extends BaseCommand {
                     player.performCommand("delhome " + homeName);
                     return;
                 case "relocate":
-                    plugin.getHomeManager().setHome(player, homeName, player.getLocation());
+                    this.plugin.getHomeManager().setHome(player, homeName, player.getLocation());
                     MessageUtil.sendMessage(player, "<green>Home relocated!");
                     break;
                 case "public":
                     home.setPublic(!home.isPublic());
-                    plugin.getPlayerStorage().saveHome(player, home);
+                    this.plugin.getPlayerStorage().saveHome(player, home);
                     MessageUtil.sendMessage(player, "<green>Home visibility set to " + (home.isPublic() ? "Public" : "Private") + "!");
                     break;
                 case "description":
@@ -66,7 +66,7 @@ public final class EditHomeCommand extends BaseCommand {
                         sb.append(args[i]).append(" ");
                     }
                     home.setDescription(sb.toString().trim());
-                    plugin.getPlayerStorage().saveHome(player, home);
+                    this.plugin.getPlayerStorage().saveHome(player, home);
                     MessageUtil.sendMessage(player, "<green>Home description updated!");
                     break;
                 case "rename":
@@ -75,13 +75,13 @@ public final class EditHomeCommand extends BaseCommand {
                         return;
                     }
                     final String newName = args[2];
-                    plugin.getHomeManager().deleteHome(player, homeName);
-                    plugin.getHomeManager().setHome(player, newName, home.getLocation());
-                    final Home newHome = plugin.getHomeManager().getHome(player, newName).get();
+                    this.plugin.getHomeManager().deleteHome(player, homeName);
+                    this.plugin.getHomeManager().setHome(player, newName, home.getLocation());
+                    final Home newHome = this.plugin.getHomeManager().getHome(player, newName).get();
                     newHome.setDescription(home.getDescription());
                     newHome.setPublic(home.isPublic());
                     newHome.setCreationDate(home.getCreationDate());
-                    plugin.getPlayerStorage().saveHome(player, newHome);
+                    this.plugin.getPlayerStorage().saveHome(player, newHome);
                     MessageUtil.sendMessage(player, "<green>Home renamed to " + newName + "!");
                     return;
             }
@@ -117,7 +117,7 @@ public final class EditHomeCommand extends BaseCommand {
     public List<String> complete(CommandSender sender, String[] args) {
         if (sender instanceof Player && args.length == 1) {
             final Player player = (Player) sender;
-            return plugin.getHomeManager().getHomes(player).keySet().stream()
+            return this.plugin.getHomeManager().getHomes(player).keySet().stream()
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }

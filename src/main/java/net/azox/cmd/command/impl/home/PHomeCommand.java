@@ -24,7 +24,7 @@ public final class PHomeCommand extends BaseCommand {
         final Player player = (Player) sender;
 
         if (args.length == 0) {
-            final List<Home> publicHomes = plugin.getHomeManager().getPublicHomes();
+            final List<Home> publicHomes = this.plugin.getHomeManager().getPublicHomes();
             if (publicHomes.isEmpty()) {
                 MessageUtil.sendMessage(player, "<red>No public homes found!");
                 return;
@@ -47,10 +47,10 @@ public final class PHomeCommand extends BaseCommand {
         final String homeName = parts.length > 1 ? parts[1] : "home";
 
         final OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
-        final Optional<Home> homeOpt = plugin.getHomeManager().getHome(player, homeName); // This should probably be target
+        final Optional<Home> homeOpt = this.plugin.getHomeManager().getHome(player, homeName); // This should probably be target
 
         // Fix: getHome should take the target OfflinePlayer
-        final Optional<Home> correctHomeOpt = plugin.getPlayerStorage().getHomes(target).values().stream()
+        final Optional<Home> correctHomeOpt = this.plugin.getPlayerStorage().getHomes(target).values().stream()
                 .filter(h -> h.getName().equalsIgnoreCase(homeName) && h.isPublic())
                 .findFirst();
 
@@ -59,6 +59,6 @@ public final class PHomeCommand extends BaseCommand {
             return;
         }
 
-        plugin.getTeleportManager().teleportWithDelay(player, correctHomeOpt.get().getLocation());
+        this.plugin.getTeleportManager().teleportWithDelay(player, correctHomeOpt.get().getLocation());
     }
 }

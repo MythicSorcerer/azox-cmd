@@ -68,7 +68,7 @@ public final class InventoryListener implements Listener {
             try {
                 final int page = Integer.parseInt(plainTitle.substring(plainTitle.lastIndexOf(' ') + 1));
                 final Player player = (Player) event.getPlayer();
-                plugin.getPlayerStorage().saveEnderChestPage(player, page, event.getInventory().getContents());
+                this.plugin.getPlayerStorage().saveEnderChestPage(player, page, event.getInventory().getContents());
                 MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Ender Chest Page " + page + " saved!");
             } catch (NumberFormatException ignored) {
             }
@@ -124,8 +124,8 @@ public final class InventoryListener implements Listener {
         }
 
         switch (setting) {
-            case "vanish_settings" -> plugin.getGuiManager().openVanishGui(player);
-            case "teleport_menu" -> plugin.getGuiManager().openTeleportMenu(player, 1);
+            case "vanish_settings" -> this.plugin.getGuiManager().openVanishGui(player);
+            case "teleport_menu" -> this.plugin.getGuiManager().openTeleportMenu(player, 1);
         }
     }
 
@@ -137,17 +137,17 @@ public final class InventoryListener implements Listener {
         }
 
         if (setting.equals("back_to:admin")) {
-            plugin.getGuiManager().openAdminGui(player);
+            this.plugin.getGuiManager().openAdminGui(player);
             return;
         }
 
         switch (setting) {
-            case "v_fake_msg" -> plugin.getPlayerStorage().setVanishFakeMessages(player, !plugin.getPlayerStorage().isVanishFakeMessages(player));
-            case "v_auto_fly" -> plugin.getPlayerStorage().setVanishAutoFly(player, !plugin.getPlayerStorage().isVanishAutoFly(player));
-            case "v_auto_god" -> plugin.getPlayerStorage().setVanishAutoGod(player, !plugin.getPlayerStorage().isVanishAutoGod(player));
-            case "v_pickup" -> plugin.getPlayerStorage().setVanishPickupDisabled(player, !plugin.getPlayerStorage().isVanishPickupDisabled(player));
+            case "v_fake_msg" -> this.plugin.getPlayerStorage().setVanishFakeMessages(player, !this.plugin.getPlayerStorage().isVanishFakeMessages(player));
+            case "v_auto_fly" -> this.plugin.getPlayerStorage().setVanishAutoFly(player, !this.plugin.getPlayerStorage().isVanishAutoFly(player));
+            case "v_auto_god" -> this.plugin.getPlayerStorage().setVanishAutoGod(player, !this.plugin.getPlayerStorage().isVanishAutoGod(player));
+            case "v_pickup" -> this.plugin.getPlayerStorage().setVanishPickupDisabled(player, !this.plugin.getPlayerStorage().isVanishPickupDisabled(player));
         }
-        plugin.getGuiManager().openVanishGui(player);
+        this.plugin.getGuiManager().openVanishGui(player);
     }
 
     private void handleConfigClick(final InventoryClickEvent event, final Player player, final ItemStack item) {
@@ -159,12 +159,12 @@ public final class InventoryListener implements Listener {
 
         switch (setting) {
             case "toggle_gui" -> {
-                plugin.getPlayerStorage().setGuiEnabled(player, !plugin.getPlayerStorage().isGuiEnabled(player));
-                plugin.getGuiManager().openConfigGui(player);
+                this.plugin.getPlayerStorage().setGuiEnabled(player, !this.plugin.getPlayerStorage().isGuiEnabled(player));
+                this.plugin.getGuiManager().openConfigGui(player);
             }
             case "toggle_particles" -> {
-                plugin.getPlayerStorage().setParticlesEnabled(player, !plugin.getPlayerStorage().areParticlesEnabled(player));
-                plugin.getGuiManager().openConfigGui(player);
+                this.plugin.getPlayerStorage().setParticlesEnabled(player, !this.plugin.getPlayerStorage().areParticlesEnabled(player));
+                this.plugin.getGuiManager().openConfigGui(player);
             }
         }
     }
@@ -203,11 +203,11 @@ public final class InventoryListener implements Listener {
             player.closeInventory();
             player.performCommand("tpo " + action.substring(11));
         } else if (action.startsWith("tp_page:")) {
-            plugin.getGuiManager().openTeleportMenu(player, Integer.parseInt(action.substring(8)));
+            this.plugin.getGuiManager().openTeleportMenu(player, Integer.parseInt(action.substring(8)));
         } else if (action.equals("back_to:admin")) {
-            plugin.getGuiManager().openAdminGui(player);
+            this.plugin.getGuiManager().openAdminGui(player);
         } else if (action.equals("back_to:config")) {
-            plugin.getGuiManager().openConfigGui(player);
+            this.plugin.getGuiManager().openConfigGui(player);
         }
     }
 
@@ -218,7 +218,7 @@ public final class InventoryListener implements Listener {
             return;
         }
 
-        plugin.getGuiManager().openEnderChestPage(player, page);
+        this.plugin.getGuiManager().openEnderChestPage(player, page);
     }
 
     private void handleInspectClick(final InventoryClickEvent event) {

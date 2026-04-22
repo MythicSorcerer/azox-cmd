@@ -20,14 +20,14 @@ public final class PotionCommands extends BaseCommand {
         if (label.equalsIgnoreCase("fillpotsave")) {
             savePotions(player);
         } else if (label.equalsIgnoreCase("fillpot")) {
-            if (plugin.getPlayerStorage().hasSavedPotions(player)) {
-                plugin.getPlayerStorage().setFillPotEnabled(player, true);
+            if (this.plugin.getPlayerStorage().hasSavedPotions(player)) {
+                this.plugin.getPlayerStorage().setFillPotEnabled(player, true);
                 MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Fillpot enabled! Your potions will be replenished.");
             } else {
                 MessageUtil.sendMessage(player, "<red>" + MessageUtil.ICON_ERROR + " No saved potions found. Use /fillpotsave first.");
             }
         } else if (label.equalsIgnoreCase("unfillpot")) {
-            plugin.getPlayerStorage().setFillPotEnabled(player, false);
+            this.plugin.getPlayerStorage().setFillPotEnabled(player, false);
             MessageUtil.sendMessage(player, "<yellow>" + MessageUtil.ICON_INFO + " Fillpot disabled.");
         }
     }
@@ -50,8 +50,8 @@ public final class PotionCommands extends BaseCommand {
             return;
         }
 
-        plugin.getPlayerStorage().savePotions(player, savedPotions);
-        plugin.getPlayerStorage().setFillPotEnabled(player, true);
+        this.plugin.getPlayerStorage().savePotions(player, savedPotions);
+        this.plugin.getPlayerStorage().setFillPotEnabled(player, true);
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Saved " + count + " potion slot(s). Fillpot is now enabled!");
     }
 

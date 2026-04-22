@@ -36,13 +36,13 @@ public final class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        plugin.getVanishManager().handleJoin(player);
-        if (plugin.getVanishManager().isVanished(player.getUniqueId())) {
+        this.plugin.getVanishManager().handleJoin(player);
+        if (this.plugin.getVanishManager().isVanished(player.getUniqueId())) {
             event.joinMessage(null);
         }
         checkLobby(player);
 
-        if (plugin.getPlayerStorage().isNightVisionEnabled(player)) {
+        if (this.plugin.getPlayerStorage().isNightVisionEnabled(player)) {
             net.azox.cmd.command.impl.util.NightVisionCommand.applyNightVision(player);
         }
 
@@ -54,23 +54,23 @@ public final class PlayerListener implements Listener {
         }
 
         // Check for jail release
-        if (plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
-            plugin.getPlayerStorage().setUnjailed(player);
+        if (this.plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            this.plugin.getPlayerStorage().setUnjailed(player);
             MessageUtil.sendMessage(player, "<green>Your jail sentence has expired. You are now free!");
         }
 
         // Re-apply jail if still sentenced
-        final String jailName = plugin.getPlayerStorage().getJailName(player);
-        if (jailName != null && !plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
-            plugin.getJailManager().getJail(jailName).ifPresent(player::teleport);
-            if (plugin.getPlayerStorage().isJailInescapable(player)) {
+        final String jailName = this.plugin.getPlayerStorage().getJailName(player);
+        if (jailName != null && !this.plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            this.plugin.getJailManager().getJail(jailName).ifPresent(player::teleport);
+            if (this.plugin.getPlayerStorage().isJailInescapable(player)) {
                 player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
                 player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 254, false, false));
                 player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.MINING_FATIGUE, Integer.MAX_VALUE, 254, false, false));
             }
         }
 
-        final Location pendingLoc = plugin.getTeleportManager().getPendingTeleport(player.getUniqueId());
+        final Location pendingLoc = this.plugin.getTeleportManager().getPendingTeleport(player.getUniqueId());
         if (pendingLoc != null) {
             player.teleport(pendingLoc);
             MessageUtil.sendMessage(player, "<green>You have been teleported!");
@@ -94,8 +94,8 @@ public final class PlayerListener implements Listener {
     }
 
     private void applyPermEffects(Player player) {
-        if (plugin.getPlayerStorage().hasPermEffects(player)) {
-            FileConfiguration config = plugin.getPlayerDataManager().getConfig(player);
+        if (this.plugin.getPlayerStorage().hasPermEffects(player)) {
+            FileConfiguration config = this.plugin.getPlayerDataManager().getConfig(player);
             if (config != null) {
                 ConfigurationSection section = config.getConfigurationSection("permeffects");
                 if (section != null) {
@@ -132,15 +132,15 @@ public final class PlayerListener implements Listener {
 
     @EventHandler
     public void onQuit(final PlayerQuitEvent event) {
-        if (plugin.getVanishManager().isVanished(event.getPlayer().getUniqueId())) {
+        if (this.plugin.getVanishManager().isVanished(event.getPlayer().getUniqueId())) {
             event.quitMessage(null);
         }
-        plugin.getPlayerDataManager().unload(event.getPlayer().getUniqueId());
+        this.plugin.getPlayerDataManager().unload(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onRespawn(final PlayerRespawnEvent event) {
-        if (plugin.getPlayerStorage().isNightVisionEnabled(event.getPlayer())) {
+        if (this.plugin.getPlayerStorage().isNightVisionEnabled(event.getPlayer())) {
             net.azox.cmd.command.impl.util.NightVisionCommand.applyNightVision(event.getPlayer());
         }
         applyPermEffects(event.getPlayer());
@@ -150,7 +150,7 @@ public final class PlayerListener implements Listener {
     public void onPickup(final EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (plugin.getVanishManager().isVanished(player.getUniqueId()) && plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
+            if (this.plugin.getVanishManager().isVanished(player.getUniqueId()) && this.plugin.getPlayerStorage().isVanishPickupDisabled(player)) {
                 event.setCancelled(true);
             }
         }
@@ -161,12 +161,12 @@ public final class PlayerListener implements Listener {
         if (!(event.getTarget() instanceof Player)) return;
         Player player = (Player) event.getTarget();
         
-        if (plugin.getVanishManager().isVanished(player.getUniqueId())) {
+        if (this.plugin.getVanishManager().isVanished(player.getUniqueId())) {
             event.setCancelled(true);
             return;
         }
         
-        if (player.isInvulnerable() && plugin.getPlayerStorage().isGodMobsIgnore(player)) {
+        if (player.isInvulnerable() && this.plugin.getPlayerStorage().isGodMobsIgnore(player)) {
             event.setCancelled(true);
         }
     }
@@ -174,38 +174,38 @@ public final class PlayerListener implements Listener {
     @EventHandler
     public void onMove(final PlayerMoveEvent event) {
         final Player player = event.getPlayer();
-        if (plugin.getFreezeManager().isFrozen(player.getUniqueId())) {
+        if (this.plugin.getFreezeManager().isFrozen(player.getUniqueId())) {
             event.setCancelled(true);
             MessageUtil.sendMessage(player, "<red>You are frozen and cannot move!");
             return;
         }
 
-        final String jailName = plugin.getPlayerStorage().getJailName(player);
-        if (jailName != null && !plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
-            if (plugin.getPlayerStorage().isJailInescapable(player)) {
-                plugin.getJailManager().getJail(jailName).ifPresent(loc -> {
+        final String jailName = this.plugin.getPlayerStorage().getJailName(player);
+        if (jailName != null && !this.plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+            if (this.plugin.getPlayerStorage().isJailInescapable(player)) {
+                this.plugin.getJailManager().getJail(jailName).ifPresent(loc -> {
                     if (!player.getLocation().getWorld().equals(loc.getWorld()) || player.getLocation().distanceSquared(loc) > 100) {
                         player.teleport(loc);
                         MessageUtil.sendMessage(player, "<red>You are in an inescapable jail!");
                     }
                 });
             }
-        } else if (jailName != null && plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
+        } else if (jailName != null && this.plugin.getPlayerStorage().shouldReleaseFromJail(player)) {
             // Player has escaped after time expired
-            plugin.getPlayerStorage().setUnjailed(player);
+            this.plugin.getPlayerStorage().setUnjailed(player);
             MessageUtil.sendMessage(player, "<green>Your jail sentence has expired. You are now free!");
             for (final Player admin : Bukkit.getOnlinePlayers()) {
                 if (admin.hasPermission("azox.util.admin.*") || admin.isOp()) {
                     MessageUtil.sendMessage(admin, "<yellow>" + player.getName() + " was released from jail (sentence expired).");
                 }
             }
-            plugin.getLogger().info("Player " + player.getName() + " was released from jail (sentence expired).");
+            this.plugin.getLogger().info("Player " + player.getName() + " was released from jail (sentence expired).");
         }
     }
 
     @EventHandler
     public void onInteract(final PlayerInteractEvent event) {
-        if (plugin.getFreezeManager().isFrozen(event.getPlayer().getUniqueId())) {
+        if (this.plugin.getFreezeManager().isFrozen(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
             MessageUtil.sendMessage(event.getPlayer(), "<red>You are frozen and cannot interact!");
             return;
@@ -214,7 +214,7 @@ public final class PlayerListener implements Listener {
         if (event.getItem() != null && event.getItem().getType() == Material.COMPASS) {
             String type = event.getItem().getItemMeta().getPersistentDataContainer().get(GuiManager.UTILITY_KEY, PersistentDataType.STRING);
             if ("world_selector_item".equals(type)) {
-                plugin.getGuiManager().openWorldSelectorGui(event.getPlayer());
+                this.plugin.getGuiManager().openWorldSelectorGui(event.getPlayer());
             }
         }
     }

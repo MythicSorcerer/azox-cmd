@@ -2,7 +2,6 @@ package net.azox.cmd.manager;
 
 import net.azox.cmd.AzoxCmd;
 import net.azox.cmd.model.TeleportRequest;
-import net.azox.cmd.storage.PlayerStorage;
 import net.azox.cmd.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,34 +20,41 @@ public final class TeleportManager {
     private static final double MOVE_THRESHOLD_SQUARED = 0.1;
 
     private final AzoxCmd plugin = AzoxCmd.getInstance();
-    private final Map<UUID, TeleportRequest> pendingRequests = new ConcurrentHashMap<>();
-    private final Map<UUID, Location> lastLocations = new ConcurrentHashMap<>();
-    private final Map<UUID, Location> pendingOfflineTeleports = new ConcurrentHashMap<>();
-    private final Map<UUID, Location> undoLocations = new ConcurrentHashMap<>();
+    private final Map<UUID, TeleportRequest> pendingRequests;
+    private final Map<UUID, Location> lastLocations;
+    private final Map<UUID, Location> pendingOfflineTeleports;
+    private final Map<UUID, Location> undoLocations;
+
+    public TeleportManager() {
+        this.pendingRequests = new ConcurrentHashMap<>();
+        this.lastLocations = new ConcurrentHashMap<>();
+        this.pendingOfflineTeleports = new ConcurrentHashMap<>();
+        this.undoLocations = new ConcurrentHashMap<>();
+    }
 
     public void addPendingTeleport(final UUID target, final Location destination) {
         if (target != null && destination != null) {
-            pendingOfflineTeleports.put(target, destination);
+            this.pendingOfflineTeleports.put(target, destination);
         }
     }
 
     public Location getPendingTeleport(final UUID target) {
-        return target != null ? pendingOfflineTeleports.remove(target) : null;
+        return target != null ? this.pendingOfflineTeleports.remove(target) : null;
     }
 
     public void addUndoLocation(final UUID target, final Location oldLocation) {
         if (target != null && oldLocation != null) {
-            undoLocations.put(target, oldLocation);
+            this.undoLocations.put(target, oldLocation);
         }
     }
 
     public Location getUndoLocation(final UUID target) {
-        return target != null ? undoLocations.remove(target) : null;
+        return target != null ? this.undoLocations.remove(target) : null;
     }
 
     public void requestTeleport(final Player requester, final Player target, final boolean here) {
         if (requester != null && target != null) {
-            pendingRequests.put(target.getUniqueId(), new TeleportRequest(requester, target, here, System.currentTimeMillis()));
+            this.pendingRequests.put(target.getUniqueId(), new TeleportRequest(requester, target, here, System.currentTimeMillis()));
         }
     }
 
@@ -56,9 +62,9 @@ public final class TeleportManager {
         if (target == null) {
             return Optional.empty();
         }
-        final TeleportRequest request = pendingRequests.get(target.getUniqueId());
+        final TeleportRequest request = this.pendingRequests.get(target.getUniqueId());
         if (request != null && request.isExpired()) {
-            pendingRequests.remove(target.getUniqueId());
+            this.pendingRequests.remove(target.getUniqueId());
             return Optional.empty();
         }
         return Optional.ofNullable(request);
@@ -66,7 +72,7 @@ public final class TeleportManager {
 
     public void removeRequest(final Player target) {
         if (target != null) {
-            pendingRequests.remove(target.getUniqueId());
+            this.pendingRequests.remove(target.getUniqueId());
         }
     }
 
@@ -89,7 +95,7 @@ public final class TeleportManager {
     }
 
     private void teleportInstantly(final Player player, final Location targetLocation) {
-        setLastLocation(player, player.getLocation());
+        this.setLastLocation(player, player.getLocation());
         player.teleport(targetLocation);
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Teleported!");
     }
@@ -115,7 +121,7 @@ public final class TeleportManager {
                 }
 
                 if (count <= 0) {
-                    setLastLocation(player, player.getLocation());
+                    TeleportManager.this.setLastLocation(player, player.getLocation());
                     player.teleport(targetLocation);
                     MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Teleported!");
                     cancel();
@@ -124,13 +130,13 @@ public final class TeleportManager {
 
                 count--;
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(this.plugin, 0L, 20L);
     }
 
     public void setLastLocation(final Player player, final Location location) {
         if (player != null && location != null) {
-            lastLocations.put(player.getUniqueId(), location);
-            plugin.getPlayerStorage().setBackLocation(player, location);
+            this.lastLocations.put(player.getUniqueId(), location);
+            this.plugin.getPlayerStorage().setBackLocation(player, location);
         }
     }
 
@@ -138,10 +144,10 @@ public final class TeleportManager {
         if (player == null) {
             return Optional.empty();
         }
-        final Location cached = lastLocations.get(player.getUniqueId());
+        final Location cached = this.lastLocations.get(player.getUniqueId());
         if (cached != null) {
             return Optional.of(cached);
         }
-        return Optional.ofNullable(plugin.getPlayerStorage().getBackLocation(player));
+        return Optional.ofNullable(this.plugin.getPlayerStorage().getBackLocation(player));
     }
 }

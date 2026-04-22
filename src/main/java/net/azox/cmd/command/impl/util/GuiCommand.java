@@ -17,14 +17,14 @@ public final class GuiCommand extends BaseCommand {
         final Player player = (Player) sender;
 
         if (args.length == 0) {
-            plugin.getGuiManager().openUtilitiesGui(player);
+            this.plugin.getGuiManager().openUtilitiesGui(player);
             return;
         }
 
         if (args[0].equalsIgnoreCase("toggle")) {
-            final boolean current = plugin.getPlayerStorage().isGuiEnabled(player);
+            final boolean current = this.plugin.getPlayerStorage().isGuiEnabled(player);
             final boolean next = !current;
-            plugin.getPlayerStorage().setGuiEnabled(player, next);
+            this.plugin.getPlayerStorage().setGuiEnabled(player, next);
             MessageUtil.sendMessage(player, "<green>GUI menus are now " + (next ? "<green>enabled" : "<red>disabled") + "!");
         } else {
             MessageUtil.sendMessage(player, "<red>Usage: /azoxgui [toggle]");

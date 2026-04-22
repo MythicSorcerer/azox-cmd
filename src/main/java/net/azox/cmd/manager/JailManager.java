@@ -1,13 +1,12 @@
 package net.azox.cmd.manager;
 
 import net.azox.cmd.AzoxCmd;
-import net.azox.cmd.storage.JailStorage;
 import lombok.Getter;
+import net.azox.cmd.storage.JailStorage;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,48 +19,48 @@ public final class JailManager {
 
     public JailManager() {
         this.storage = new JailStorage();
-        this.cachedJails = new ConcurrentHashMap<>(storage.getJails());
+        this.cachedJails = new ConcurrentHashMap<>(this.storage.getJails());
     }
 
     public Optional<Location> getJail(final String name) {
         if (name == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(cachedJails.get(name.toLowerCase()));
+        return Optional.ofNullable(this.cachedJails.get(name.toLowerCase()));
     }
 
     public void setJail(final String name, final Location location) {
         if (name == null || location == null) {
             return;
         }
-        cachedJails.put(name.toLowerCase(), location);
-        storage.saveJail(name, location);
+        this.cachedJails.put(name.toLowerCase(), location);
+        this.storage.saveJail(name, location);
     }
 
     public void deleteJail(final String name) {
         if (name == null) {
             return;
         }
-        cachedJails.remove(name.toLowerCase());
-        storage.deleteJail(name);
+        this.cachedJails.remove(name.toLowerCase());
+        this.storage.deleteJail(name);
     }
 
     public void jailPlayer(final Player player, final String jailName, final boolean inescapable) {
         if (player == null || jailName == null) {
             return;
         }
-        getJail(jailName).ifPresent(player::teleport);
-        plugin.getPlayerStorage().setJailed(player, jailName, inescapable);
+        this.getJail(jailName).ifPresent(player::teleport);
+        this.plugin.getPlayerStorage().setJailed(player, jailName, inescapable);
     }
 
     public void unjailPlayer(final Player player) {
         if (player == null) {
             return;
         }
-        plugin.getPlayerStorage().setUnjailed(player);
+        this.plugin.getPlayerStorage().setUnjailed(player);
     }
 
     public Map<String, Location> getJails() {
-        return cachedJails;
+        return this.cachedJails;
     }
 }

@@ -14,9 +14,9 @@ public final class NightVisionCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        final boolean currentlyEnabled = plugin.getPlayerStorage().isNightVisionEnabled(player);
+        final boolean currentlyEnabled = this.plugin.getPlayerStorage().isNightVisionEnabled(player);
         final boolean next = !currentlyEnabled;
-        plugin.getPlayerStorage().setNightVisionEnabled(player, next);
+        this.plugin.getPlayerStorage().setNightVisionEnabled(player, next);
 
         if (next) {
             applyNightVision(player);

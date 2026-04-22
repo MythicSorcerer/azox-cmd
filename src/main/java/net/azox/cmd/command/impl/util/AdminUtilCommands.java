@@ -84,8 +84,8 @@ public final class AdminUtilCommands extends BaseCommand {
                     MessageUtil.sendMessage(sender, "<red>Player not found!");
                     return;
                 }
-                plugin.getFreezeManager().toggleFreeze(targetFreeze.getUniqueId());
-                boolean frozen = plugin.getFreezeManager().isFrozen(targetFreeze.getUniqueId());
+                this.plugin.getFreezeManager().toggleFreeze(targetFreeze.getUniqueId());
+                boolean frozen = this.plugin.getFreezeManager().isFrozen(targetFreeze.getUniqueId());
                 MessageUtil.sendMessage(sender, "<green>Player " + targetFreeze.getName() + " is now " + (frozen ? "<red>frozen" : "<green>unfrozen") + "!");
                 if (frozen) {
                     MessageUtil.sendMessage(targetFreeze, "<red>You have been frozen by staff!");

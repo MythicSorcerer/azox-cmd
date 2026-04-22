@@ -22,6 +22,6 @@ public final class LobbyCommand extends BaseCommand {
             return;
         }
 
-        plugin.getTeleportManager().teleportWithDelay(player, target.getSpawnLocation());
+        this.plugin.getTeleportManager().teleportWithDelay(player, target.getSpawnLocation());
     }
 }

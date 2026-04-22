@@ -33,11 +33,11 @@ public final class GuiManager {
         if (player == null) {
             return;
         }
-        final Map<String, net.azox.cmd.model.Home> homes = plugin.getHomeManager().getHomes(player);
+        final Map<String, Home> homes = this.plugin.getHomeManager().getHomes(player);
         final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<gold>" + MessageUtil.ICON_HOME + " Your Homes"));
 
         int slot = 0;
-        for (final net.azox.cmd.model.Home home : homes.values()) {
+        for (final Home home : homes.values()) {
             if (slot >= 53) {
                 break;
             }
@@ -77,7 +77,7 @@ public final class GuiManager {
         player.openInventory(inventory);
     }
 
-    public void openManageHomeGui(final Player player, final net.azox.cmd.model.Home home) {
+    public void openManageHomeGui(final Player player, final Home home) {
         if (player == null || home == null) {
             return;
         }
@@ -105,7 +105,7 @@ public final class GuiManager {
         inventory.setItem(15, createHomeActionItem(Material.COMPASS, "<gold>Relocate", "relocate", home.getName()));
         inventory.setItem(16, createHomeActionItem(Material.BARRIER, "<red>Delete", "delete", home.getName()));
 
-        inventory.setItem(22, createBackButton("homes"));
+        inventory.setItem(22, this.createBackButton("homes"));
 
         player.openInventory(inventory);
     }
@@ -144,25 +144,25 @@ public final class GuiManager {
         final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<gold>" + MessageUtil.ICON_UTILITY + " Server Utilities"));
 
         if (player.hasPermission("azox.util.craft")) {
-            inventory.setItem(10, createGuiItem(Material.CRAFTING_TABLE, "<green>Crafting Table", "craft"));
+            inventory.setItem(10, this.createGuiItem(Material.CRAFTING_TABLE, "<green>Crafting Table", "craft"));
         }
         if (player.hasPermission("azox.util.grindstone")) {
-            inventory.setItem(11, createGuiItem(Material.GRINDSTONE, "<green>Grindstone", "grindstone"));
+            inventory.setItem(11, this.createGuiItem(Material.GRINDSTONE, "<green>Grindstone", "grindstone"));
         }
         if (player.hasPermission("azox.util.stonecutter")) {
-            inventory.setItem(12, createGuiItem(Material.STONECUTTER, "<green>Stonecutter", "stonecutter"));
+            inventory.setItem(12, this.createGuiItem(Material.STONECUTTER, "<green>Stonecutter", "stonecutter"));
         }
         if (player.hasPermission("azox.util.enderchest")) {
-            inventory.setItem(13, createGuiItem(Material.ENDER_CHEST, "<green>Ender Chest", "ec"));
+            inventory.setItem(13, this.createGuiItem(Material.ENDER_CHEST, "<green>Ender Chest", "ec"));
         }
         if (player.hasPermission("azox.util.anvil")) {
-            inventory.setItem(14, createGuiItem(Material.ANVIL, "<green>Anvil", "anvil"));
+            inventory.setItem(14, this.createGuiItem(Material.ANVIL, "<green>Anvil", "anvil"));
         }
         if (player.hasPermission("azox.util.cartographytable")) {
-            inventory.setItem(15, createGuiItem(Material.CARTOGRAPHY_TABLE, "<green>Cartography Table", "carttable"));
+            inventory.setItem(15, this.createGuiItem(Material.CARTOGRAPHY_TABLE, "<green>Cartography Table", "carttable"));
         }
         if (player.hasPermission("azox.util.loom")) {
-            inventory.setItem(16, createGuiItem(Material.LOOM, "<green>Loom", "loom"));
+            inventory.setItem(16, this.createGuiItem(Material.LOOM, "<green>Loom", "loom"));
         }
 
         player.openInventory(inventory);
@@ -176,8 +176,8 @@ public final class GuiManager {
         final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<red>" + MessageUtil.ICON_STAR + " Admin Configuration"));
 
         // Middle row (row 3): slots 18-26, place items at 20 and 24
-        inventory.setItem(20, createAdminItem(Material.ENDER_EYE, "<aqua>Vanish Settings", "vanish_settings", true));
-        inventory.setItem(24, createAdminItem(Material.COMPASS, "<green>Teleport Menu", "teleport_menu", true));
+        inventory.setItem(20, this.createAdminItem(Material.ENDER_EYE, "<aqua>Vanish Settings", "vanish_settings", true));
+        inventory.setItem(24, this.createAdminItem(Material.COMPASS, "<green>Teleport Menu", "teleport_menu", true));
 
         player.openInventory(inventory);
     }
@@ -189,29 +189,29 @@ public final class GuiManager {
         // Use 54-slot inventory for better spacing
         final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<aqua>" + MessageUtil.ICON_INFO + " Vanish Settings"));
 
-        final boolean fakeMessage = plugin.getPlayerStorage().isVanishFakeMessages(player);
-        final boolean autoFly = plugin.getPlayerStorage().isVanishAutoFly(player);
-        final boolean autoGod = plugin.getPlayerStorage().isVanishAutoGod(player);
-        final boolean pickup = !plugin.getPlayerStorage().isVanishPickupDisabled(player);
+        final boolean fakeMessage = this.plugin.getPlayerStorage().isVanishFakeMessages(player);
+        final boolean autoFly = this.plugin.getPlayerStorage().isVanishAutoFly(player);
+        final boolean autoGod = this.plugin.getPlayerStorage().isVanishAutoGod(player);
+        final boolean pickup = !this.plugin.getPlayerStorage().isVanishPickupDisabled(player);
 
         // Row 2 (slots 9-17): Fake Join/Leave at slot 11, indicator at 20
-        inventory.setItem(11, createAdminItem(Material.PAPER, "<yellow>Fake Join/Leave", "v_fake_msg", fakeMessage));
-        inventory.setItem(20, createStatusIndicator(fakeMessage));
+        inventory.setItem(11, this.createAdminItem(Material.PAPER, "<yellow>Fake Join/Leave", "v_fake_msg", fakeMessage));
+        inventory.setItem(20, this.createStatusIndicator(fakeMessage));
 
         // Row 3 (slots 18-26): Auto Fly at slot 20, indicator at 29 - but we use 54 slot so 29 is valid
-        inventory.setItem(22, createAdminItem(Material.FEATHER, "<yellow>Auto Fly", "v_auto_fly", autoFly));
-        inventory.setItem(31, createStatusIndicator(autoFly));
+        inventory.setItem(22, this.createAdminItem(Material.FEATHER, "<yellow>Auto Fly", "v_auto_fly", autoFly));
+        inventory.setItem(31, this.createStatusIndicator(autoFly));
 
         // Row 4 (slots 27-35): Auto God at slot 31, indicator at 40
-        inventory.setItem(33, createAdminItem(Material.GOLDEN_APPLE, "<yellow>Auto God", "v_auto_god", autoGod));
-        inventory.setItem(42, createStatusIndicator(autoGod));
+        inventory.setItem(33, this.createAdminItem(Material.GOLDEN_APPLE, "<yellow>Auto God", "v_auto_god", autoGod));
+        inventory.setItem(42, this.createStatusIndicator(autoGod));
 
         // Row 5 (slots 36-44): Item Pickup at slot 38, indicator at 47
-        inventory.setItem(38, createAdminItem(Material.HOPPER, "<yellow>Item Pickup", "v_pickup", pickup));
-        inventory.setItem(47, createStatusIndicator(pickup));
+        inventory.setItem(38, this.createAdminItem(Material.HOPPER, "<yellow>Item Pickup", "v_pickup", pickup));
+        inventory.setItem(47, this.createStatusIndicator(pickup));
 
         // Back button in center of last row
-        inventory.setItem(49, createBackButton("admin"));
+        inventory.setItem(49, this.createBackButton("admin"));
 
         player.openInventory(inventory);
     }
@@ -223,16 +223,16 @@ public final class GuiManager {
         // Use 54-slot inventory for better spacing
         final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<gold>" + MessageUtil.ICON_UTILITY + " Configuration"));
 
-        final boolean guiEnabled = plugin.getPlayerStorage().isGuiEnabled(player);
-        final boolean particles = plugin.getPlayerStorage().areParticlesEnabled(player);
+        final boolean guiEnabled = this.plugin.getPlayerStorage().isGuiEnabled(player);
+        final boolean particles = this.plugin.getPlayerStorage().areParticlesEnabled(player);
 
         // Row 3 (slots 18-26): GUI Mode at slot 20, indicator at 29
-        inventory.setItem(20, createAdminItem(Material.BOOK, "<yellow>GUI Mode", "toggle_gui", guiEnabled));
-        inventory.setItem(29, createStatusIndicator(guiEnabled));
+        inventory.setItem(20, this.createAdminItem(Material.BOOK, "<yellow>GUI Mode", "toggle_gui", guiEnabled));
+        inventory.setItem(29, this.createStatusIndicator(guiEnabled));
 
         // Row 4 (slots 27-35): Particles at slot 31, indicator at 40 - leave gap
-        inventory.setItem(33, createAdminItem(Material.FIREWORK_STAR, "<yellow>Particles", "toggle_particles", particles));
-        inventory.setItem(42, createStatusIndicator(particles));
+        inventory.setItem(33, this.createAdminItem(Material.FIREWORK_STAR, "<yellow>Particles", "toggle_particles", particles));
+        inventory.setItem(42, this.createStatusIndicator(particles));
 
         player.openInventory(inventory);
     }
@@ -243,10 +243,10 @@ public final class GuiManager {
         }
         final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<green>" + MessageUtil.ICON_WARP + " World Selector"));
 
-        inventory.setItem(11, createWorldItem(Material.GRASS_BLOCK, "<green>Survival", "world"));
-        inventory.setItem(13, createWorldItem(Material.BEACON, "<gold>Lobby", "lobby"));
+        inventory.setItem(11, this.createWorldItem(Material.GRASS_BLOCK, "<green>Survival", "world"));
+        inventory.setItem(13, this.createWorldItem(Material.BEACON, "<gold>Lobby", "lobby"));
 
-        inventory.setItem(22, createBackButton("admin"));
+        inventory.setItem(22, this.createBackButton("admin"));
 
         player.openInventory(inventory);
     }
@@ -258,9 +258,9 @@ public final class GuiManager {
         final Inventory inventory = Bukkit.createInventory(null, 54, MessageUtil.parse("<green>" + MessageUtil.ICON_TP + " Teleport Menu - Page " + page));
 
         // Top row: dimension teleports (no status indicators needed - these are actions, not toggles)
-        inventory.setItem(0, createWorldItem(Material.GRASS_BLOCK, "<green>Overworld", "tp_world_overworld"));
-        inventory.setItem(1, createWorldItem(Material.NETHERRACK, "<red>Nether", "tp_world_nether"));
-        inventory.setItem(2, createWorldItem(Material.END_STONE, "<purple>End", "tp_world_end"));
+        inventory.setItem(0, this.createWorldItem(Material.GRASS_BLOCK, "<green>Overworld", "tp_world_overworld"));
+        inventory.setItem(1, this.createWorldItem(Material.NETHERRACK, "<red>Nether", "tp_world_nether"));
+        inventory.setItem(2, this.createWorldItem(Material.END_STONE, "<purple>End", "tp_world_end"));
 
         int slot = 9;
         int itemsOnPage = 0;
@@ -292,7 +292,7 @@ public final class GuiManager {
             itemsOnPage++;
         }
 
-        final File dataFolder = new File(plugin.getDataFolder(), "playerdata");
+        final File dataFolder = new File(this.plugin.getDataFolder(), "playerdata");
         if (dataFolder.exists()) {
             final File[] files = dataFolder.listFiles((dir, name) -> name.endsWith(".yml"));
             if (files != null) {
@@ -350,7 +350,7 @@ public final class GuiManager {
             inventory.setItem(48, prev);
         }
 
-        final ItemStack back = createBackButton("admin");
+        final ItemStack back = this.createBackButton("admin");
         final ItemMeta backMeta = back.getItemMeta();
         if (backMeta != null) {
             backMeta.displayName(MessageUtil.parse("<red>Back"));
@@ -377,8 +377,8 @@ public final class GuiManager {
             return;
         }
         final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<gold>Ender Chest Pages"));
-        for (int i = 1; i <= maxPages; i++) {
-            inventory.setItem(10 + i, createEcPageItem(i));
+        for (int pageIndex = 1; pageIndex <= maxPages; pageIndex++) {
+            inventory.setItem(10 + pageIndex, this.createEcPageItem(pageIndex));
         }
         player.openInventory(inventory);
     }
@@ -388,7 +388,7 @@ public final class GuiManager {
             return;
         }
         final Inventory inventory = Bukkit.createInventory(null, 27, MessageUtil.parse("<gold>Ender Chest - Page " + page));
-        inventory.setContents(plugin.getPlayerStorage().getEnderChestPage(player, page));
+        inventory.setContents(this.plugin.getPlayerStorage().getEnderChestPage(player, page));
         player.openInventory(inventory);
     }
 

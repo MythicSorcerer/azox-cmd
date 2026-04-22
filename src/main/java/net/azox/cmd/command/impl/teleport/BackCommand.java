@@ -15,12 +15,12 @@ public final class BackCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        final Optional<Location> lastLoc = plugin.getTeleportManager().getLastLocation(player);
+        final Optional<Location> lastLoc = this.plugin.getTeleportManager().getLastLocation(player);
         if (lastLoc.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>No back location found!");
             return;
         }
 
-        plugin.getTeleportManager().teleportWithDelay(player, lastLoc.get());
+        this.plugin.getTeleportManager().teleportWithDelay(player, lastLoc.get());
     }
 }

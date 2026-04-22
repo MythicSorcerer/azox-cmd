@@ -15,7 +15,7 @@ public final class TpAcceptCommand extends BaseCommand {
         if (!isPlayer(sender)) return;
         final Player player = (Player) sender;
 
-        final Optional<TeleportRequest> requestOpt = plugin.getTeleportManager().getRequest(player);
+        final Optional<TeleportRequest> requestOpt = this.plugin.getTeleportManager().getRequest(player);
         if (requestOpt.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>You have no pending teleport requests!");
             return;
@@ -27,7 +27,7 @@ public final class TpAcceptCommand extends BaseCommand {
             return;
         }
 
-        plugin.getTeleportManager().removeRequest(player);
+        this.plugin.getTeleportManager().removeRequest(player);
         final Player requester = request.getRequester();
         if (!requester.isOnline()) {
             MessageUtil.sendMessage(player, "<red>The requester is no longer online!");
@@ -36,11 +36,11 @@ public final class TpAcceptCommand extends BaseCommand {
 
         if (request.isHere()) {
             // Requester wants target (player) to tp to them
-            plugin.getTeleportManager().teleportWithDelay(player, requester.getLocation());
+            this.plugin.getTeleportManager().teleportWithDelay(player, requester.getLocation());
             MessageUtil.sendMessage(requester, "<green>" + player.getName() + " accepted your request!");
         } else {
             // Requester wants to tp to target (player)
-            plugin.getTeleportManager().teleportWithDelay(requester, player.getLocation());
+            this.plugin.getTeleportManager().teleportWithDelay(requester, player.getLocation());
             MessageUtil.sendMessage(player, "<green>Accepted " + requester.getName() + "'s request!");
         }
     }

@@ -31,7 +31,7 @@ public final class InventoryUtilCommands extends BaseCommand {
                     }
                 }
                 if (maxPages > 1) {
-                    plugin.getGuiManager().openEnderChestPageSelector(player, maxPages);
+                    this.plugin.getGuiManager().openEnderChestPageSelector(player, maxPages);
                 } else {
                     player.openInventory(player.getEnderChest());
                 }

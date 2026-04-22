@@ -39,7 +39,7 @@ public final class RtpCommand extends BaseCommand {
         }
 
         final Location target = block.getLocation().add(0.5, 1, 0.5);
-        plugin.getTeleportManager().teleportWithDelay(player, target);
+        this.plugin.getTeleportManager().teleportWithDelay(player, target);
         MessageUtil.sendMessage(player, "<green>Finding a safe location...");
     }
 }

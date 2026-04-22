@@ -19,7 +19,7 @@ public final class WarpCommand extends BaseCommand {
         final Player player = (Player) sender;
 
         if (args.length == 0) {
-            final List<String> warps = plugin.getWarpManager().getWarps().values().stream()
+            final List<String> warps = this.plugin.getWarpManager().getWarps().values().stream()
                     .filter(warp -> player.hasPermission("azox.util.warp." + warp.getLevel()))
                     .map(Warp::getName)
                     .collect(Collectors.toList());
@@ -34,7 +34,7 @@ public final class WarpCommand extends BaseCommand {
         }
 
         final String name = args[0];
-        final Optional<Warp> warpOpt = plugin.getWarpManager().getWarp(name);
+        final Optional<Warp> warpOpt = this.plugin.getWarpManager().getWarp(name);
 
         if (warpOpt.isEmpty()) {
             MessageUtil.sendMessage(player, "<red>" + MessageUtil.ICON_ERROR + " Warp '" + name + "' not found!");
@@ -47,14 +47,14 @@ public final class WarpCommand extends BaseCommand {
             return;
         }
 
-        plugin.getTeleportManager().teleportWithDelay(player, warp.getLocation());
+        this.plugin.getTeleportManager().teleportWithDelay(player, warp.getLocation());
     }
 
     @Override
     public List<String> complete(CommandSender sender, String[] args) {
         if (sender instanceof Player && args.length == 1) {
             final Player player = (Player) sender;
-            return plugin.getWarpManager().getWarps().values().stream()
+            return this.plugin.getWarpManager().getWarps().values().stream()
                     .filter(warp -> player.hasPermission("azox.util.warp." + warp.getLevel()))
                     .map(Warp::getName)
                     .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
