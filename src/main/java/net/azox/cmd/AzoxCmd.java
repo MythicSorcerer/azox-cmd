@@ -26,6 +26,9 @@ import net.azox.cmd.command.impl.util.InventoryUtilCommands;
 import net.azox.cmd.command.impl.util.ItemModCommands;
 import net.azox.cmd.command.impl.util.JailCommand;
 import net.azox.cmd.command.impl.util.KitCommands;
+import net.azox.cmd.command.impl.util.LockChestCommand;
+import net.azox.cmd.command.impl.util.LockGuiCommand;
+import net.azox.cmd.command.impl.util.ChestCommand;
 import net.azox.cmd.command.impl.util.LobbyCommand;
 import net.azox.cmd.command.impl.util.MiscUtilCommands;
 import net.azox.cmd.command.impl.util.NavigationCommands;
@@ -49,6 +52,7 @@ import net.azox.cmd.command.impl.warp.WarpCommand;
 import net.azox.cmd.listener.InventoryListener;
 import net.azox.cmd.listener.PlayerListener;
 import net.azox.cmd.listener.TeleportListener;
+import net.azox.cmd.listener.ChestListener;
 import net.azox.cmd.manager.FillPotManager;
 import net.azox.cmd.manager.FreezeManager;
 import net.azox.cmd.manager.GuiManager;
@@ -56,6 +60,7 @@ import net.azox.cmd.manager.HomeManager;
 import net.azox.cmd.manager.ILiveManager;
 import net.azox.cmd.manager.JailManager;
 import net.azox.cmd.manager.KitManager;
+import net.azox.cmd.manager.LockChestManager;
 import net.azox.cmd.manager.ParticleManager;
 import net.azox.cmd.manager.PlayerDataManager;
 import net.azox.cmd.manager.TeleportManager;
@@ -87,6 +92,7 @@ public final class AzoxCmd extends JavaPlugin {
     private ParticleManager particleManager;
     private ILiveManager iliveManager;
     private FillPotManager fillPotManager;
+    private LockChestManager lockChestManager;
 
     public static AzoxCmd getInstance() {
         return instance;
@@ -100,9 +106,22 @@ public final class AzoxCmd extends JavaPlugin {
         return fillPotManager;
     }
 
+    public LockChestManager getLockChestManager() {
+        return lockChestManager;
+    }
+
     @Override
     public void onEnable() {
         AzoxCmd.instance = this;
+
+        this.getConfig().options().copyDefaults(true);
+        if (!this.getConfig().contains("chestlocking.enabled")) {
+            this.getConfig().set("chestlocking.enabled", true);
+        }
+        if (!this.getConfig().contains("chestlocking.global_log")) {
+            this.getConfig().set("chestlocking.global_log", false);
+        }
+        this.saveConfig();
 
         this.playerDataManager = new PlayerDataManager();
         this.playerStorage = new PlayerStorage();
@@ -117,6 +136,7 @@ public final class AzoxCmd extends JavaPlugin {
         this.particleManager = new ParticleManager();
         this.iliveManager = new ILiveManager();
         this.fillPotManager = new FillPotManager();
+        this.lockChestManager = new LockChestManager();
 
         this.registerCommands();
         this.registerListeners();
@@ -239,6 +259,10 @@ public final class AzoxCmd extends JavaPlugin {
         commandMap.put("unfillpot", new PotionCommands());
         commandMap.put("silence", new SilenceCommand());
 
+        commandMap.put("lockchest", new LockChestCommand());
+        commandMap.put("lockgui", new LockGuiCommand());
+        commandMap.put("chest", new ChestCommand());
+
         commandMap.forEach((name, executor) -> {
             final var command = this.getCommand(name);
             if (command != null) {
@@ -251,6 +275,7 @@ public final class AzoxCmd extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new TeleportListener(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+        this.getServer().getPluginManager().registerEvents(new ChestListener(), this);
     }
 
     @Override

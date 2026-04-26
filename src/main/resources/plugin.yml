@@ -223,6 +223,15 @@ commands:
   silence:
     description: Toggle silence for command responses.
     permission: azox.cmd.silence
+  lockchest:
+    description: Lock a chest.
+    permission: azox.util.lockchest
+  lockgui:
+    description: Open chest key management GUI.
+    permission: azox.util.lockchest
+  chest:
+    description: View chest information.
+    permission: azox.util.lockchest
   sethome:
     description: Set a home at your current location.
     permission: azox.cmd.sethome
@@ -467,4 +476,10 @@ permissions:
     default: op
   azox.util.kit.delete:
     description: Delete kits
+    default: op
+  azox.util.lockchest:
+    description: Lock and manage chests
+    default: true
+  azox.util.lockchest.others:
+    description: View and manage other players' locked chests
     default: op
