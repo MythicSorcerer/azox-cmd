@@ -8,6 +8,9 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class TpCommand extends BaseCommand {
 
     @Override
@@ -87,5 +90,13 @@ public final class TpCommand extends BaseCommand {
             return current + Double.parseDouble(input.substring(1));
         }
         return Double.parseDouble(input);
+    }
+
+    @Override
+    public List<String> complete(final CommandSender sender, final String[] args) {
+        if (args.length == 1) {
+            return getVisiblePlayerNames(sender, args[0]);
+        }
+        return new ArrayList<>();
     }
 }

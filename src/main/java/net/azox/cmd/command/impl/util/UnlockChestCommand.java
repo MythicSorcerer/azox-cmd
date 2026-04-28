@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class LockChestCommand extends BaseCommand {
+public final class UnlockChestCommand extends BaseCommand {
 
     private final LockChestManager lockChestManager = this.plugin.getLockChestManager();
 
@@ -33,19 +33,19 @@ public final class LockChestCommand extends BaseCommand {
             return;
         }
 
-        final ChestLock existingChest = this.lockChestManager.getChestAt(block.getLocation());
-        if (existingChest != null) {
-            MessageUtil.sendMessage(player, "<red>This chest is already locked!");
+        final ChestLock chest = this.lockChestManager.getChestAt(block.getLocation());
+        if (chest == null) {
+            MessageUtil.sendMessage(player, "<red>This chest is not locked!");
             return;
         }
 
-        final ChestLock lockedChest = this.lockChestManager.lockChest(player, block);
-        if (lockedChest == null) {
-            MessageUtil.sendMessage(player, "<red>Failed to lock the chest!");
+        if (!chest.getOwnerUuid().equals(player.getUniqueId())) {
+            MessageUtil.sendMessage(player, "<red>You cannot unlock someone else's chest!");
             return;
         }
 
-        MessageUtil.sendMessage(player, "<green>Chest locked! Only you can access it.");
+        this.lockChestManager.unlockChest(chest.getChestId());
+        MessageUtil.sendMessage(player, "<green>Chest unlocked!");
     }
 
     @Override

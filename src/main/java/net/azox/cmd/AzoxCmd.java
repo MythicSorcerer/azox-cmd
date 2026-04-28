@@ -27,8 +27,7 @@ import net.azox.cmd.command.impl.util.ItemModCommands;
 import net.azox.cmd.command.impl.util.JailCommand;
 import net.azox.cmd.command.impl.util.KitCommands;
 import net.azox.cmd.command.impl.util.LockChestCommand;
-import net.azox.cmd.command.impl.util.LockGuiCommand;
-import net.azox.cmd.command.impl.util.ChestCommand;
+import net.azox.cmd.command.impl.util.UnlockChestCommand;
 import net.azox.cmd.command.impl.util.LobbyCommand;
 import net.azox.cmd.command.impl.util.MiscUtilCommands;
 import net.azox.cmd.command.impl.util.NavigationCommands;
@@ -254,14 +253,17 @@ public final class AzoxCmd extends JavaPlugin {
 
         commandMap.put("permeffect", new PermEffectCommand());
         commandMap.put("ilive", new ILiveCommand());
-        commandMap.put("fillpotsave", new PotionCommands());
-        commandMap.put("fillpot", new PotionCommands());
-        commandMap.put("unfillpot", new PotionCommands());
         commandMap.put("silence", new SilenceCommand());
 
+        commandMap.put("lock", new LockChestCommand());
         commandMap.put("lockchest", new LockChestCommand());
-        commandMap.put("lockgui", new LockGuiCommand());
-        commandMap.put("chest", new ChestCommand());
+        commandMap.put("lockcontainer", new LockChestCommand());
+        commandMap.put("l", new LockChestCommand());
+
+        commandMap.put("unlock", new UnlockChestCommand());
+        commandMap.put("unlockchest", new UnlockChestCommand());
+        commandMap.put("unlockcontainer", new UnlockChestCommand());
+        commandMap.put("ul", new UnlockChestCommand());
 
         commandMap.forEach((name, executor) -> {
             final var command = this.getCommand(name);

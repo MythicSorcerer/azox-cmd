@@ -87,13 +87,6 @@ commands:
   feed:
     description: Feed a player.
     permission: azox.cmd.feed
-    aliases: [eat]
-  fillpot:
-    description: Enable potion auto-refill.
-    permission: azox.cmd.fillpot
-  fillpotsave:
-    description: Save potion slots for auto-refill.
-    permission: azox.cmd.fillpot
   fly:
     description: Toggle flight.
     permission: azox.cmd.fly
@@ -223,14 +216,29 @@ commands:
   silence:
     description: Toggle silence for command responses.
     permission: azox.cmd.silence
+  lock:
+    description: Lock a chest.
+    permission: azox.util.lockchest
   lockchest:
     description: Lock a chest.
     permission: azox.util.lockchest
-  lockgui:
-    description: Open chest key management GUI.
+  lockcontainer:
+    description: Lock a chest.
     permission: azox.util.lockchest
-  chest:
-    description: View chest information.
+  l:
+    description: Lock a chest.
+    permission: azox.util.lockchest
+  unlock:
+    description: Unlock a chest.
+    permission: azox.util.lockchest
+  unlockchest:
+    description: Unlock a chest.
+    permission: azox.util.lockchest
+  unlockcontainer:
+    description: Unlock a chest.
+    permission: azox.util.lockchest
+  ul:
+    description: Unlock a chest.
     permission: azox.util.lockchest
   sethome:
     description: Set a home at your current location.
@@ -323,9 +331,6 @@ commands:
   unjail:
     description: Unjail a player.
     permission: azox.cmd.jail
-  unfillpot:
-    description: Disable potion auto-refill.
-    permission: azox.cmd.fillpot
   uptime:
     description: See how long the server has been running.
     permission: azox.cmd.tps
@@ -409,7 +414,6 @@ permissions:
       azox.cmd.whois: true
       azox.cmd.permeffect: true
       azox.cmd.ilive: true
-      azox.cmd.fillpot: true
       azox.cmd.silence: true
   azox.cmd.rank.*:
     description: Advanced permissions for ranked players
