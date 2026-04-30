@@ -54,7 +54,7 @@ commands:
     aliases: [dupe,clone]
   craft:
     description: Open a portable crafting table.
-    permission: azox.cmd.admin.craft
+    permission: azox.cmd.craft
     aliases: [workbench]
   createkit:
     description: Create a kit.
@@ -90,10 +90,10 @@ commands:
     permission: azox.cmd.feed
   fly:
     description: Toggle flight.
-    permission: azox.cmd.admin.fly
+    permission: azox.cmd.fly
   flyspeed:
     description: Set flight speed.
-    permission: azox.cmd.admin.flyspeed
+    permission: azox.cmd.flyspeed
   freeze:
     description: Freeze or unfreeze a player.
     permission: azox.cmd.freeze
@@ -295,7 +295,7 @@ commands:
     permission: azox.cmd.tempban
   top:
     description: Teleport to the highest safe block.
-    permission: azox.cmd.admin.top
+    permission: azox.cmd.top
   tp:
     description: Teleport command.
     permission: azox.cmd.tp
@@ -360,7 +360,7 @@ commands:
     permission: azox.cmd.world
   wb:
     description: World Builder command (admin only).
-    permission: azox.cmd.admin.wb
+    permission: azox.cmd.wb
 permissions:
   azox.cmd.*:
     description: All player-use commands (granted to all players when no permission manager is present)
@@ -385,15 +385,15 @@ permissions:
       azox.cmd.config: true
       azox.cmd.settings: true
       azox.cmd.enderchest: true
-      azox.cmd.craft: false
-      azox.cmd.anvil: false
+      azox.cmd.craft: true
+      azox.cmd.anvil: true
       azox.cmd.grindstone: true
       azox.cmd.stonecutter: true
       azox.cmd.cartographytable: true
       azox.cmd.loom: true
       azox.cmd.trash: true
-      azox.cmd.fly: false
-      azox.cmd.flyspeed: false
+      azox.cmd.fly: true
+      azox.cmd.flyspeed: true
       azox.cmd.god: true
       azox.cmd.heal: true
       azox.cmd.feed: true
@@ -408,7 +408,7 @@ permissions:
       azox.cmd.compass: true
       azox.cmd.getpos: true
       azox.cmd.near: true
-      azox.cmd.top: false
+      azox.cmd.top: true
       azox.cmd.jumpto: true
       azox.cmd.world: true
       azox.cmd.weather: true
@@ -423,6 +423,33 @@ permissions:
       azox.cmd.permeffect: true
       azox.cmd.ilive: true
       azox.cmd.silence: true
+  azox.cmd.fly:
+    description: Toggle flight
+    default: op
+  azox.cmd.flyspeed:
+    description: Set flight speed
+    default: op
+  azox.cmd.top:
+    description: Teleport to top
+    default: op
+  azox.cmd.craft:
+    description: Open crafting table
+    default: op
+  azox.cmd.anvil:
+    description: Open anvil
+    default: op
+  azox.cmd.wb:
+    description: World builder command
+    default: op
+  azox.cmd.weather:
+    description: Change weather
+    default: op
+  azox.cmd.sun:
+    description: Set sunny weather
+    default: op
+  azox.cmd.storm:
+    description: Set stormy weather
+    default: op
   azox.cmd.rank.*:
     description: Advanced permissions for ranked players
     default: false
@@ -446,11 +473,14 @@ permissions:
     default: op
     children:
       azox.cmd.admin: true
-      azox.cmd.admin.fly: true
-      azox.cmd.admin.flyspeed: true
-      azox.cmd.admin.top: true
-      azox.cmd.admin.craft: true
-      azox.cmd.admin.wb: true
+      azox.cmd.fly: true
+      azox.cmd.flyspeed: true
+      azox.cmd.top: true
+      azox.cmd.craft: true
+      azox.cmd.wb: true
+      azox.cmd.weather: true
+      azox.cmd.sun: true
+      azox.cmd.storm: true
       azox.cmd.vanish: true
       azox.cmd.vanish.see: true
       azox.cmd.see: true
