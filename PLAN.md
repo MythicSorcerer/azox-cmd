@@ -9,8 +9,8 @@ Create a Minecraft plugin (AzoxCmd) that provides various commands (/fly, /flysp
 3. Implement the onEnable() method to register commands and load configuration.
 4. Create command executor classes for each command (FlyCommand, FlySpeedCommand, TopCommand, AnvilCommand, CraftCommand, WbCommand) that check for administrator permissions.
 5. Implement the permission check: 
-   - Primary: Check if the player has the permission "azoxcmd.admin".
-   - Fallback: If the above fails, check if the player is OP (player.isOp()).
+    - Primary: Check if the player has the permission "azoxcmd.admin".
+    - Fallback: If the above fails, check if the player is OP (player.isOp()).
 6. If the player does not have the required permission, send a message indicating insufficient permissions and return false (to prevent command execution).
 7. Implement the actual functionality for each command (to be filled in later).
 8. Ensure the plugin follows the coding standards: use Lombok, fully qualified variable names, null checks, etc.

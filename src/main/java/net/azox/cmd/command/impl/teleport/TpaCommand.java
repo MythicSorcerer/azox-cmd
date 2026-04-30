@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class TpaCommand extends BaseCommand {
 
@@ -44,10 +43,12 @@ public final class TpaCommand extends BaseCommand {
         this.plugin.getTeleportManager().requestTeleport(player, target, false);
         MessageUtil.sendMessage(player, "<green>" + MessageUtil.ICON_SUCCESS + " Teleport request sent to " + target.getName() + "!");
 
-        final Component message = Component.text(MessageUtil.ICON_TP + " " + player.getName() + " would like to teleport to you. ", NamedTextColor.YELLOW)
-                .append(Component.text("[Accept] ", NamedTextColor.GREEN).clickEvent(ClickEvent.runCommand("/tpaccept " + player.getName())))
+        Component accept = Component.text("[Accept] ", NamedTextColor.GREEN).clickEvent(ClickEvent.runCommand("/tpaccept " + player.getName()));
+        Component deny = Component.text("[Deny]", NamedTextColor.RED).clickEvent(ClickEvent.runCommand("/tpdecline " + player.getName()));
+        Component message = Component.text(player.getName() + " would like to teleport to you\n", NamedTextColor.YELLOW)
+                .append(accept)
                 .append(Component.text(" / ", NamedTextColor.GRAY))
-                .append(Component.text("[Deny]", NamedTextColor.RED).clickEvent(ClickEvent.runCommand("/tpdecline " + player.getName())));
+                .append(deny);
         target.sendMessage(message);
     }
 
