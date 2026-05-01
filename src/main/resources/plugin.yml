@@ -3,7 +3,7 @@ main: net.azox.cmd.AzoxCmd
 version: 1.0.0
 api-version: 1.21
 author: AzoxTeam
-description: A plugin that provides various commands restricted to administrators.
+description: A plugin that provides various commands with proper permission defaults.
 
 commands:
   anvil:
@@ -11,11 +11,11 @@ commands:
     permission: azox.cmd.anvil
   azox:
     description: Open AzoxUtils Admin GUI.
-    permission: azox.cmd.admin
+    permission: azox.cmd.azox
     aliases: [azoxadmin]
   azoxreload:
     description: Reload the plugin.
-    permission: azox.cmd.admin
+    permission: azox.cmd.azoxreload
   back:
     description: Go back to your last location.
     permission: azox.cmd.back
@@ -358,12 +358,10 @@ commands:
   world:
     description: Teleport to a different world.
     permission: azox.cmd.world
-  wb:
-    description: World Builder command (admin only).
-    permission: azox.cmd.wb
+
 permissions:
   azox.cmd.*:
-    description: All player-use commands (granted to all players when no permission manager is present)
+    description: All player-use commands (default true for all players)
     default: true
     children:
       azox.cmd.tpa: true
@@ -392,13 +390,11 @@ permissions:
       azox.cmd.cartographytable: true
       azox.cmd.loom: true
       azox.cmd.trash: true
-      azox.cmd.fly: true
-      azox.cmd.flyspeed: true
-      azox.cmd.god: true
-      azox.cmd.heal: true
-      azox.cmd.feed: true
-      azox.cmd.gamemode: true
-      azox.cmd.speed: true
+      azox.cmd.god: false
+      azox.cmd.heal: false
+      azox.cmd.feed: false
+      azox.cmd.gamemode: false
+      azox.cmd.speed: false
       azox.cmd.nightvision: true
       azox.cmd.ping: true
       azox.cmd.stats: true
@@ -408,48 +404,22 @@ permissions:
       azox.cmd.compass: true
       azox.cmd.getpos: true
       azox.cmd.near: true
-      azox.cmd.top: true
+      azox.cmd.top: false
       azox.cmd.jumpto: true
       azox.cmd.world: true
-      azox.cmd.weather: true
-      azox.cmd.sun: true
-      azox.cmd.storm: true
+      azox.cmd.weather: false
+      azox.cmd.sun: false
+      azox.cmd.storm: false
       azox.cmd.suicide: true
-      azox.cmd.clearinventory: true
+      azox.cmd.clearinventory: false
       azox.cmd.condense: true
       azox.cmd.kit: true
       azox.cmd.seen: true
       azox.cmd.whois: true
-      azox.cmd.permeffect: true
-      azox.cmd.ilive: true
+      azox.cmd.permeffect: false
+      azox.cmd.ilive: false
       azox.cmd.silence: true
-  azox.cmd.fly:
-    description: Toggle flight
-    default: op
-  azox.cmd.flyspeed:
-    description: Set flight speed
-    default: op
-  azox.cmd.top:
-    description: Teleport to top
-    default: op
-  azox.cmd.craft:
-    description: Open crafting table
-    default: op
-  azox.cmd.anvil:
-    description: Open anvil
-    default: op
-  azox.cmd.wb:
-    description: World builder command
-    default: op
-  azox.cmd.weather:
-    description: Change weather
-    default: op
-  azox.cmd.sun:
-    description: Set sunny weather
-    default: op
-  azox.cmd.storm:
-    description: Set stormy weather
-    default: op
+
   azox.cmd.rank.*:
     description: Advanced permissions for ranked players
     default: false
@@ -468,50 +438,59 @@ permissions:
       azox.cmd.rank.admin: true
       azox.cmd.rank.mod: true
       azox.cmd.rank.vip: true
-  azox.cmd.admin.*:
-    description: All admin-only commands
-    default: op
-    children:
-      azox.cmd.admin: true
       azox.cmd.fly: true
       azox.cmd.flyspeed: true
-      azox.cmd.top: true
-      azox.cmd.craft: true
-      azox.cmd.wb: true
+
+  azox.cmd.admin.*:
+    description: Admin-only commands
+    default: op
+    children:
+      azox.cmd.azox: true
+      azox.cmd.azoxreload: true
+      azox.cmd.tp: true
+      azox.cmd.tpo: true
+      azox.cmd.tpohere: true
+      azox.cmd.tpoundo: true
       azox.cmd.weather: true
       azox.cmd.sun: true
       azox.cmd.storm: true
-      azox.cmd.vanish: true
-      azox.cmd.vanish.see: true
-      azox.cmd.see: true
+      azox.cmd.fly: true
+      azox.cmd.flyspeed: true
+      azox.cmd.god: true
+      azox.cmd.speed: true
+      azox.cmd.heal: true
+      azox.cmd.feed: true
+      azox.cmd.gamemode: true
       azox.cmd.jail: true
       azox.cmd.setjail: true
       azox.cmd.deljail: true
+      azox.cmd.unjail: true
+      azox.cmd.vanish: true
+      azox.cmd.see: true
       azox.cmd.freeze: true
-      azox.cmd.sudo: true
-      azox.cmd.lightning: true
       azox.cmd.burn: true
-      azox.cmd.extinguish: true
+      azox.cmd.lightning: true
       azox.cmd.tempban: true
-      azox.cmd.break: true
       azox.cmd.broadcast: true
-      azox.cmd.copyitem: true
+      azox.cmd.break: true
+      azox.cmd.sudo: true
       azox.cmd.enchant: true
       azox.cmd.itemname: true
       azox.cmd.lore: true
       azox.cmd.repair: true
+      azox.cmd.copyitem: true
       azox.cmd.setwarp: true
       azox.cmd.setphome: true
       azox.cmd.setspawn: true
       azox.cmd.createkit: true
       azox.cmd.delkit: true
       azox.cmd.remove: true
-      azox.cmd.tp: true
-      azox.cmd.tpo: true
-      azox.cmd.tpohere: true
-      azox.cmd.tpoundo: true
-      azox.cmd.gamemode: true
-      azox.cmd.azoxreload: true
+      azox.cmd.clearinventory: true
+      azox.cmd.permeffect: true
+      azox.cmd.ilive: true
+      azox.cmd.top: true
+      azox.cmd.extinguish: true
+
   azox.util.kit.*:
     description: Access to all kits
     default: true
