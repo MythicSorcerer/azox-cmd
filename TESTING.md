@@ -12,7 +12,7 @@ To verify that commands are properly restricted to administrators:
    - OP player (without explicit permission)
    - Regular player (no special permissions or OP status)
 
-### Test Cases for Each Command (/fly, /flyspeed, /top, /anvil, /craft, /wb)
+### Test Cases for Each Command (/fly, /flyspeed, /top, /anvil, /craft, /wb, etc.)
 
 #### Test 1: Regular Player (No Permission)
 - Expected: Command fails with "You do not have permission to use this command."
