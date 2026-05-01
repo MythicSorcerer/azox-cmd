@@ -382,14 +382,14 @@ permissions:
       azox.cmd.gui: true
       azox.cmd.config: true
       azox.cmd.settings: true
-      azox.cmd.enderchest: true
-      azox.cmd.craft: true
-      azox.cmd.anvil: true
-      azox.cmd.grindstone: true
-      azox.cmd.stonecutter: true
-      azox.cmd.cartographytable: true
-      azox.cmd.loom: true
-      azox.cmd.trash: true
+      azox.cmd.enderchest: false
+      azox.cmd.craft: false
+      azox.cmd.anvil: false
+      azox.cmd.grindstone: false
+      azox.cmd.stonecutter: false
+      azox.cmd.cartographytable: false
+      azox.cmd.loom: false
+      azox.cmd.trash: false
       azox.cmd.god: false
       azox.cmd.heal: false
       azox.cmd.feed: false
@@ -405,7 +405,7 @@ permissions:
       azox.cmd.getpos: true
       azox.cmd.near: true
       azox.cmd.top: false
-      azox.cmd.jumpto: true
+      azox.cmd.jumpto: false
       azox.cmd.world: true
       azox.cmd.weather: false
       azox.cmd.sun: false
@@ -415,7 +415,7 @@ permissions:
       azox.cmd.condense: true
       azox.cmd.kit: true
       azox.cmd.seen: true
-      azox.cmd.whois: true
+      azox.cmd.whois: false
       azox.cmd.permeffect: false
       azox.cmd.ilive: false
       azox.cmd.silence: true
@@ -467,6 +467,16 @@ permissions:
       azox.cmd.unjail: true
       azox.cmd.vanish: true
       azox.cmd.see: true
+      azox.cmd.enderchest: true
+      azox.cmd.craft: true
+      azox.cmd.anvil: true
+      azox.cmd.grindstone: true
+      azox.cmd.stonecutter: true
+      azox.cmd.cartographytable: true
+      azox.cmd.loom: true
+      azox.cmd.trash: true
+      azox.cmd.jumpto: true
+      azox.cmd.whois: true
       azox.cmd.freeze: true
       azox.cmd.burn: true
       azox.cmd.lightning: true
